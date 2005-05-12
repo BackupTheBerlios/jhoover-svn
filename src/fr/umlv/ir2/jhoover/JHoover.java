@@ -6,6 +6,6 @@ public class JHoover {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("Bienvenue dans jHoover");
+		System.out.println("Bienvenue dans jHoover");		
 	}
 }
