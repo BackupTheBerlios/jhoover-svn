@@ -8,10 +8,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.HashMap;
+
+import javax.swing.text.Document;
+import javax.swing.text.EditorKit;
+import javax.swing.text.Element;
+import javax.swing.text.ElementIterator;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLEditorKit;
 
 /**
  * @author Romain Papuchon
@@ -20,9 +28,12 @@ import java.util.HashMap;
  */
 public class WebFile {
 	private URL url;
+	private int depth;
+	private String contentType;
 	private int realSize;
 	private int downloadedSize;
-	private int depth;
+	private Date beginDate;
+	
 	
 	
 	/*
@@ -59,6 +70,22 @@ public class WebFile {
 		} catch (IOException e) {			
 			System.err.println(e);
 		}
+		
+		/*
+		 * parameters from the file
+		 */
+		realSize = connection.getContentLength();
+		contentType = connection.getContentType();
+		beginDate = new Date(connection.getDate());
+		
+		System.out.println("AFFICHAGE DES PARAMETRES DU FICHIER:");
+		System.out.println("------------------------------------");
+		System.out.println("realSize: " + realSize);
+		System.out.println("contentType: " + contentType);
+		System.out.println("beginDate: " + beginDate);
+		System.out.println("");
+		
+		
 
 		try {
 			//Opening File for writing
@@ -89,31 +116,70 @@ public class WebFile {
 				System.err.println(e);
 			}
 		}
-		
-		
+
+	
 		//TODO: voir la taille du fichier
-		realSize = 512;
 		downloadedSize = realSize;
-		
 		
 				
 		System.out.println("--parsing of the webFile--");
 		//parsing of the webFile
-		HashMap<URL,Integer> urlLinks = parseHtml(this, depth);
+		HashMap<URL,Integer> urlLinks = parseHtml(this, depth, inputStream);
 		
 		return urlLinks;
 	}
 	
 	
-	private HashMap<URL,Integer> parseHtml(WebFile fileToParse, int depthParent) {
-		// TODO: changer cela, temporaire pour le moment
+	private HashMap<URL,Integer> parseHtml(WebFile fileToParse, int depthParent, InputStream inputStream) {
+		// TODO: reprendre le code proprement
 		HashMap<URL,Integer> linkList = new HashMap<URL,Integer>();
-		try {
-			linkList.put(new URL("http://www.google.fr/webhp.html"), depthParent+1);
-			linkList.put(new URL("http://www.google.fr/ads/index.html"), depthParent+1);
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		
+		//if it is a HTML document
+		if (contentType.equals(Constants.TEXT_HTML)) {
+			EditorKit editorKit = new HTMLEditorKit();
+			Document document = editorKit.createDefaultDocument();
+			//document.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
+			try {
+				if(inputStream != null) {
+					editorKit.read(inputStream, document, 0);
+					ElementIterator it = new ElementIterator(document);
+					Element elem;
+					
+					while ((elem = it.next()) != null) {
+						
+						
+						
+						SimpleAttributeSet simpleAttributeSet;
+						//search for a "a href" tag
+						if((simpleAttributeSet = (SimpleAttributeSet)elem.getAttributes().getAttribute(HTML.Tag.A)) != null) {
+							Object o;
+							if((o = simpleAttributeSet.getAttribute(HTML.Attribute.HREF)) != null) {
+								System.err.println(o);
+								linkList.put(new URL(o.toString()), depthParent+1);							
+							}
+						}
+						
+						//TODO: voir pour les images...
+						/*
+						if((simpleAttributeSet = (SimpleAttributeSet)elem.getAttributes().getAttribute(HTML.Tag.IMG)) != null) {
+							if((o = simpleAttributeSet.getAttribute(HTML.Attribute.SRC)) != null) {
+								url = o.toString();							
+								if(linkValid(url)) {
+									links.add(getAbsolutePath(url));						
+								}
+							}
+						}
+						*/
+					}		
+					
+				} else {
+					System.out.println("InputStream vide!!!");
+				}
+			} 
+			catch (Exception e) {
+				System.err.println(e);
+			}
 		}
 		return linkList;
 	}

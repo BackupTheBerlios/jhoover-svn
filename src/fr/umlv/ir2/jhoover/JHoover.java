@@ -31,7 +31,7 @@ public class JHoover {
 		int maxDLHtml = 4;
 		int maxDLLink = 4;
 		int maxDepth = 4;
-		String urlString = "http://www.google.fr/index.html";
+		String urlString = "http://papuch36.free.fr/index.php";
 		
 		try {
 			startURL = new URL(urlString);			

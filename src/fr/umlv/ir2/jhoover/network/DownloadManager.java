@@ -51,7 +51,7 @@ public class DownloadManager implements Runnable {
 			
 			//download the webFile and bring back the links contained in the webFile
 			HashMap<URL,Integer> links = webFile1.download();
-			System.out.println("[DownloadManager]: DL terminé, analyse des liens");
+			System.out.println("[DownloadManager]: DL terminé, analyse des liens:");
 			
 			Iterator<URL> it = links.keySet().iterator();
 			while (it.hasNext()) {
