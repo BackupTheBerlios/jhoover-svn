@@ -1,15 +1,12 @@
 package fr.umlv.ir2.jhoover;
 
 import java.awt.Dimension;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 import javax.swing.JFrame;
+
+import fr.umlv.ir2.jhoover.network.DownloadManager;
 
 /** 
  * Main Class
@@ -17,83 +14,41 @@ import javax.swing.JFrame;
  * @author Romain Papuchon 
  */
 public class JHoover {
+	private static DownloadManager downloadManager;
+	
+	
+	public JHoover(URL startURL, int maxDLHtml, int maxDLLink, int maxDepth) {		
+		downloadManager = new DownloadManager(maxDLHtml, maxDLLink, maxDepth);
+	}
 
 	/**
 	 * Main class
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		JHoover jHoover;
+		URL startURL = null;
+		int maxDLHtml = 4;
+		int maxDLLink = 4;
+		int maxDepth = 4;
+		String urlString = "http://www.google.fr/index.html";
 		
+		try {
+			startURL = new URL(urlString);			
+		} catch (MalformedURLException e) {		
+			System.err.println(e);
+		}
+				
 		
+		jHoover = new JHoover(startURL, maxDLHtml, maxDLLink, maxDepth);
+		//add the file pointed by startURL in the downloadList from the downloadManager
+		downloadManager.addURL(startURL, 0);
+		downloadManager.run();
 		
-		URL url = null;
-		try {
-			url = new URL("http://www.google.fr");
-		} catch (MalformedURLException e4) {
-			// TODO Auto-generated catch block
-			e4.printStackTrace();
-		}
-		URLConnection connection = null;
-		try {
-			connection = url.openConnection();
-		} catch (IOException e3) {
-			// TODO Auto-generated catch block
-			e3.printStackTrace();
-		}
-		try {
-			connection.connect();
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-
-		// Recuperation des données
-		InputStream is = null;
-		try {
-			is = connection.getInputStream();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		// create the fileoutputstream to write the index file
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream("C:/temp/google.html");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		byte[] buffer = new byte[4096];
-		
-		while (true) {
-			int count = 0;
-			try {
-				count = is.read(buffer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (count > 0) {
-				// write out the data buffer (only the #bytes read)
-				try {
-					fos.write(buffer, 0, count);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else {			
-				// we are done reading bytes
-				break;
-			}
-		}
 		/*
 		JFrame frame = new JFrame("JHoover -- The Papuch's Web Hoover");
-		
 		//initialisation of the Frame
 		initFrame(frame);
-		
 		frame.setVisible(true);
 		*/
 		
