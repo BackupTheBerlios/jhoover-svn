@@ -17,8 +17,8 @@ public class JHoover {
 	private static DownloadManager downloadManager;
 	
 	
-	public JHoover(URL startURL, int maxDLHtml, int maxDLLink, int maxDepth) {		
-		downloadManager = new DownloadManager(maxDLHtml, maxDLLink, maxDepth);
+	public JHoover(URL startURL, int maxDLHtml, int maxDLLink, int maxDepth, URL defaultUrl, String defaultPathString) {		
+		downloadManager = new DownloadManager(maxDLHtml, maxDLLink, maxDepth, defaultUrl, defaultPathString);
 	}
 
 	/**
@@ -27,22 +27,24 @@ public class JHoover {
 	 */
 	public static void main(String[] args) {
 		JHoover jHoover;
-		URL startURL = null;
+		URL defaultUrl = null;
 		int maxDLHtml = 4;
 		int maxDLLink = 4;
-		int maxDepth = 4;
-		String urlString = "http://papuch36.free.fr/index.php";
+		int maxDepth = 8;
+		String defaultUrlString = "http://membres.lycos.fr/huchon/index.html";
+		String defaultPathString = "C:/TEMP/";
+		
 		
 		try {
-			startURL = new URL(urlString);			
+			defaultUrl = new URL(defaultUrlString);			
 		} catch (MalformedURLException e) {		
 			System.err.println(e);
 		}
 				
 		
-		jHoover = new JHoover(startURL, maxDLHtml, maxDLLink, maxDepth);
+		jHoover = new JHoover(defaultUrl, maxDLHtml, maxDLLink, maxDepth, defaultUrl, defaultPathString);
 		//add the file pointed by startURL in the downloadList from the downloadManager
-		downloadManager.addURL(startURL, 0);
+		downloadManager.addURL(defaultUrl, 0);
 		downloadManager.run();
 		
 		/*

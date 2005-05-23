@@ -4,6 +4,7 @@
  */
 package fr.umlv.ir2.jhoover.network;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,13 +14,12 @@ import java.net.URLConnection;
 import java.util.Date;
 import java.util.HashMap;
 
-import javax.swing.text.Document;
-import javax.swing.text.EditorKit;
-import javax.swing.text.Element;
-import javax.swing.text.ElementIterator;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLEditorKit;
+import org.htmlparser.Node;
+import org.htmlparser.Parser;
+import org.htmlparser.tags.ImageTag;
+import org.htmlparser.tags.LinkTag;
+import org.htmlparser.util.ParserException;
+import org.htmlparser.visitors.ObjectFindingVisitor;
 
 /**
  * @author Romain Papuchon
@@ -51,140 +51,139 @@ public class WebFile {
 	 * Download the file and return the links
 	 * @return the list of links contained in the webFile
 	 */
-	public HashMap<URL,Integer> download() {
+	public void download(String defaultPathString, String defaultHost) throws IOException {
 		URLConnection connection = null;
-		InputStream inputStream = null;
 		FileOutputStream fileOutputStream = null;
+		InputStream inputStream = null;		
 		byte[] buffer = new byte[4096];
 		int nbBytes = 0;
 		
-		
-		System.out.println("--Downloading the webFile: " + url.getFile() + "--");
-
-		try {
-			//open the connexion
-			connection = url.openConnection();
-			connection.connect();
-			//Opening the InputStream
-			inputStream = connection.getInputStream();
-		} catch (IOException e) {			
-			System.err.println(e);
-		}
-		
-		/*
-		 * parameters from the file
-		 */
-		realSize = connection.getContentLength();
-		contentType = connection.getContentType();
-		beginDate = new Date(connection.getDate());
-		
-		System.out.println("AFFICHAGE DES PARAMETRES DU FICHIER:");
-		System.out.println("------------------------------------");
-		System.out.println("realSize: " + realSize);
-		System.out.println("contentType: " + contentType);
-		System.out.println("beginDate: " + beginDate);
-		System.out.println("");
-		
-		
-
-		try {
-			//Opening File for writing
-			fileOutputStream = new FileOutputStream("C:/temp/" + url.getFile());
-		} catch (FileNotFoundException e) {
-			System.err.println(e);
-		}
-		
-		
-		
-		
-		try {
-			nbBytes = inputStream.read(buffer);
-		} catch (IOException e) {
-			System.err.println(e);
-		}
-				
-		while (nbBytes > 0) {
+		//TODO: filter ici pour ne pas downloader les liens qui n'ont pas le même host
+		if ((this.getUrl().getProtocol() + "://" + this.getUrl().getHost()).equals(defaultHost)) {
+			/*
+			 * Open the connexion
+			 */
 			try {
-				//writes the datas in the file
-				fileOutputStream.write(buffer, 0, nbBytes);
-			} catch (IOException e) {
+				connection = url.openConnection();
+				connection.connect();
+				inputStream = connection.getInputStream();
+			} catch (IOException e) {			
 				System.err.println(e);
 			}
+
+			
+			/*
+			 * parameters from the file
+			 */
+			realSize = connection.getContentLength();
+			contentType = connection.getContentType();
+			beginDate = new Date(connection.getDate());
+			
+			System.out.println("AFFICHAGE DES PARAMETRES DU FICHIER:");
+			System.out.println("------------------------------------");
+			System.out.println("realSize: " + realSize);
+			System.out.println("contentType: " + contentType);
+			System.out.println("beginDate: " + beginDate);
+			System.out.println("");
+			
+			
+			/*
+			 * Opening File for writing 
+			 */
+			try {
+				String localPath = defaultPathString + url.getFile();			
+				File file = new File(localPath);
+				//creates the directory if it doesn't yet exist
+				if (!file.getParentFile().exists()) {
+					if (!file.getParentFile().mkdirs()) {
+						throw new IOException("Cannot create ancestor directories: '" + localPath + "'");
+					}
+				}
+				fileOutputStream = new FileOutputStream(file);
+			} catch (FileNotFoundException e) {
+				System.err.println(e);
+			}
+
+			
+			/*
+			 * Writing the data in the File
+			 */
 			try {
 				nbBytes = inputStream.read(buffer);
 			} catch (IOException e) {
 				System.err.println(e);
 			}
+			while (nbBytes > 0) {
+				try {
+					fileOutputStream.write(buffer, 0, nbBytes);
+				} catch (IOException e) {
+					System.err.println(e);
+				}
+				try {
+					nbBytes = inputStream.read(buffer);
+				} catch (IOException e) {
+					System.err.println(e);
+				}
+			}
+			
+			
+			/*
+			 * closing the streams
+			 */
+			try {
+				inputStream.close();
+				fileOutputStream.close();
+			} catch (IOException e) {
+				System.err.println(e);
+			}
+			
+			//TODO: voir pour la taille du fichier
+			downloadedSize = realSize;
+		} else {
+			//it is not the same web site or the same protocol
+			contentType = new String();  //TODO: voir ca.
 		}
-
-	
-		//TODO: voir la taille du fichier
-		downloadedSize = realSize;
-		
-				
-		System.out.println("--parsing of the webFile--");
-		//parsing of the webFile
-		HashMap<URL,Integer> urlLinks = parseHtml(this, depth, inputStream);
-		
-		return urlLinks;
 	}
 	
 	
-	private HashMap<URL,Integer> parseHtml(WebFile fileToParse, int depthParent, InputStream inputStream) {
+	public HashMap<String,Integer> parseHtml(int depthParent, String defaultHost) {
 		// TODO: reprendre le code proprement
-		HashMap<URL,Integer> linkList = new HashMap<URL,Integer>();
-		
-		
-		//if it is a HTML document
-		if (contentType.equals(Constants.TEXT_HTML)) {
-			EditorKit editorKit = new HTMLEditorKit();
-			Document document = editorKit.createDefaultDocument();
-			//document.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
-			try {
-				if(inputStream != null) {
-					editorKit.read(inputStream, document, 0);
-					ElementIterator it = new ElementIterator(document);
-					Element elem;
-					
-					while ((elem = it.next()) != null) {
-						
-						
-						
-						SimpleAttributeSet simpleAttributeSet;
-						//search for a "a href" tag
-						if((simpleAttributeSet = (SimpleAttributeSet)elem.getAttributes().getAttribute(HTML.Tag.A)) != null) {
-							Object o;
-							if((o = simpleAttributeSet.getAttribute(HTML.Attribute.HREF)) != null) {
-								System.err.println(o);
-								linkList.put(new URL(o.toString()), depthParent+1);							
-							}
-						}
-						
-						//TODO: voir pour les images...
-						/*
-						if((simpleAttributeSet = (SimpleAttributeSet)elem.getAttributes().getAttribute(HTML.Tag.IMG)) != null) {
-							if((o = simpleAttributeSet.getAttribute(HTML.Attribute.SRC)) != null) {
-								url = o.toString();							
-								if(linkValid(url)) {
-									links.add(getAbsolutePath(url));						
-								}
-							}
-						}
-						*/
-					}		
-					
-				} else {
-					System.out.println("InputStream vide!!!");
+		HashMap<String,Integer> linkList = new HashMap<String,Integer>();
+		 
+		if (this != null) {  //TODO: voir si c'est bien de faire ca...
+			//if it is a HTML document
+			if (contentType.equals(Constants.TEXT_HTML)) {
+				Parser parser;
+				Node [] images;
+				try {
+					parser = new Parser (defaultHost + url.getPath());
+					images = parser.extractAllNodesThatAre (ImageTag.class);
+					for (int i = 0; i < images.length; i++)
+					{
+						ImageTag imageTag = (ImageTag)images[i];
+						//System.out.println (imageTag.getImageURL ());					
+						linkList.put(imageTag.getImageURL(), depthParent+1);
+					}
+					parser = new Parser (defaultHost + url.getPath());
+					ObjectFindingVisitor visitor = new ObjectFindingVisitor (LinkTag.class);
+					parser.visitAllNodesWith (visitor);
+					Node[] links = visitor.getTags ();
+					for (int i = 0; i < links.length; i++)
+					{
+						LinkTag linkTag = (LinkTag)links[i];
+						//System.out.print ("\"" + linkTag.getLinkText () + "\" => ");
+						//System.out.println (linkTag.getLink ());
+						linkList.put(linkTag.getLink(), depthParent+1);
+					}
+				} catch (ParserException e) {
+					System.out.println(e);
 				}
-			} 
-			catch (Exception e) {
-				System.err.println(e);
 			}
 		}
 		return linkList;
 	}
 	
-	
+
 	/*
 	 * Returns true if the webFile is completely downloaded, false else
 	 */
@@ -231,5 +230,5 @@ public class WebFile {
 	
 	public int getDepth() {
 		return depth;
-	}
+	}	
 }
