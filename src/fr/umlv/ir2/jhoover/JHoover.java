@@ -1,10 +1,7 @@
 package fr.umlv.ir2.jhoover;
 
-import java.awt.Dimension;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.swing.JFrame;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import fr.umlv.ir2.jhoover.network.DownloadManager;
 
@@ -16,9 +13,8 @@ import fr.umlv.ir2.jhoover.network.DownloadManager;
 public class JHoover {
 	private static DownloadManager downloadManager;
 	
-	
-	public JHoover(URL startURL, int maxDLHtml, int maxDLLink, int maxDepth, URL defaultUrl, String defaultPathString) {		
-		downloadManager = new DownloadManager(maxDLHtml, maxDLLink, maxDepth, defaultUrl, defaultPathString);
+	public JHoover(int maxDLHtml, int maxDLLink, int maxDepth, URI startURI, String destDirectory) {		
+		downloadManager = new DownloadManager(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
 	}
 
 	/**
@@ -27,37 +23,36 @@ public class JHoover {
 	 */
 	public static void main(String[] args) {
 		JHoover jHoover;
-		URL defaultUrl = null;
+		//String startURIString = "http://membres.lycos.fr/huchon/index.html";
+		String startURIString = "http://www.univ-mlv.fr/index.php";
+		URI startURI = null;
+		int maxDepth = 3;
 		int maxDLHtml = 4;
 		int maxDLLink = 4;
-		int maxDepth = 8;
-		String defaultUrlString = "http://membres.lycos.fr/huchon/index.html";
-		String defaultPathString = "C:/TEMP/";
-		
+		String destDirectory = "C:/TEMP";
+		//TODO: creer un repertoire avec le nom du projet
 		
 		try {
-			defaultUrl = new URL(defaultUrlString);			
-		} catch (MalformedURLException e) {		
+			startURI = new URI(startURIString);
+		} catch (URISyntaxException e) {
 			System.err.println(e);
-		}
-				
+			//TODO: générer une erreur et quitter programme ici
+		}			
 		
-		jHoover = new JHoover(defaultUrl, maxDLHtml, maxDLLink, maxDepth, defaultUrl, defaultPathString);
-		//add the file pointed by startURL in the downloadList from the downloadManager
-		downloadManager.addURL(defaultUrl, 0);
+		jHoover = new JHoover(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
+		//add the file pointed by startURI in the downloadList from the downloadManager
+		downloadManager.addURI(startURI, 0);
 		downloadManager.run();
 		
-		/*
-		JFrame frame = new JFrame("JHoover -- The Papuch's Web Hoover");
-		//initialisation of the Frame
-		initFrame(frame);
-		frame.setVisible(true);
-		*/
 		
+//		JFrame frame = new JFrame("JHoover -- The Papuch's Web Hoover");
+//		//initialisation of the Frame
+//		initFrame(frame);
+//		frame.setVisible(true);
 	}
 
-	private static void initFrame(JFrame frame) {
-		frame.setSize(new Dimension(800, 600));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
+//	private static void initFrame(JFrame frame) {
+//		frame.setSize(new Dimension(800, 600));
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//	}
 }
