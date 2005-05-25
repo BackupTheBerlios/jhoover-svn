@@ -57,6 +57,7 @@ public class WebFile {
 		InputStream inputStream = null;
 		byte[] buffer = new byte[4096];
 		int nbBytes = 0;
+		int progressionInPercent = 0;
 		String localPath = destDirectory + uri.getPath();
 		
 		
@@ -64,7 +65,7 @@ public class WebFile {
 		 * Open the connexion
 		 */
 		try {
-			connection = (HttpURLConnection) uri.toURL().openConnection();  //TODO: porc, peut-on faire autrement?
+			connection = (HttpURLConnection) uri.toURL().openConnection();
 			connection.connect();
 		} catch (IOException e) {			
 			System.err.println(e);
@@ -92,6 +93,7 @@ public class WebFile {
 			if (!file.getParentFile().exists()) {
 				if (!file.getParentFile().mkdirs()) {
 					throw new IOException("Cannot create ancestor directories: '" + localPath + "'");
+					//TODO: voir si on quitte le programme ou pas
 				}
 			}
 			
@@ -113,6 +115,10 @@ public class WebFile {
 			while (nbBytes > 0) {
 				try {
 					fileOutputStream.write(buffer, 0, nbBytes);
+					downloadedSize += nbBytes;
+					progressionInPercent = downloadedSize * 100 / realSize;
+//					System.out.print(" "  + percentProgression);
+					//TODO: voir ce que l'on fait du pourcentage de progression
 				} catch (IOException e) {
 					System.err.println(e);
 				}
@@ -133,8 +139,6 @@ public class WebFile {
 			} catch (IOException e) {
 				System.err.println(e);
 			}
-			//TODO: voir pour la taille du fichier et pour les pourcentages de progression
-			downloadedSize = realSize;
 			return true;
 		}
 		return false;
@@ -160,7 +164,7 @@ public class WebFile {
 	 * @return true if the download can begin, false else
 	 */
 	private boolean canBeDownloaded(HttpURLConnection connection) {
-		//TODO: voir s'il faut ajouter des codes ou pas
+		//TODO: voir s'il faut ajouter des codes de retour ou pas
 		try {
 			switch (connection.getResponseCode()) {
 			case 200:
@@ -185,9 +189,7 @@ public class WebFile {
 		Parser parser;
 		Node [] images;
 		try {
-			//TODO: voir pour le port
-			//parser = new Parser (defaultHost + ":" + uri.getPort() + uri.getPath());
-			parser = new Parser (defaultHost + uri.getPath());
+			parser = new Parser(defaultHost + uri.getPath());
 			images = parser.extractAllNodesThatAre (ImageTag.class);
 			for (int i = 0; i < images.length; i++)
 			{
@@ -197,11 +199,12 @@ public class WebFile {
 					new URI(imageTag.getImageURL());	
 					linkList.put(imageTag.getImageURL(), depthParent+1);
 				} catch (URISyntaxException e) {
-					System.err.println("Lien non valide: " + imageTag.getImageURL());
-					//TODO: voir ce que l'on fait ce cette erreur
+					System.err.println("INVILID URI: " + imageTag.getImageURL());
+					//TODO: voir ce que l'on fait de cette erreur
 				}
 			}
-			parser = new Parser (defaultHost + uri.getPath());
+
+			parser = new Parser(defaultHost + uri.getPath());
 			ObjectFindingVisitor visitor = new ObjectFindingVisitor (LinkTag.class);
 			parser.visitAllNodesWith (visitor);
 			Node[] links = visitor.getTags ();
@@ -214,7 +217,7 @@ public class WebFile {
 					URI u = new URI(linkTag.getLink());
 					linkList.put(linkTag.getLink(), depthParent+1);
 				} catch (URISyntaxException e) {
-					System.err.println("Lien non valide: " + linkTag.getLink());
+					System.err.println("INVILID URI: " + linkTag.getLink());
 					//TODO: voir ce que l'on fait ce cette erreur
 				}
 			}

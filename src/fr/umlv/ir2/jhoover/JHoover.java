@@ -23,20 +23,33 @@ public class JHoover {
 	 */
 	public static void main(String[] args) {
 		JHoover jHoover;
-		//String startURIString = "http://membres.lycos.fr/huchon/index.html";
-		String startURIString = "http://www.univ-mlv.fr/index.php";
+		String startURIString = "http://membres.lycos.fr/huchon/index.html";
+//		String startURIString = "http://www.univ-mlv.fr/index.php";
+//		String startURIString = "http://amb-mfg-intra2k:8399/index.asp";
+//		String startURIString = "http://amb-mfg-intra01:8011/exploit/default.asp";
 		URI startURI = null;
-		int maxDepth = 3;
+		int maxDepth = 5;
 		int maxDLHtml = 4;
 		int maxDLLink = 4;
 		String destDirectory = "C:/TEMP";
-		//TODO: creer un repertoire avec le nom du projet
+//		String projectName = "univ";  //TODO: verifier eventuellement que le nom du projet ne finisse pas par "/"
+		String projectName = "huchon";
+//		String projectName = "amb";
+//		String projectName = "cdcatalog";
+
+		//adds the project name in the path
+		if (destDirectory.endsWith("/")) {
+			destDirectory = destDirectory + projectName; 
+		} else {
+			destDirectory = destDirectory + "/" + projectName; 
+		}
 		
 		try {
 			startURI = new URI(startURIString);
 		} catch (URISyntaxException e) {
 			System.err.println(e);
-			//TODO: générer une erreur et quitter programme ici
+			System.out.println("Exiting the program...");
+			System.exit(0);
 		}			
 		
 		jHoover = new JHoover(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
