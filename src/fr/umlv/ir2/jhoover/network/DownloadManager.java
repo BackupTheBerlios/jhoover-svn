@@ -4,12 +4,8 @@
  */
 package fr.umlv.ir2.jhoover.network;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * @author Romain Papuchon
@@ -17,9 +13,12 @@ import java.util.Iterator;
  * Manage the download
  */
 public class DownloadManager implements Runnable {
-	private ArrayList<WebFile> webFileToDownload;
-	private ArrayList<WebFile> webFileDownloaded;
-	//private ArrayList<WebFile> webFileInDownloading;
+	private ArrayList<WebFile> htmlFileToDownload;
+	private ArrayList<WebFile> linkedFileToDownload;
+//	private ArrayList<WebFile> htmlFileDownloaded;
+//	private ArrayList<WebFile> linkedFileDownloaded;
+	private ArrayList<WebFile> htmlFileInDownloading;
+	private ArrayList<WebFile> linkedFileInDownloading;
 	private ArrayList<String> discoveredURI; 
 	private int maxDLHtml;
 	private int maxDLLink;
@@ -34,131 +33,125 @@ public class DownloadManager implements Runnable {
 	 * Creates a DownloadManager
 	 */
 	public DownloadManager(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory) {
-		webFileToDownload = new ArrayList<WebFile>();
-		webFileDownloaded = new ArrayList<WebFile>();
-		//webFileInDownloading = new ArrayList<WebFile>();
-		discoveredURI = new ArrayList<String>();
+		this.htmlFileToDownload = new ArrayList<WebFile>();
+		this.linkedFileToDownload = new ArrayList<WebFile>();
+		this.htmlFileInDownloading = new ArrayList<WebFile>();
+		this.linkedFileInDownloading = new ArrayList<WebFile>();
+//		this.htmlFileDownloaded = new ArrayList<WebFile>();
+//		this.linkedFileDownloaded = new ArrayList<WebFile>();
+		this.discoveredURI = new ArrayList<String>();
 		this.maxDLHtml = maxDLHtml;
 		this.maxDLLink = maxDLLink;
-		currentDLHtml = 0;
-		currentDLLink = 0;
+		this.currentDLHtml = 0;
+		this.currentDLLink = 0;
 		this.maxDepth = maxDepth;
 		this.startURI = startURI;
 		this.destDirectory = destDirectory;
 	}
 	
+	
 	/*
 	 * Thread to download files
 	 * 
-	 * Take all the webFile contained in the webFileToDownload list and download them  
+	 * Take all the webFile contained in the htmlFileToDownload list and download them  
 	 */
 	public void run() {
-		// TODO Voir s'il faut ajouter la liste webFileInDownloading
 		String defaultHost;
-		
-		
-		if (startURI.getPort() > 0) {
-			defaultHost = startURI.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + startURI.getHost() + ":" + startURI.getPort();
+	
+		if (this.startURI.getPort() > 0) {
+			defaultHost = this.startURI.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.startURI.getHost() + ":" + this.startURI.getPort();
 		} else {
-			defaultHost = startURI.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + startURI.getHost();
+			defaultHost = this.startURI.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.startURI.getHost();
 		}
 		
-		
-		while(webFileToDownload.size() > 0) {
-			boolean downloadedFile = false;
-			WebFile webFile = webFileToDownload.get(0);
-			URI webFileUri = webFile.getURI();
-			String webFileHostURI;
+		DownloadAndParseFile downloadFile;
+		WebFile webFile;
+		while(this.htmlFileToDownload.isEmpty() == false || this.linkedFileToDownload.isEmpty() == false || this.htmlFileInDownloading.isEmpty() == false || this.linkedFileInDownloading.isEmpty() == false) {
+//			System.out.println("...NEW...");
+//			System.out.println("currentDLHtml: " + currentDLHtml);
+//			System.out.println("currentDLLink: " + currentDLLink);
 			
-			if (webFileUri.getPort() > 0) {
-				webFileHostURI = webFileUri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + webFileUri.getHost() + ":" + webFileUri.getPort();
-			} else {
-				webFileHostURI = webFileUri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + webFileUri.getHost();
+			if (this.currentDLHtml < this.maxDLHtml && this.htmlFileToDownload.isEmpty() == false) {
+				webFile = this.htmlFileToDownload.get(0);
+				this.htmlFileToDownload.remove(0);
+				this.htmlFileInDownloading.add(webFile);
+				//start a new download of Html File in a new Thread
+				downloadFile = new DownloadAndParseFile(this, webFile, defaultHost, this.destDirectory);
+				Thread htmlThread = new Thread(downloadFile);
+				htmlThread.start();
+				this.currentDLHtml++;
 			}
 			
-			//download the webFile
-			System.out.println("--Downloading: " + webFileHostURI + webFileUri.getPath() + " - depth: " + webFile.getDepth());
+			if (this.currentDLLink < this.maxDLLink && this.linkedFileToDownload.isEmpty() == false) {
+				webFile = this.linkedFileToDownload.get(0);
+				this.linkedFileToDownload.remove(0);
+				this.linkedFileInDownloading.add(webFile);
+				//start a new download of Linked File in a new Thread
+				downloadFile = new DownloadAndParseFile(this, webFile, defaultHost, this.destDirectory);
+				Thread linkThread = new Thread(downloadFile);
+				linkThread.start();
+				this.currentDLLink++;
+			}
 			
-			//filter the links which have not the same host
-			//TODO: voir si on dl les liens exterieurs (peut etre une option dans la config) => je pense que non
-			if (webFileHostURI.equals(defaultHost)) {
-				try {
-					downloadedFile = webFile.download(destDirectory);
-				} catch (IOException e1) {
-					System.err.println(e1);
-				}
-				
-				//delete the webFile from the list to download
-				webFileToDownload.remove(webFile);
-				
-				if (downloadedFile) {
-					//add the webFile in the list of downloaded 
-					webFileDownloaded.add(webFile); //TODO: est ce je vais m'en servir?
-					//parsing of the webFile if it is a HTML document
-					if (webFile.getContentType().contains(HtmlConstants.TEXT_HTML)) {
-						System.out.println("------parsing: " + destDirectory + webFileUri.getPath());
-						HashMap<String,Integer> links = webFile.parseHtml(webFile.getDepth(), defaultHost);
-						Iterator<String> it = links.keySet().iterator();
-						while (it.hasNext()) {
-							String keyURI;
-							keyURI = it.next();
-							int valueDepth = links.get(keyURI);
-							//add with addURI in the DownloadManager queue
-							URI u = null;
-							try {
-								u = new URI(keyURI);
-								//TODO: voir pour le port: je ne pense pas que ce soit necessaire ici...
-								if (u.getScheme() != null && u.getHost() != null && u.getPath() != null) {
-									addURI(u, valueDepth);
-								} else {
-									if (u.getPort() > 0) {
-										System.err.println("INVALID URI: " + u.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + u.getHost() + ":" + u.getPort() + u.getPath());
-									} else {
-										System.err.println("INVALID URI: " + u.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + u.getHost() + u.getPath());
-									}
-									//TODO: essayer de corriger le path plutot que de ne pas telecharger le fichier ?
-								}
-							} catch (URISyntaxException e) {						
-								System.err.println(e);
-							}
-						}
-					}
-				}
-			} else {
-				//it is not the same web site or the same protocol
-				System.err.println(webFileHostURI + " / " + defaultHost + ": NOT THE SAME HOST OR THE SAME PROTOCOL");
-				//TODO: voir ce que l'on fait de cet affichage sur stderr
-				//delete the webFile from the list to download
-				webFileToDownload.remove(webFile);
+			//TODO: tmp, a voir
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
+		
+//		System.out.println("...FIN...");
+//		System.out.println("currentDLHtml: " + currentDLHtml);
+//		System.out.println("currentDLLink: " + currentDLLink);
 	}
-
+	
+	
 	/*
 	 * Add a webFile in the queue if it hasn't been already downloaded 
 	 */
-	public void addURI(URI uri, int depth) {
+	public void addHtmlFile(URI uri, int depth) {
 		//creates the webFile according to the URI 
 		if (!isUriAlreadyDownloaded(uri)) {
 			//verification if the depth is good
-			if (depth <= maxDepth) {
+			if (depth <= this.maxDepth) {
 				if (uri.getPort() > 0) {
-					discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + ":" + uri.getPort() + uri.getPath());
+					this.discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + ":" + uri.getPort() + uri.getPath());
 				} else {
-					discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + uri.getPath());
+					this.discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + uri.getPath());
 				}
-				webFileToDownload.add(new WebFile(uri, depth));
+				this.htmlFileToDownload.add(new WebFile(uri, depth));
 			}
 		}
 	}
+	
+	
+	/*
+	 * Add a webFile in the queue if it hasn't been already downloaded 
+	 */
+	public void addLinkedFile(URI uri, int depth) {
+		//creates the webFile according to the URI 
+		if (!isUriAlreadyDownloaded(uri)) {
+			//verification if the depth is good
+			if (depth <= this.maxDepth) {
+				if (uri.getPort() > 0) {
+					this.discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + ":" + uri.getPort() + uri.getPath());
+				} else {
+					this.discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + uri.getPath());
+				}
+				this.linkedFileToDownload.add(new WebFile(uri, depth));
+			}
+		}
+	}
+	
 	
 	/*
 	 * Return true if the WebFile has been already downloaded or if we shoutd not try to download it, else false
 	 */
 	public boolean isUriAlreadyDownloaded(URI uri) {
 		String discoveredURIString;
-		for (int i=0; i<discoveredURI.size(); i++) {
-			discoveredURIString = discoveredURI.get(i);//.getPath();
+		for (int i=0; i<this.discoveredURI.size(); i++) {
+			discoveredURIString = this.discoveredURI.get(i);
 			if (uri.getPort() > 0) {
 				if (discoveredURIString.compareTo(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + ":" + uri.getPort() + uri.getPath()) == 0){
 					return true;
@@ -168,6 +161,36 @@ public class DownloadManager implements Runnable {
 					return true;
 				}
 			}
+		}
+		return false;
+	}
+	
+	public void removeHtmlFileFromInDownloading(WebFile webFile) {
+		this.htmlFileInDownloading.remove(webFile);
+	}
+	
+	public void removeLinkedWebFileFromInDownloading(WebFile webFile) {
+		this.htmlFileInDownloading.remove(webFile);
+	}
+	
+	public void endDownloadHtml(WebFile webFile) {
+		this.currentDLHtml--;
+		this.htmlFileInDownloading.remove(webFile);
+//		this.htmlFileDownloaded.add(webFile);
+	}
+	
+	public void endDownloadLink(WebFile webFile) {
+		this.currentDLLink--;
+		this.linkedFileInDownloading.remove(webFile);
+//		this.linkedFileDownloaded.add(webFile);
+	}
+
+	/*
+	 * Tests if the webFile is a linked File or not
+	 */
+	public boolean isALinkedFile(WebFile webFile) {
+		if (this.linkedFileInDownloading.contains(webFile)) {
+			return true;
 		}
 		return false;
 	}

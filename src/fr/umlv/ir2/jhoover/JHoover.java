@@ -28,7 +28,7 @@ public class JHoover {
 //		String startURIString = "http://amb-mfg-intra2k:8399/index.asp";
 //		String startURIString = "http://amb-mfg-intra01:8011/exploit/default.asp";
 		URI startURI = null;
-		int maxDepth = 5;
+		int maxDepth = 6;
 		int maxDLHtml = 4;
 		int maxDLLink = 4;
 		String destDirectory = "C:/TEMP";
@@ -54,8 +54,9 @@ public class JHoover {
 		
 		jHoover = new JHoover(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
 		//add the file pointed by startURI in the downloadList from the downloadManager
-		downloadManager.addURI(startURI, 0);
-		downloadManager.run();
+		downloadManager.addHtmlFile(startURI, 0);
+		Thread downloadManagerThread = new Thread(downloadManager);
+		downloadManagerThread.start();
 		
 		
 //		JFrame frame = new JFrame("JHoover -- The Papuch's Web Hoover");
