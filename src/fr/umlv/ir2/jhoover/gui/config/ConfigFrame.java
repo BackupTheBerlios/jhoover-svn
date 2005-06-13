@@ -29,16 +29,13 @@ import fr.umlv.ir2.jhoover.util.JHooverConfiguration;
  *
  */
 public class ConfigFrame extends JFrame{
-
 	//Configuration of jHoover
 	JHooverConfiguration configuration;
-	
 	
 	public ConfigFrame(String title) {
 		super(title);
 		setdesign();
 		configuration = JHooverConfiguration.getInstance();
-		configuration.load();
 		addFields();
 		this.setVisible(true);
 	}

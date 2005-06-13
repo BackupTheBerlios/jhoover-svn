@@ -39,7 +39,6 @@ public class ConfigFrame_old extends JFrame{
 		super(title);
 		setdesign();
 		configuration = JHooverConfiguration.getInstance();
-		configuration.load();
 		addFields();
 	}
 

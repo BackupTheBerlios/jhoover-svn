@@ -12,6 +12,7 @@ import fr.umlv.ir2.jhoover.network.DownloadManager;
  * @author Romain Papuchon 
  */
 public class JHoover {
+	//manage the download
 	private static DownloadManager downloadManager;
 	
 	public JHoover(int maxDLHtml, int maxDLLink, int maxDepth, URI startURI, String destDirectory) {		

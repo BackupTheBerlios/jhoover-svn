@@ -33,6 +33,7 @@ public class JHooverConfiguration {
 	private JHooverConfiguration(String configFile) {
 		try {
 			configuration = new XMLConfiguration(new File(configFile));
+			configuration.load();
 		} catch (ConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -168,15 +169,6 @@ public class JHooverConfiguration {
 	public void save() {
 		try {
 			configuration.save();
-		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void load() {
-		try {
-			configuration.load(CONFIG_FILE);
 		} catch (ConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
