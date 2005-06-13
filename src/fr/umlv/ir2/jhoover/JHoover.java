@@ -3,6 +3,7 @@ package fr.umlv.ir2.jhoover;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import fr.umlv.ir2.jhoover.gui.config.ConfigFrame;
 import fr.umlv.ir2.jhoover.network.DownloadManager;
 
 /** 
@@ -22,21 +23,13 @@ public class JHoover {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		JHoover jHoover;
-		String startURIString = "http://membres.lycos.fr/huchon/index.html";
-//		String startURIString = "http://www.univ-mlv.fr/index.php";
-//		String startURIString = "http://amb-mfg-intra2k:8399/index.asp";
-//		String startURIString = "http://amb-mfg-intra01:8011/exploit/default.asp";
-		URI startURI = null;
-		int maxDepth = 6;
-		int maxDLHtml = 4;
-		int maxDLLink = 4;
-		String destDirectory = "C:/TEMP";
-//		String projectName = "univ";  //TODO: verifier eventuellement que le nom du projet ne finisse pas par "/"
-		String projectName = "huchon";
-//		String projectName = "amb";
-//		String projectName = "cdcatalog";
+		//Configuration Frame
+		ConfigFrame configFrame = new ConfigFrame("Configuration of jHoover");
+	}
 
+	public static void startDownload(String projectName, String startURIString, String destDirectory, int maxDepth, int maxDLHtml, int maxDLLink, String regExp) {
+		//TODO: utiliser la RegExp
+		URI startURI = null;
 		//adds the project name in the path
 		if (destDirectory.endsWith("/")) {
 			destDirectory = destDirectory + projectName; 
@@ -52,21 +45,10 @@ public class JHoover {
 			System.exit(0);
 		}			
 		
-		jHoover = new JHoover(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
+		new JHoover(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
 		//add the file pointed by startURI in the downloadList from the downloadManager
 		downloadManager.addHtmlFile(startURI, 0);
 		Thread downloadManagerThread = new Thread(downloadManager);
 		downloadManagerThread.start();
-		
-		
-//		JFrame frame = new JFrame("JHoover -- The Papuch's Web Hoover");
-//		//initialisation of the Frame
-//		initFrame(frame);
-//		frame.setVisible(true);
 	}
-
-//	private static void initFrame(JFrame frame) {
-//		frame.setSize(new Dimension(800, 600));
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//	}
 }

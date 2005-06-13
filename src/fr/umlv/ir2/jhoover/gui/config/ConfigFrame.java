@@ -6,16 +6,22 @@ package fr.umlv.ir2.jhoover.gui.config;
 
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 
+import fr.umlv.ir2.jhoover.JHoover;
 import fr.umlv.ir2.jhoover.util.JHooverConfiguration;
 
 /**
@@ -27,12 +33,14 @@ public class ConfigFrame extends JFrame{
 	//Configuration of jHoover
 	JHooverConfiguration configuration;
 	
+	
 	public ConfigFrame(String title) {
 		super(title);
 		setdesign();
 		configuration = JHooverConfiguration.getInstance();
 		configuration.load();
 		addFields();
+		this.setVisible(true);
 	}
 
 	private void setdesign() {
@@ -43,105 +51,155 @@ public class ConfigFrame extends JFrame{
 	
 	private void addFields() {
 		//TODO: revoir la position des objets
-		GridBagLayout gridBagLayout = new GridBagLayout();
+		GridLayout gridLayout = new GridLayout(3,1,1,1);
 		Container container = getContentPane();
-		container.setLayout(gridBagLayout);	
-		GridBagConstraints constraints = new GridBagConstraints();
-
+		container.setLayout(gridLayout);
 		
 		/*
-		 * Logo
+		 * Declaration
 		 */
+		final JLabel lProjectName;
+		final JLabel lUrl;
+		final JLabel lDepth;
+		final JLabel lRegexp;
+		final JLabel lNbHtmlThread;
+		final JLabel lNbLinkedThread;
+		final JLabel lDestDirectory;
+		final JTextField rProjectName;
+		final JTextField rUrl;
+		final JTextField rRegexp;
+		final JTextField rDestDirectory;
+		final JSpinner rDepth;
+		final JSpinner rNbHtmlThread;
+		final JSpinner rNbLinkedThread;
+		JButton buttonOk;
+		JButton buttonCancel;
+		JButton buttonReset;
+		
+		
+		/*
+		 * Logo Panel
+		 */
+		JPanel logoPanel = new JPanel();
+		GridLayout logoLayout = new GridLayout(1,1,1,1);
+		logoPanel.setLayout(logoLayout);
 		//TODO: faire marcher ce logo
-//		Icon logo = new ImageIcon("fr/umlv/ir2/jhoover/gui/ressources/jHoover.bmp", "jHoover");
-//		JLabel jLogo = new JLabel("Image and Text", logo, SwingConstants.CENTER);
-//		container.add(jLogo);
+		Icon logo = new ImageIcon("C:/Romain/Workspace/jHoover/src/fr/umlv/ir2/jhoover/gui/ressources/jHoover.jpg");
+		JLabel jLogo = new JLabel(logo, SwingConstants.CENTER);
+		logoPanel.add(jLogo);
+		
 		
 		
 		/*
-		 * Left Column
+		 * Fields Panel
 		 */
-		constraints.anchor = GridBagConstraints.EAST;
-		constraints.insets = new Insets(5,15,5,15);
-		constraints.gridx = 0;
-		constraints.gridy = 0;
+		JPanel fieldsPanel = new JPanel();
+		GridLayout fieldsLayout = new GridLayout(7,2,1,1);
+		fieldsPanel.setLayout(fieldsLayout);
 		
-		JLabel lUrl = new JLabel("URL:");
-		gridBagLayout.setConstraints(lUrl, constraints);
-		container.add(lUrl);
+		lProjectName = new JLabel("Project Name:");
+		fieldsPanel.add(lProjectName);
+		rProjectName = new JTextField(configuration.getProjectName());
+		fieldsPanel.add(rProjectName);
 		
-		constraints.gridy++;
-		JLabel lDepth = new JLabel("depth:");
-		gridBagLayout.setConstraints(lDepth, constraints);
-		container.add(lDepth);
+		lUrl = new JLabel("URL:");
+		fieldsPanel.add(lUrl);
+		rUrl = new JTextField(configuration.getUrl());
+		fieldsPanel.add(rUrl);
 		
-		constraints.gridy++;
-		JLabel lRegexp = new JLabel("Regular Expression:");
-		gridBagLayout.setConstraints(lRegexp, constraints);
-		container.add(lRegexp);
+		lDepth = new JLabel("depth:");
+		fieldsPanel.add(lDepth);
+		rDepth = new JSpinner(new SpinnerNumberModel((int)configuration.getDepth(), 1, 50, 1));
+		fieldsPanel.add(rDepth);
 		
-		constraints.gridy++;
-		JLabel lNbHtmlThread = new JLabel("Simultaneous Html download:");
-		gridBagLayout.setConstraints(lNbHtmlThread, constraints);
-		container.add(lNbHtmlThread);
+		lRegexp = new JLabel("Regular Expression:");
+		fieldsPanel.add(lRegexp);
+		rRegexp = new JTextField(configuration.getRegExp());
+		fieldsPanel.add(rRegexp);
 		
-		constraints.gridy++;
-		JLabel lNbLinkedThread = new JLabel("Simultaneous Linked download:");
-		gridBagLayout.setConstraints(lNbLinkedThread, constraints);
-		container.add(lNbLinkedThread);
+		lNbHtmlThread = new JLabel("Simultaneous Html download:");
+		fieldsPanel.add(lNbHtmlThread);
+		rNbHtmlThread = new JSpinner(new SpinnerNumberModel((int)configuration.getNbHtmlThread(), 1, 50, 1));
+		fieldsPanel.add(rNbHtmlThread);
 		
-		constraints.gridy++;
-		JLabel lDestDirectory = new JLabel("Destination Directory:");
-		gridBagLayout.setConstraints(lDestDirectory, constraints);
-		container.add(lDestDirectory);
+		lNbLinkedThread = new JLabel("Simultaneous Linked download:");
+		fieldsPanel.add(lNbLinkedThread);
+		rNbLinkedThread = new JSpinner(new SpinnerNumberModel((int)configuration.getNbLinkedThread(), 1, 50, 1));
+		fieldsPanel.add(rNbLinkedThread);
+		
+		lDestDirectory = new JLabel("Destination Directory:");
+		fieldsPanel.add(lDestDirectory);
+		rDestDirectory = new JTextField(configuration.getDestDirectory());
+		//JFileChooser rDestDirectory = new JFileChooser();
+		//TODO: voir pour mettre le JFileChooser
+		fieldsPanel.add(rDestDirectory);		
+		
+
+		/*
+		 * Buttons
+		 */
+		JPanel buttonPanel = new JPanel(); 
+		GridLayout buttonLayout = new GridLayout(1,3,1,1);
+		buttonPanel.setLayout(buttonLayout);
+		
+		//Ok Button
+		buttonOk = new JButton("OK");
+		buttonOk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Saving configuration...");
+				String projectName = rProjectName.getText();
+				String url = rUrl.getText();
+				Integer depth = (Integer)rDepth.getValue();
+				String regExp = rRegexp.getText();
+				Integer nbHtmlThread = (Integer)rNbHtmlThread.getValue();
+				Integer nbLinkedThread = (Integer)rNbLinkedThread.getValue();
+				String destDirectory = rDestDirectory.getText();
+				configuration.setProjectName(projectName);
+				configuration.setUrl(url);
+				configuration.setDepth(depth);
+				configuration.setRegExp(regExp);
+				configuration.setNbHtmlThread(nbHtmlThread);
+				configuration.setNbLinkedThread(nbLinkedThread);
+				configuration.setDestDirectory(destDirectory);
+				configuration.save();
+				JHoover.startDownload(projectName, url, destDirectory, depth, nbHtmlThread, nbLinkedThread, regExp);
+				dispose();
+			}
+		});
+		buttonPanel.add(buttonOk);
+		
+		//Cancel Button
+		buttonCancel = new JButton("Cancel");
+		buttonCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Cancelling...");
+				dispose();
+			}
+		});
+		buttonPanel.add(buttonCancel);
+		
+		//Reset Button
+		buttonReset = new JButton("Reset");
+		buttonReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Resetting fields...");
+				rUrl.setText(configuration.getUrl());
+				rProjectName.setText(configuration.getProjectName());
+				rDepth.setValue(configuration.getDepth());
+				rRegexp.setText(configuration.getRegExp());
+				rNbHtmlThread.setValue(configuration.getNbHtmlThread());
+				rNbLinkedThread.setValue(configuration.getNbLinkedThread());
+				rDestDirectory.setText(configuration.getDestDirectory());
+			}
+		});
+		buttonPanel.add(buttonReset);
 		
 		
 		/*
-		 * Right Column
-		 */		 
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.gridx = 1;
-		constraints.gridwidth = GridBagConstraints.RELATIVE;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.weightx = 1;
-
-		
-		constraints.gridy = 0;
-		JTextField rUrl = new JTextField(configuration.getUrl());
-		gridBagLayout.setConstraints(rUrl, constraints);
-		container.add(rUrl);
-		
-		constraints.gridy = 2;
-		JTextField rRegexp = new JTextField(configuration.getRegExp());
-		gridBagLayout.setConstraints(rRegexp, constraints);
-		container.add(rRegexp);
-		
-		constraints.gridy = 5;
-		JTextField rDestDirectory = new JTextField(configuration.getDestDirectory());
-//		JFileChooser rDestDirectory = new JFileChooser(new File("C:\\TMP"));
-		//TODO: voir pour mettre le JFileChooser
-		gridBagLayout.setConstraints(rDestDirectory, constraints);
-		container.add(rDestDirectory);
-		
-		
-		
-		constraints.gridwidth = GridBagConstraints.NONE;
-		constraints.fill = GridBagConstraints.NONE;
-		
-		constraints.gridy = 1;		
-		JSpinner rDepth = new JSpinner(new SpinnerNumberModel((int)configuration.getDepth(), 1, 50, 1));
-		gridBagLayout.setConstraints(rDepth, constraints);
-		container.add(rDepth);		
-
-		constraints.gridy = 3;
-		JSpinner rNbHtmlThread = new JSpinner(new SpinnerNumberModel((int)configuration.getNbHtmlThread(), 1, 50, 1));
-		gridBagLayout.setConstraints(rNbHtmlThread, constraints);
-		container.add(rNbHtmlThread);		
-		
-		constraints.gridy = 4;
-		JSpinner rNbLinkedThread = new JSpinner(new SpinnerNumberModel((int)configuration.getNbLinkedThread(), 1, 50, 1));
-		gridBagLayout.setConstraints(rNbLinkedThread, constraints);
-		container.add(rNbLinkedThread);
-		
+		 * Adding the panels to the container
+		 */
+		container.add(logoPanel);
+		container.add(fieldsPanel);
+		container.add(buttonPanel);
 	}
 }

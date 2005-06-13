@@ -51,6 +51,14 @@ public class JHooverConfiguration {
 
 	
 	
+	public void setProjectName(String projectName) {
+		if (projectName != null) {
+			configuration.setProperty("project.name", projectName);
+		} else {
+			configuration.setProperty("project.name", DEFAULT_BLANK_STRING);
+		}
+	}
+	
 	public void setUrl(String url) {
 		if (url != null) {
 			configuration.setProperty("url", url);
@@ -100,6 +108,14 @@ public class JHooverConfiguration {
 	}
 	
 	
+	
+	public String getProjectName() {
+		String projectName = configuration.getString("project.name");
+		if (projectName != null) {
+			return projectName;
+		}
+		return DEFAULT_BLANK_STRING;
+	}
 	
 	public String getUrl() {
 		String url = configuration.getString("url");
