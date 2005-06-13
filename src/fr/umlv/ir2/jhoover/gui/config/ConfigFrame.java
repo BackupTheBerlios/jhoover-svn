@@ -9,14 +9,14 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.io.File;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+
+import fr.umlv.ir2.jhoover.util.JHooverConfiguration;
 
 /**
  * @author Romain Papuchon
@@ -24,9 +24,14 @@ import javax.swing.SpinnerNumberModel;
  */
 public class ConfigFrame extends JFrame{
 
+	//Configuration of jHoover
+	JHooverConfiguration configuration;
+	
 	public ConfigFrame(String title) {
 		super(title);
 		setdesign();
+		configuration = JHooverConfiguration.getInstance();
+		configuration.load();
 		addFields();
 	}
 
@@ -102,17 +107,17 @@ public class ConfigFrame extends JFrame{
 
 		
 		constraints.gridy = 0;
-		JTextField rUrl = new JTextField("TMP - http://www.google.fr");
+		JTextField rUrl = new JTextField(configuration.getUrl());
 		gridBagLayout.setConstraints(rUrl, constraints);
 		container.add(rUrl);
 		
 		constraints.gridy = 2;
-		JTextField rRegexp = new JTextField("TMP - *.*");
+		JTextField rRegexp = new JTextField(configuration.getRegExp());
 		gridBagLayout.setConstraints(rRegexp, constraints);
 		container.add(rRegexp);
 		
 		constraints.gridy = 5;
-		JTextField rDestDirectory = new JTextField("C:\\TMP");
+		JTextField rDestDirectory = new JTextField(configuration.getDestDirectory());
 //		JFileChooser rDestDirectory = new JFileChooser(new File("C:\\TMP"));
 		//TODO: voir pour mettre le JFileChooser
 		gridBagLayout.setConstraints(rDestDirectory, constraints);
@@ -124,20 +129,19 @@ public class ConfigFrame extends JFrame{
 		constraints.fill = GridBagConstraints.NONE;
 		
 		constraints.gridy = 1;		
-		JSpinner rDepth = new JSpinner(new SpinnerNumberModel(5, 0, 50, 1));
+		JSpinner rDepth = new JSpinner(new SpinnerNumberModel((int)configuration.getDepth(), 1, 50, 1));
 		gridBagLayout.setConstraints(rDepth, constraints);
 		container.add(rDepth);		
 
 		constraints.gridy = 3;
-		JSpinner rNbHtmlThread = new JSpinner(new SpinnerNumberModel(5, 0, 50, 1));
+		JSpinner rNbHtmlThread = new JSpinner(new SpinnerNumberModel((int)configuration.getNbHtmlThread(), 1, 50, 1));
 		gridBagLayout.setConstraints(rNbHtmlThread, constraints);
 		container.add(rNbHtmlThread);		
 		
 		constraints.gridy = 4;
-		JSpinner rNbLinkedThread = new JSpinner(new SpinnerNumberModel(5, 0, 50, 1));
+		JSpinner rNbLinkedThread = new JSpinner(new SpinnerNumberModel((int)configuration.getNbLinkedThread(), 1, 50, 1));
 		gridBagLayout.setConstraints(rNbLinkedThread, constraints);
-		container.add(rNbLinkedThread);		
+		container.add(rNbLinkedThread);
+		
 	}
-
-	
 }
