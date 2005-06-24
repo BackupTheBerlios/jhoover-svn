@@ -27,7 +27,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import fr.umlv.ir2.jhoover.network.DownloadManager;
-import fr.umlv.ir2.jhoover.util.JHooverConfiguration;
+import fr.umlv.ir2.jhoover.network.util.JHooverConfiguration;
 
 /**
  * @author Romain Papuchon
