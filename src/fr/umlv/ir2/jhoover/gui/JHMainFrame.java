@@ -14,151 +14,95 @@ import java.awt.event.WindowEvent;
 import java.net.URL;
 
 import javax.swing.JFrame;
-import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
+import fr.umlv.ir2.jhoover.gui.panel.JHMainPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
+import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 
 /**
  * @author Romain Papuchon
  *
  */
-public final class JHMainFrame extends JFrame
-{
+public final class JHMainFrame extends JFrame {
 	private static JHMainFrame INSTANCE = null;
-
-	private static JHrMenuBar menuBar;
+	private static JHMenuBar menuBar;
 	private static JHToolBar toolBar;
 	private static JHMainPanel mainPanel;
-
 	private ActionManager actions;
-	
-	private final static String	WINDOW_TITLE = "JHoover";
 
 	
-	private JHMainFrame ()
-	{
-		super (WINDOW_TITLE);
-		
-		this.actions = new ActionManager();
-		
-		// Modifie l'icone a gauche du titre
+	private JHMainFrame () {
+		super (Labels.MAINFRAME_WINDOW_TITLE_LABEL);
+		actions = new ActionManager();
+		//set the icon from the frame
 		setIcon (Icons.LOGO_URL);
 		
-		// Surcharge le traitement de la fermeture de la fenêtre
+		//perform actions before exiting the application
 		setDefaultCloseOperation (WindowConstants.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter ()
-		{
-			public void windowClosing (WindowEvent e)
-			{
+		addWindowListener(new WindowAdapter () {
+			public void windowClosing (WindowEvent e) {
 				//TODO: faire un traitement (actionManager)
 				System.exit(0);
 			}
 		});
 		
+		//build the Mainframe
 		build();
+		
 		pack();
+		//full screen
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setVisible(true);
 	}
 
 	
-	/**
-	 * Method very useful to get the instance of the main Frame of the
-	 * application
-	 * 
-	 * @return BossMainFrame the instance of the main frame
-	 */
-	public static JHMainFrame getInstance ()
-	{
-		if (INSTANCE == null)
+
+	public static JHMainFrame getInstance() {
+		if (INSTANCE == null) {
 			INSTANCE = new JHMainFrame();
-		
+		}
 		return INSTANCE;
 	}
 
 	
-	/**
-	 * Returns the main TabPane of the application
-	 * 
-	 * @return Returns the MainTabPane.
-	 */
-	public JHMainPanel getMainPanel ()
-	{
+
+	public JHMainPanel getMainPanel() {
 		return mainPanel;
 	}
 
-	/**
-	 * Returns the actions manager of the application
-	 * 
-	 * @return Returns the actions.
-	 */
-	public ActionManager getActions ()
-	{
+
+	public ActionManager getActions() {
 		return this.actions;
 	}
 
-	/**
-	 * Returns the menuBar of the application
-	 * 
-	 * @return Returns the BossMenuBar.
-	 */
-	public JHrMenuBar getMyMenuBar()
-	{
+
+	public JHMenuBar getJHMenuBar() {
 		return menuBar;
 	}
 
-	/**
-	 * Returns the ToolBar of the application
-	 * 
-	 * @return Returns the Boss ToolBar.
-	 */
-	public JHToolBar getMyToolBar()
-	{
+
+	public JHToolBar getJHToolBar() {
 		return toolBar;
 	}
 
 	
-	
-	/**
-	 * To build the frame
-	 */
-	public void build ()
-	{
+	public void build() {
 		mainPanel = new JHMainPanel();
-		toolBar 	= new JHToolBar();
-		menuBar 	= new JHrMenuBar();
-
+		toolBar = new JHToolBar();
+		menuBar = new JHMenuBar();
 		// Add the menu bar
 		setJMenuBar(menuBar);
-
 		// Add the toolbar
 		getContentPane().add(toolBar, BorderLayout.NORTH);
-
 		// Add the main panel
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 	}
 	
-	/**
-	 * This method enables to set the Icon of the Frame and to put the icon
-	 * passed in parameter
-	 * @param logoFile LOGO to place in the title bar
-	 */
-	private void setIcon (final URL logoFile)
-	{
+
+	private void setIcon(final URL logoFile) {
 		Image icone = Toolkit.getDefaultToolkit().getImage(logoFile);
 		setIconImage(icone);
-	}
-	
-
-	/**
-	 * 
-	 * 
-	 * @param args
-	 */
-	public static void main (final String [] args)
-	{
-		JHMainFrame.getInstance();	
 	}
 }

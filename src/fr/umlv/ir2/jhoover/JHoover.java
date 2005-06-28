@@ -1,11 +1,16 @@
+/**
+ * jHoover - UMLV IR2
+ * UI Project
+ */
 package fr.umlv.ir2.jhoover;
 
-import fr.umlv.ir2.jhoover.gui.config.ConfigFrame;
+import fr.umlv.ir2.jhoover.gui.dialog.ConfigDialog;
+import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /** 
- * Main Class
- * 
  * @author Romain Papuchon 
+ * 
+ * 
  */
 public class JHoover {
 	/**
@@ -14,6 +19,6 @@ public class JHoover {
 	 */
 	public static void main(String[] args) {
 		//Configuration Frame
-		ConfigFrame configFrame = new ConfigFrame("Configuration of jHoover");
+		ConfigDialog configFrame = new ConfigDialog(Labels.CONFIG_JHOOVER_LABEL);
 	}
 }

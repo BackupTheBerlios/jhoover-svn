@@ -1,5 +1,7 @@
-
-
+/**
+ * jHoover - UMLV IR2
+ * UI Project
+ */
 package fr.umlv.ir2.jhoover.gui;
 
 import javax.swing.Action;
@@ -10,9 +12,10 @@ import javax.swing.SwingConstants;
 
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
-
-
-
+/**
+ * @author Romain Papuchon
+ *
+ */
 public final class JHToolBar extends JToolBar
 {
 
@@ -20,25 +23,28 @@ public final class JHToolBar extends JToolBar
 	 * Default constructor which builds the toolbar with all its components and
 	 * actions associated
 	 */
-	public JHToolBar ()
-	{
+	public JHToolBar () {
 		super(SwingConstants.HORIZONTAL);
 		setFloatable(false);
-		addButtonToToolBar (ActionManager.helpAction, Labels.HELP_LABEL);
-		add (Box.createHorizontalStrut (10));
+		addButtonToToolBar(ActionManager.newAction, Labels.NEW_LABEL);
+		addButtonToToolBar(ActionManager.stopAction, Labels.STOP_LABEL);
+		addButtonToToolBar(ActionManager.pauseAction, Labels.PAUSE_LABEL);
+		addButtonToToolBar(ActionManager.resumeAction, Labels.RESUME_LABEL);
+		addButtonToToolBar(ActionManager.closeAction, Labels.CLOSE_LABEL);
+		addButtonToToolBar(ActionManager.exitAction, Labels.EXIT_LABEL);
+		addButtonToToolBar(ActionManager.addFilterAction, Labels.ADD_FILTER_LABEL);
+		addButtonToToolBar(ActionManager.modifyFilterAction, Labels.MODIFY_FILTER_LABEL);
+		addButtonToToolBar(ActionManager.deleteFilterAction, Labels.DELETE_FILTER_LABEL);
+		addButtonToToolBar(ActionManager.findAction, Labels.FIND_LABEL);
+		addButtonToToolBar(ActionManager.configurationAction, Labels.CONFIGURATION_LABEL);
+		addButtonToToolBar(ActionManager.colorsAction, Labels.COLORS_LABEL);
+		addButtonToToolBar(ActionManager.helpAction, Labels.HELP_LABEL);
+//		add (Box.createHorizontalStrut (10));
 	}
 
-	
-	/**
-	 * Add an action to the ToolBar in a JButton with a toolTipText
-	 * 
-	 * @param action action to execute
-	 * @param szToolTipText tooltip for the button
-	 */
-	private void addButtonToToolBar (final Action action, final String szToolTipText)
-	{
+	private void addButtonToToolBar (final Action action, final String toolTip) {
 		JButton myButton = new JButton (action);
-		myButton.setToolTipText (szToolTipText);
+		myButton.setToolTipText (toolTip);
 		myButton.setText (null);
 		myButton.setBorderPainted (false);
 		add(Box.createHorizontalStrut (5));

@@ -1,11 +1,7 @@
-/*
- * File : Actions.java 
- * Created : 6 janv. 2005
- * ====================================== 
- * PROJET BOSS ("http://boss.berlios.de")
- * ======================================
+/**
+ * jHoover - UMLV IR2
+ * UI Project
  */
-
 package fr.umlv.ir2.jhoover.gui;
 
 import java.awt.event.ActionEvent;
@@ -14,77 +10,110 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JToolBar;
 
+import fr.umlv.ir2.jhoover.gui.dialog.RegexpDialog;
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
- * This class manages every actions of the application
- * 
- * @author bricou 
+ * @author Romain Papuchon
+ *
  */
 public final class ActionManager
 {
 	private static final Set myActions = new HashSet();
 
-//	private static abstract class MyAction extends AbstractAction
-//	{
-//		/**
-//		 * Default constructor for an action that can not be activated or unactivated
-//		 * 
-//		 * @param szLabel
-//		 * @param icon
-//		 */
-//		public MyAction(String szLabel, Icon icon)
-//		{
-//			super(szLabel, icon);
-//			myActions.add(this);
-//		}
-//		
-//		/**
-//		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-//		 */
-//		public abstract void actionPerformed (ActionEvent e);
-//	}
-
-
-
-	/**
-	 * Action to quit the application
-	 */
-	public static final Action	quitAction = new AbstractAction(Labels.QUIT_LABEL, Icons.QUIT_ICON) {
-		public void actionPerformed (ActionEvent e) {
-			//TODO: quit
-			System.out.println("Quit action");
+	public static final Action newAction = new AbstractAction(Labels.NEW_LABEL, Icons.NEW_ICON) {
+		public void actionPerformed (ActionEvent e) {			
+			System.out.println("New action");
 		}
 	};
 
-	/**
-	 * Action to display the help, according to the current view
-	 */
+	public static final Action stopAction = new AbstractAction(Labels.STOP_LABEL, Icons.STOP_ICON) {
+		public void actionPerformed (ActionEvent e) {			
+			System.out.println("Stop action");
+		}
+	};
+	
+	public static final Action pauseAction = new AbstractAction(Labels.PAUSE_LABEL, Icons.PAUSE_ICON) {
+		public void actionPerformed (ActionEvent e) {			
+			System.out.println("Pause action");
+		}
+	};
+	
+	public static final Action resumeAction = new AbstractAction(Labels.RESUME_LABEL, Icons.RESUME_ICON) {
+		public void actionPerformed (ActionEvent e) {			
+			System.out.println("Resume action");
+		}
+	};
+	
+	public static final Action closeAction = new AbstractAction(Labels.CLOSE_LABEL, Icons.CLOSE_ICON) {
+		public void actionPerformed (ActionEvent e) {			
+			System.out.println("Close action");
+		}
+	};
+	
+	public static final Action	exitAction = new AbstractAction(Labels.EXIT_LABEL, Icons.EXIT_ICON) {
+		public void actionPerformed (ActionEvent e) {
+			System.out.println("Exit action");
+		}
+	};
+
+	public static final Action	addFilterAction = new AbstractAction(Labels.ADD_FILTER_LABEL, Icons.ADD_FILTER_ICON) {
+		public void actionPerformed (ActionEvent e) {
+			System.out.println("Add Filter action");
+			new RegexpDialog();
+		}
+	};
+	
+	public static final Action	modifyFilterAction = new AbstractAction(Labels.MODIFY_FILTER_LABEL, Icons.MODIFY_FILTER_ICON) {
+		public void actionPerformed (ActionEvent e) {
+			System.out.println("Modify Filter action");
+		}
+	};
+	
+	public static final Action	deleteFilterAction = new AbstractAction(Labels.DELETE_FILTER_LABEL, Icons.DELETE_FILTER_ICON) {
+		public void actionPerformed (ActionEvent e) {
+			System.out.println("Delete Filter action");
+		}
+	};
+	
+	public static final Action	findAction = new AbstractAction(Labels.FIND_LABEL, Icons.FIND_ICON) {
+		public void actionPerformed (ActionEvent e) {
+			System.out.println("Find action");
+		}
+	};
+	
+	public static final Action	configurationAction = new AbstractAction(Labels.CONFIGURATION_LABEL, Icons.CONFIGURATION_ICON) {
+		public void actionPerformed (ActionEvent e) {
+			System.out.println("Configuration action");
+		}
+	};
+	
+	public static final Action	colorsAction = new AbstractAction(Labels.COLORS_LABEL, Icons.COLORS_ICON) {
+		public void actionPerformed (ActionEvent e) {
+			System.out.println("Colors action");
+		}
+	};
+	
 	public static final Action helpAction = new AbstractAction (Labels.HELP_LABEL, Icons.HELP_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			//TODO: help
 			System.out.println("Help action");
 		}
 	};
 
-	
-	/**
-	 * Action for displaying the preferences
-	 */
-	public static final Action	preferences = new AbstractAction (Labels.PREFERENCES_LABEL, null) {
+	public static final Action aboutAction = new AbstractAction (Labels.ABOUT_LABEL, Icons.ABOUT_ICON) {
 		public void actionPerformed (ActionEvent e) {
-//			TODO: preference
-			System.out.println("Preference action");
+			System.out.println("About action");
 		}
 	};
 
+	
+
 	public static final Action visibleToolBar = new AbstractAction () {
 		public void actionPerformed (ActionEvent arg0) {
-			final JHToolBar toolBar = JHMainFrame.getInstance().getMyToolBar ();
-			if (!JHMainFrame.getInstance().getMyMenuBar().getToolBarItem().isSelected ()) {
+			final JHToolBar toolBar = JHMainFrame.getInstance().getJHToolBar ();
+			if (!JHMainFrame.getInstance().getJHMenuBar().getToolBarItem().isSelected ()) {
 				toolBar.setVisible (false);
 			}
 			else {
