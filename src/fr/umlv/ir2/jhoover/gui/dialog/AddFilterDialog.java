@@ -2,9 +2,8 @@
  * jHoover - UMLV IR2
  * UI Project
  */
-package fr.umlv.ir2.jhoover.gui.panel;
+package fr.umlv.ir2.jhoover.gui.dialog;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,21 +16,21 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+import fr.umlv.ir2.jhoover.gui.ActionManager;
+import fr.umlv.ir2.jhoover.gui.JHMainFrame;
+import fr.umlv.ir2.jhoover.gui.tool.Labels;
+
 /**
  * @author Romain Papuchon
  *
  */
-public class JHRegexpPanel extends JPanel {
+public class AddFilterDialog extends AbstractDialog {
 
 	private JTextField regexpTextField;
-
 	
-	/*
-	 * Constructor
-	 */
-	public JHRegexpPanel() {
-		super();
-		add(createPanel());
+	public AddFilterDialog() {
+		super(JHMainFrame.getInstance(), "Add a filter");
+		buildPanel(new JPanel[]{createPanel(), createButtonPanel()});
 	}
 	
 	
@@ -40,42 +39,30 @@ public class JHRegexpPanel extends JPanel {
 	 */
 	private JPanel createPanel() {
 		FormLayout regexpLayout = new FormLayout(
-			    "p, 9dlu, p, 9dlu, p, 9dlu, p", // columns
-			    "p");      						// rows
+			    "p, 9dlu, p", // columns
+			    "p");         // rows
 		PanelBuilder regexpBuilder = new PanelBuilder(regexpLayout);
 		regexpBuilder.setDefaultDialogBorder();
 		
 		JLabel rexexpLabel = new JLabel("Regular Expression");
 		
 		regexpTextField = new JTextField(20);
-		regexpTextField.setSize(new Dimension(10,10));
-		
-		JButton addButton = new JButton("Add a filter");
-		addButton.addActionListener(addAction());
-		
-		JButton helpButton = new JButton("Help");
-		helpButton.addActionListener(helpAction());
 		
 		//Adding the Fields to the builder
 		CellConstraints ccHeader = new CellConstraints();
 		regexpBuilder.add(rexexpLabel,				ccHeader.xy (1,  1));
 		regexpBuilder.add(regexpTextField,			ccHeader.xy (3,  1));
-		regexpBuilder.add(addButton,				ccHeader.xy (5,  1));
-		regexpBuilder.add(helpButton,				ccHeader.xy (7,  1));
 
 		return regexpBuilder.getPanel();
 	};
-	
-	
-	/*
-	 * Add a filter in the DetailledPanel
-	 */
-	private ActionListener addAction() {
+
+
+
+	private ActionListener cancelButtonAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO: voir pour le null + verifier si filtre ok
-				System.out.println("Ajoute un onglet dans DetailledPanel");
-//				JHDetailledPanel.getInstance().addTabPanel(regexpTextField.getText(), null);
+				System.out.println("Cancelling...");
+				dispose();
 			}
 		};
 	}
@@ -92,4 +79,33 @@ public class JHRegexpPanel extends JPanel {
 			}
 		};
 	}
+
+	
+	protected ActionListener validButtonAction() {
+		return ActionManager.okRegexpDialogAction;
+	}
+
+
+	
+	protected JPanel createButtonPanel() {
+		FormLayout buttonLayout = new FormLayout(
+			    "p, 9dlu, p, 9dlu, p",	 // columns
+			    "p");			// rows
+		PanelBuilder buttonBuilder = new PanelBuilder(buttonLayout);
+		buttonBuilder.setDefaultDialogBorder();
+		
+		validButton.setText(Labels.ADD_FILTER_LABEL);
+		
+		JButton helpButton = new JButton("Help");
+		helpButton.addActionListener(helpAction());
+		
+		//Adding the Buttons to the builder
+		CellConstraints ccHeader = new CellConstraints();
+		buttonBuilder.add(validButton,		ccHeader.xy (1,  1));
+		buttonBuilder.add(cancelButton,		ccHeader.xy (3,  1));
+		buttonBuilder.add(helpButton,		ccHeader.xy (5,  1));
+		
+		return buttonBuilder.getPanel();
+	}
+	
 }

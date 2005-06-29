@@ -11,7 +11,12 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import fr.umlv.ir2.jhoover.gui.dialog.RegexpDialog;
+import fr.umlv.ir2.jhoover.gui.dialog.AddFilterDialog;
+import fr.umlv.ir2.jhoover.gui.dialog.DeleteFilterDialog;
+import fr.umlv.ir2.jhoover.gui.dialog.FindFileDialog;
+import fr.umlv.ir2.jhoover.gui.dialog.ModifyFilterDialog;
+import fr.umlv.ir2.jhoover.gui.dialog.RunConfigDialog;
+import fr.umlv.ir2.jhoover.gui.dialog.SetConfigDialog;
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
@@ -25,7 +30,7 @@ public final class ActionManager
 
 	public static final Action newAction = new AbstractAction(Labels.NEW_LABEL, Icons.NEW_ICON) {
 		public void actionPerformed (ActionEvent e) {			
-			System.out.println("New action");
+			new RunConfigDialog(Labels.RUN_JHOOVER_LABEL);
 		}
 	};
 
@@ -61,32 +66,40 @@ public final class ActionManager
 
 	public static final Action	addFilterAction = new AbstractAction(Labels.ADD_FILTER_LABEL, Icons.ADD_FILTER_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			System.out.println("Add Filter action");
-			new RegexpDialog();
+			new AddFilterDialog();
 		}
 	};
 	
 	public static final Action	modifyFilterAction = new AbstractAction(Labels.MODIFY_FILTER_LABEL, Icons.MODIFY_FILTER_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			System.out.println("Modify Filter action");
+			new ModifyFilterDialog();
 		}
 	};
 	
 	public static final Action	deleteFilterAction = new AbstractAction(Labels.DELETE_FILTER_LABEL, Icons.DELETE_FILTER_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			System.out.println("Delete Filter action");
+			new DeleteFilterDialog();
 		}
 	};
+
+	public static final Action	okRegexpDialogAction = new AbstractAction() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO: voir pour le null + verifier si filtre ok
+				System.out.println("Ajoute un onglet dans DetailledPanel");
+//				JHDetailledPanel.getInstance().addTabPanel(regexpTextField.getText(), null);
+			}
+	};
+	
 	
 	public static final Action	findAction = new AbstractAction(Labels.FIND_LABEL, Icons.FIND_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			System.out.println("Find action");
+			new FindFileDialog();
 		}
 	};
 	
 	public static final Action	configurationAction = new AbstractAction(Labels.CONFIGURATION_LABEL, Icons.CONFIGURATION_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			System.out.println("Configuration action");
+			new SetConfigDialog(Labels.CONFIGURATION_OF_JHOOVER_LABEL);
 		}
 	};
 	

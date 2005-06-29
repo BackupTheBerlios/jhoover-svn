@@ -4,6 +4,8 @@
  */
 package fr.umlv.ir2.jhoover.gui.panel;
 
+import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -19,9 +21,11 @@ public class JHDetailledPanel extends JTabbedPane {
 
 	private static JHDetailledPanel INSTANCE = null;
 	
+	private ArrayList<String> tabbedList;
 	
 	public JHDetailledPanel() {
 		super();
+		tabbedList = new ArrayList<String>();
 		addTabPanel("ALL", new JButton("ALL"));
 		addTabPanel("HTML", new JButton("HTML"));
 		
@@ -46,6 +50,14 @@ public class JHDetailledPanel extends JTabbedPane {
 	 */
 	public void addTabPanel(String label, JComponent component) {
 		addTab(label, component);
+		tabbedList.add(label);
+	}
+
+	/*
+	 * Returns the list of the tabs
+	 */
+	public ArrayList<String> getTabbedList() {
+		return tabbedList;
 	}
 	
 	

@@ -36,9 +36,9 @@ public class JHMenuBar extends JMenuBar
 		fileMenu.setMnemonic ('F');
 		fileMenu.add (createItem (ActionManager.newAction, KeyStroke.getKeyStroke (KeyEvent.VK_N , ActionEvent.CTRL_MASK)));
 		fileMenu.addSeparator ();
-		fileMenu.add (createItem (ActionManager.stopAction, KeyStroke.getKeyStroke (KeyEvent.VK_C , ActionEvent.CTRL_MASK)));
-		fileMenu.add (createItem (ActionManager.pauseAction, KeyStroke.getKeyStroke (KeyEvent.VK_P , ActionEvent.CTRL_MASK)));
 		fileMenu.add (createItem (ActionManager.resumeAction, KeyStroke.getKeyStroke (KeyEvent.VK_R , ActionEvent.CTRL_MASK)));
+		fileMenu.add (createItem (ActionManager.pauseAction, KeyStroke.getKeyStroke (KeyEvent.VK_P , ActionEvent.CTRL_MASK)));
+		fileMenu.add (createItem (ActionManager.stopAction, KeyStroke.getKeyStroke (KeyEvent.VK_C , ActionEvent.CTRL_MASK)));
 		fileMenu.addSeparator ();
 		fileMenu.add (createItem (ActionManager.closeAction, KeyStroke.getKeyStroke (KeyEvent.VK_W , ActionEvent.CTRL_MASK)));
 		fileMenu.add (createItem (ActionManager.exitAction, KeyStroke.getKeyStroke (KeyEvent.VK_Q , ActionEvent.CTRL_MASK)));

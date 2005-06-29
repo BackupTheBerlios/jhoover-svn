@@ -5,7 +5,6 @@
 package fr.umlv.ir2.jhoover.gui;
 
 import javax.swing.Action;
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -27,11 +26,11 @@ public final class JHToolBar extends JToolBar
 		super(SwingConstants.HORIZONTAL);
 		setFloatable(false);
 		addButtonToToolBar(ActionManager.newAction, Labels.NEW_LABEL);
-		addButtonToToolBar(ActionManager.stopAction, Labels.STOP_LABEL);
-		addButtonToToolBar(ActionManager.pauseAction, Labels.PAUSE_LABEL);
 		addButtonToToolBar(ActionManager.resumeAction, Labels.RESUME_LABEL);
-		addButtonToToolBar(ActionManager.closeAction, Labels.CLOSE_LABEL);
-		addButtonToToolBar(ActionManager.exitAction, Labels.EXIT_LABEL);
+		addButtonToToolBar(ActionManager.pauseAction, Labels.PAUSE_LABEL);
+		addButtonToToolBar(ActionManager.stopAction, Labels.STOP_LABEL);
+//		addButtonToToolBar(ActionManager.closeAction, Labels.CLOSE_LABEL);
+//		addButtonToToolBar(ActionManager.exitAction, Labels.EXIT_LABEL);
 		addButtonToToolBar(ActionManager.addFilterAction, Labels.ADD_FILTER_LABEL);
 		addButtonToToolBar(ActionManager.modifyFilterAction, Labels.MODIFY_FILTER_LABEL);
 		addButtonToToolBar(ActionManager.deleteFilterAction, Labels.DELETE_FILTER_LABEL);
@@ -39,7 +38,6 @@ public final class JHToolBar extends JToolBar
 		addButtonToToolBar(ActionManager.configurationAction, Labels.CONFIGURATION_LABEL);
 		addButtonToToolBar(ActionManager.colorsAction, Labels.COLORS_LABEL);
 		addButtonToToolBar(ActionManager.helpAction, Labels.HELP_LABEL);
-//		add (Box.createHorizontalStrut (10));
 	}
 
 	private void addButtonToToolBar (final Action action, final String toolTip) {
@@ -47,7 +45,6 @@ public final class JHToolBar extends JToolBar
 		myButton.setToolTipText (toolTip);
 		myButton.setText (null);
 		myButton.setBorderPainted (false);
-		add(Box.createHorizontalStrut (5));
 		add(myButton);
 	}
 }

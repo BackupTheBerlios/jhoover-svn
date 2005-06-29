@@ -7,16 +7,23 @@ package fr.umlv.ir2.jhoover.gui.dialog;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
+import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
  * @author Romain Papuchon
@@ -24,11 +31,18 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public abstract class AbstractDialog extends JDialog {
 	
+	protected JButton cancelButton;
+	protected JButton validButton;
+	
+	
 	/*
 	 * Constructor
 	 */
 	public AbstractDialog(JFrame parent, String title) {
 		super(parent, title, true);
+		cancelButton = new JButton(Labels.CANCEL_LABEL);
+		validButton = new JButton();
+		initButtonAction();
 		setdesign();		
 	}
 	
@@ -49,26 +63,37 @@ public abstract class AbstractDialog extends JDialog {
 		Dimension dim = Toolkit.getDefaultToolkit ().getScreenSize ();
 		setLocation(dim.width / 2 - getWidth() / 2 , dim.height / 2 - getHeight() / 2);
 	}
-
-
+	
+	
+	
 	/*
 	 * Add the Panels to the content Pane of the JDialog
 	 */
-	protected void buildPanel(JPanel builderPanel, JPanel buttonPanel) {
+	protected void buildPanel(JPanel[] allJPanel) {
 		Container container = getContentPane();
+		int nbPanel = allJPanel.length;
+		String rows = "";
+		String single = "center:p";		
+		
+		for (int i=0; i<nbPanel; i++) {
+			if (i!=0) {
+				rows = rows + ", ";
+			}
+			rows = rows + single;
+		}
+
 		FormLayout configLayout = new FormLayout(
-			    "center:p", 							// columns
-			    "center:p, center:p");    	// rows
+				single, 		// columns
+			    rows);    		// rows
 		PanelBuilder configFields = new PanelBuilder(configLayout);
 		configFields.setDefaultDialogBorder();
 		
-		
 		//Adding the panels to the contentpane
 		CellConstraints ccFields = new CellConstraints();
-		configFields.add(builderPanel,   ccFields.xy (1,  1));
-		configFields.add(buttonPanel,  	 ccFields.xy (1,  2));
+		for (int i=0; i<nbPanel; i++) {
+			configFields.add(allJPanel[i], ccFields.xy (1, i+1));
+		}
 		setContentPane(configFields.getPanel());
-		
 		pack();
 		center();
 		setVisible(true);
@@ -76,52 +101,34 @@ public abstract class AbstractDialog extends JDialog {
 	
 	
 	
-	/*
-	 * Add the Panels to the content Pane of the JDialog
-	 */
-	protected void buildPanel(JPanel headerPanel, JPanel builderPanel, JPanel buttonPanel) {
-		Container container = getContentPane();
-		FormLayout configLayout = new FormLayout(
-			    "center:p", 							// columns
-			    "center:p, center:p, center:p");    	// rows
-		PanelBuilder configFields = new PanelBuilder(configLayout);
-		configFields.setDefaultDialogBorder();
+	
+	private void initButtonAction() {
+		ActionListener actionListenerEscape = new ActionListener() {
+			public void actionPerformed (ActionEvent actionEvent) {
+				dispose();
+			}
+		};
+		//add the cancel action to the cancel button
+		cancelButton.addActionListener(actionListenerEscape);
 		
-		
-		//Adding the panels to the contentpane
-		CellConstraints ccFields = new CellConstraints();
-		configFields.add(headerPanel,    ccFields.xy (1,  1));
-		configFields.add(builderPanel,   ccFields.xy (1,  2));
-		configFields.add(buttonPanel,  	 ccFields.xy (1,  3));
-		setContentPane(configFields.getPanel());
-		
-		
-//		//Escape => cancel Button
-//		ActionListener actionListenerEscape = new ActionListener() {
-//			public void actionPerformed (ActionEvent actionEvent) {
-//				cancelButtonAction();
-//			}
-//		};
-//		KeyStroke strokeEscape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE , 0);
-//		((JComponent)getContentPane()).registerKeyboardAction(actionListenerEscape , strokeEscape , JComponent.WHEN_IN_FOCUSED_WINDOW);
-//
-//
-//		//Enter => OK Button
-//		ActionListener actionListenerValidate = new ActionListener() {
-//			public void actionPerformed (ActionEvent actionEvent) {
-//				okButtonAction();
-//			}
-//		};
-//		KeyStroke strokeEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER , 0);
-//		((JComponent)getContentPane()).registerKeyboardAction(actionListenerValidate , strokeEnter , JComponent.WHEN_IN_FOCUSED_WINDOW);
+		//add the cancel action to the escape key
+		KeyStroke strokeEscape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE , 0);
+		((JComponent)getContentPane()).registerKeyboardAction(actionListenerEscape , strokeEscape , JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-		pack();
-		center();
-		setVisible(true);
+		//TODO: voir pourquoi les actions avec les touches Enter et Escape ne fonctionnent pas
+		
+		
+		ActionListener actionListenerValidate = validButtonAction();
+		
+		//add the valid action to the validate button
+		validButton.addActionListener(actionListenerValidate);
+		
+		//add the valid action to the enter key
+		KeyStroke strokeEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER , 0);
+		((JComponent)getContentPane()).registerKeyboardAction(actionListenerValidate , strokeEnter , JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
-
-	protected abstract ActionListener okButtonAction();
+	abstract ActionListener validButtonAction();
 	
-	protected abstract ActionListener cancelButtonAction();
+	abstract JPanel createButtonPanel();
 }

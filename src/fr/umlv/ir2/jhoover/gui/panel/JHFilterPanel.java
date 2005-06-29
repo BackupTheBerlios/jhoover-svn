@@ -1,4 +1,8 @@
-package fr.umlv.ir2.jhoover.gui.dialog;
+/**
+ * jHoover - UMLV IR2
+ * UI Project
+ */
+package fr.umlv.ir2.jhoover.gui.panel;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -13,15 +17,21 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-import fr.umlv.ir2.jhoover.gui.JHMainFrame;
-
-public class RegexpDialog extends AbstractDialog {
+/**
+ * @author Romain Papuchon
+ *
+ */
+public class JHFilterPanel extends JPanel {
 
 	private JTextField regexpTextField;
+
 	
-	public RegexpDialog() {
-		super(JHMainFrame.getInstance(), "Add a filter");
-		buildPanel(createPanel(), createButton());
+	/*
+	 * Constructor
+	 */
+	public JHFilterPanel() {
+		super();
+		add(createPanel());
 	}
 	
 	
@@ -55,49 +65,6 @@ public class RegexpDialog extends AbstractDialog {
 
 		return regexpBuilder.getPanel();
 	};
-
-
-	private JPanel createButton() {
-		FormLayout buttonLayout = new FormLayout(
-			    "p, 9dlu, p",	 // columns
-			    "p");			// rows
-		PanelBuilder buttonBuilder = new PanelBuilder(buttonLayout);
-		buttonBuilder.setDefaultDialogBorder();
-		
-		JButton okButton = new JButton("OK");
-		okButton.addActionListener(okButtonAction());
-		JButton cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(cancelButtonAction());
-		
-		//Adding the Buttons to the builder
-		CellConstraints ccHeader = new CellConstraints();
-		buttonBuilder.add(okButton,				ccHeader.xy (1,  1));
-		buttonBuilder.add(cancelButton,			ccHeader.xy (3,  1));
-
-		return buttonBuilder.getPanel();
-	}
-
-
-	protected ActionListener okButtonAction() {
-		return new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//TODO: voir pour le null + verifier si filtre ok
-				System.out.println("Ajoute un onglet dans DetailledPanel");
-//				JHDetailledPanel.getInstance().addTabPanel(regexpTextField.getText(), null);
-			}
-		};
-	}
-
-	
-	protected ActionListener cancelButtonAction() {
-		return new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Cancelling...");
-				dispose();
-			}
-		};
-	}
-
 	
 	
 	/*
@@ -125,5 +92,4 @@ public class RegexpDialog extends AbstractDialog {
 			}
 		};
 	}
-	
 }

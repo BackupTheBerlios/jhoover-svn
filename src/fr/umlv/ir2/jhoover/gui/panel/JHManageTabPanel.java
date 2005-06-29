@@ -15,7 +15,7 @@ import javax.swing.JPanel;
  */
 public class JHManageTabPanel extends JPanel {
 
-	private final JHRegexpPanel regexpPanel = new JHRegexpPanel();
+	private final JHFilterPanel regexpPanel = new JHFilterPanel();
 	private final JHDetailledPanel detailledPanel = new JHDetailledPanel();
 	
 	public JHManageTabPanel() {
