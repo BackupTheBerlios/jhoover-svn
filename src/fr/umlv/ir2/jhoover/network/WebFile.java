@@ -92,5 +92,9 @@ public class WebFile {
 //	public void setBeginDate(Date beginDate) {
 //		this.beginDate = beginDate;
 //	}
+	
+	public String getPath() {
+		return getURI().getPath();
+	}
 }
 
