@@ -20,4 +20,8 @@ public class JHMainPanel extends JSplitPane {
 		super(JSplitPane.HORIZONTAL_SPLIT, discoveryPanel, manageTabPanel);
 		setOneTouchExpandable(true);
 	}
+	
+	public static JHDiscoveryPanel getDiscoveryPanel() {
+		return discoveryPanel;
+	}
 }

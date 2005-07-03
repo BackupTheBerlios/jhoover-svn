@@ -16,11 +16,11 @@ import javax.swing.JPanel;
 public class JHManageTabPanel extends JPanel {
 
 	private final JHFilterPanel regexpPanel = new JHFilterPanel();
-	private final JHDetailledPanel detailledPanel = new JHDetailledPanel();
+//	private final JHDetailledPanel detailledPanel = new JHDetailledPanel();
 	
 	public JHManageTabPanel() {
 		setLayout(new BorderLayout());
-		add(regexpPanel, BorderLayout.NORTH);
-		add(detailledPanel, BorderLayout.CENTER);
+		add(this.regexpPanel, BorderLayout.NORTH);
+		add(JHDetailledPanel.getInstance(), BorderLayout.CENTER);
 	}
 }

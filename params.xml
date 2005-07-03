@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-<depth>2</depth>
+<depth>4</depth>
 <destination>
 <directory>C:/TEMP/</directory>
 </destination>

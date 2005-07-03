@@ -23,7 +23,7 @@ public class JHoover {
 	 */
 	public static void main(String[] args) {
 		//Running JHoover Frame
-		RunConfigDialog configDialog = new RunConfigDialog(Labels.RUN_JHOOVER_LABEL);
+		new RunConfigDialog(Labels.RUN_JHOOVER_LABEL);
 	}
 	
 	

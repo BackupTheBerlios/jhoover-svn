@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JPanel;
 
 import fr.umlv.ir2.jhoover.gui.dialog.AddFilterDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.DeleteFilterDialog;
@@ -17,6 +18,7 @@ import fr.umlv.ir2.jhoover.gui.dialog.FindFileDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.ModifyFilterDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.RunConfigDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.SetConfigDialog;
+import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
@@ -86,7 +88,7 @@ public final class ActionManager
 			public void actionPerformed(ActionEvent arg0) {
 				//TODO: voir pour le null + verifier si filtre ok
 				System.out.println("Ajoute un onglet dans DetailledPanel");
-//				JHDetailledPanel.getInstance().addTabPanel(regexpTextField.getText(), null);
+//				JHDetailledPanel.getInstance().addTabPanel(regexpTextField.getText(), new JPanel());
 			}
 	};
 	

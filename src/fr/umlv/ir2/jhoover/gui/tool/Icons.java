@@ -34,6 +34,7 @@ public final class Icons {
 	public static final Icon EXIT_ICON = new ImageIcon (getURL ("exit_16x16.png"));
 	public static final URL LOGO_URL	= getURL ("jHoover_125x123.jpg");
 	public static final Icon ABOUT_ICON = new ImageIcon (getURL ("about_16x16.png"));
+	public static final Icon LEAF_ICON = new ImageIcon (getURL ("leaf_16x16.png"));
 	
 
 	public static URL getURL (final String image) {

@@ -35,7 +35,7 @@ public final class JHMainFrame extends JFrame {
 	
 	private JHMainFrame () {
 		super (Labels.MAINFRAME_WINDOW_TITLE_LABEL);
-		actions = new ActionManager();
+		this.actions = new ActionManager();
 		//set the icon from the frame
 		setIcon (Icons.LOGO_URL);
 		

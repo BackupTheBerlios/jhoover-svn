@@ -6,7 +6,6 @@ package fr.umlv.ir2.jhoover.gui.panel;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -15,13 +14,14 @@ import javax.swing.JScrollPane;
  *
  */
 public class JHDiscoveryPanel extends JPanel {
+	private JPanel scrollablePanel;
 	public JHDiscoveryPanel() {
-		super(new BorderLayout ());
-		
-		JPanel panel = new JPanel();
-		for (int i=0; i<100; i++){
-			panel.add(new JButton("" + i));
-		}
-		add(new JScrollPane(panel), BorderLayout.CENTER);
+		super(new BorderLayout());
+		this.scrollablePanel = new JPanel();
+		add(new JScrollPane(this.scrollablePanel), BorderLayout.CENTER);
+	}
+	
+	public JPanel getScrollablePanel() {
+		return this.scrollablePanel;
 	}
 }

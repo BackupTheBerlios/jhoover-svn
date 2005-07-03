@@ -32,11 +32,10 @@ public class JHooverConfiguration {
 	 */
 	private JHooverConfiguration(String configFile) {
 		try {
-			configuration = new XMLConfiguration(new File(configFile));
-			configuration.load();
+			this.configuration = new XMLConfiguration(new File(configFile));
+			this.configuration.load();
 		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 	}
 
@@ -54,64 +53,64 @@ public class JHooverConfiguration {
 	
 	public void setProjectName(String projectName) {
 		if (projectName != null) {
-			configuration.setProperty("project.name", projectName);
+			this.configuration.setProperty("project.name", projectName);
 		} else {
-			configuration.setProperty("project.name", DEFAULT_BLANK_STRING);
+			this.configuration.setProperty("project.name", DEFAULT_BLANK_STRING);
 		}
 	}
 	
 	public void setUrl(String url) {
 		if (url != null) {
-			configuration.setProperty("url", url);
+			this.configuration.setProperty("url", url);
 		} else {
-			configuration.setProperty("url", DEFAULT_BLANK_STRING);
+			this.configuration.setProperty("url", DEFAULT_BLANK_STRING);
 		}
 	}
 
 	public void setDepth(Integer depth) {
 		if (depth > 0) {
-			configuration.setProperty("depth", depth);
+			this.configuration.setProperty("depth", depth);
 		} else {
-			configuration.setProperty("depth", DEFAULT_DEPTH);
+			this.configuration.setProperty("depth", DEFAULT_DEPTH);
 		}
 	}
 	
 	public void setRegExp(String regExp) {
 		if (regExp != null) {
-			configuration.setProperty("regexp", regExp);
+			this.configuration.setProperty("regexp", regExp);
 		} else {
-			configuration.setProperty("regexp", DEFAULT_BLANK_STRING);
+			this.configuration.setProperty("regexp", DEFAULT_BLANK_STRING);
 		}
 	}
 	
 	public void setNbHtmlThread(Integer nbHtmlThread) {
 		if (nbHtmlThread > 0) {
-			configuration.setProperty("nb.html.thread", nbHtmlThread);
+			this.configuration.setProperty("nb.html.thread", nbHtmlThread);
 		} else {
-			configuration.setProperty("nb.html.thread", DEFAULT_NB_THREAD);
+			this.configuration.setProperty("nb.html.thread", DEFAULT_NB_THREAD);
 		}
 	}
 
 	public void setNbLinkedThread(Integer nbLinkedThread) {
 		if (nbLinkedThread > 0) {
-			configuration.setProperty("nb.linked.thread", nbLinkedThread);
+			this.configuration.setProperty("nb.linked.thread", nbLinkedThread);
 		} else {
-			configuration.setProperty("nb.linked.thread", DEFAULT_NB_THREAD);	
+			this.configuration.setProperty("nb.linked.thread", DEFAULT_NB_THREAD);	
 		}
 	}
 	
 	public void setDestDirectory(String destDirectory) {
 		if (destDirectory != null) {
-			configuration.setProperty("destination.directory", destDirectory);
+			this.configuration.setProperty("destination.directory", destDirectory);
 		} else {
-			configuration.setProperty("destination.directory", DEFAULT_BLANK_STRING);
+			this.configuration.setProperty("destination.directory", DEFAULT_BLANK_STRING);
 		}
 	}
 	
 	
 	
 	public String getProjectName() {
-		String projectName = configuration.getString("project.name");
+		String projectName = this.configuration.getString("project.name");
 		if (projectName != null) {
 			return projectName;
 		}
@@ -119,7 +118,7 @@ public class JHooverConfiguration {
 	}
 	
 	public String getUrl() {
-		String url = configuration.getString("url");
+		String url = this.configuration.getString("url");
 		if (url != null) {
 			return url;
 		}
@@ -127,7 +126,7 @@ public class JHooverConfiguration {
 	}
 
 	public Integer getDepth() {
-		Integer depth = configuration.getInt("depth");
+		Integer depth = this.configuration.getInt("depth");
 		if (depth != null) {
 			return depth;
 		}
@@ -135,7 +134,7 @@ public class JHooverConfiguration {
 	}
 	
 	public String getRegExp() {
-		String regExp = configuration.getString("regexp");
+		String regExp = this.configuration.getString("regexp");
 		if (regExp != null) {
 			return regExp;
 		}
@@ -143,7 +142,7 @@ public class JHooverConfiguration {
 	}
 	
 	public Integer getNbHtmlThread() {
-		Integer nbHtmlThread = configuration.getInt("nb.html.thread");
+		Integer nbHtmlThread = this.configuration.getInt("nb.html.thread");
 		if (nbHtmlThread != null) {
 			return nbHtmlThread;
 		}
@@ -151,7 +150,7 @@ public class JHooverConfiguration {
 	}
 
 	public Integer getNbLinkedThread() {
-		Integer nbLinkedThread = configuration.getInt("nb.linked.thread");
+		Integer nbLinkedThread = this.configuration.getInt("nb.linked.thread");
 		if (nbLinkedThread != null) {
 			return nbLinkedThread;
 		}
@@ -159,7 +158,7 @@ public class JHooverConfiguration {
 	}
 	
 	public String getDestDirectory() {
-		String destDirectory = configuration.getString("destination.directory");
+		String destDirectory = this.configuration.getString("destination.directory");
 		if (destDirectory != null) {
 			return destDirectory;
 		}
@@ -168,7 +167,7 @@ public class JHooverConfiguration {
 
 	public void save() {
 		try {
-			configuration.save();
+			this.configuration.save();
 		} catch (ConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

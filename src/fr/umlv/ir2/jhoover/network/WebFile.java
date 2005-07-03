@@ -9,9 +9,8 @@ import java.net.URI;
 /**
  * @author Romain Papuchon
  *
- * Represents a file
  */
-public class WebFile {
+public abstract class WebFile {
 	private URI uri;
 	private int depth;
 	private String contentType;
@@ -23,7 +22,7 @@ public class WebFile {
 	/*
 	 * Creates a WebFile
 	 */
-	public WebFile(URI uri, int depth) {
+	protected WebFile(URI uri, int depth) {
 		this.uri = uri;
 		this.depth = depth;
 		this.contentType = "";

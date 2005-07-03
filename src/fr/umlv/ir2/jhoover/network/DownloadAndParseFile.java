@@ -58,31 +58,23 @@ public class DownloadAndParseFile implements Runnable {
 		if (webFileHostURI.equals(this.defaultHost)) {
 			boolean downloadedFile = false;
 			try {
-				downloadedFile = download(this.destDirectory);
+				downloadedFile = download();
 			} catch (IOException e1) {
 				System.err.println(e1);
 			}
-			
 			if (downloadedFile) {
 				//parsing of the webFile if it is a HTML document
 				if (this.webFile.getContentType().contains(HtmlConstants.TEXT_HTML)) {
 					System.out.println("------parsing: " + this.destDirectory + webFileUri.getPath());
-					parseHtml(this.webFile.getDepth(), this.defaultHost);
+					parseHtml(this.webFile);
 				}
 			}
-			
 		} else {
 			//it is not the same web site or the same protocol
 			System.err.println(webFileHostURI + " / " + this.defaultHost + ": NOT THE SAME HOST OR THE SAME PROTOCOL");
 		}
 		
-		
-		//TODO: voir si on peut optimiser cela...
-		if (this.downloadManager.isALinkedFile(this.webFile)) {
-			this.downloadManager.endDownloadLink(this.webFile);
-		} else {
-			this.downloadManager.endDownloadHtml(this.webFile);
-		}
+		this.downloadManager.endDownload(this.webFile);
 	}
 	
 	
@@ -90,14 +82,13 @@ public class DownloadAndParseFile implements Runnable {
 	 * Download the file and return the status
 	 * @return true if the file has been downloaded, false else
 	 */
-	public boolean download(String destDirectory) throws IOException {
+	public boolean download() throws IOException {
 		HttpURLConnection connection = null;
 		FileOutputStream fileOutputStream = null;
 		InputStream inputStream = null;
 		byte[] buffer = new byte[4096];
 		int nbBytes = 0;
-		int progressionInPercent = 0;
-		String localPath = destDirectory + this.webFile.getURI().getPath();
+		String localPath = this.destDirectory + this.webFile.getURI().getPath();
 		
 		
 		/*
@@ -149,6 +140,7 @@ public class DownloadAndParseFile implements Runnable {
 				System.err.println(e);
 			}
 			int downloadedSize = 0;
+			int progressionInPercent = 0;
 			while (nbBytes > 0) {
 				try {
 					fileOutputStream.write(buffer, 0, nbBytes);
@@ -220,25 +212,26 @@ public class DownloadAndParseFile implements Runnable {
 	}
 
 
-	public void parseHtml(int depthParent, String defaultHost) {
+	public void parseHtml(WebFile parent) {
 		
+		int depthParent = parent.getDepth();
 		Parser parser;
 		Node [] images;
 		try {
-			parser = new Parser(defaultHost + this.webFile.getURI().getPath());
+			parser = new Parser(this.defaultHost + this.webFile.getURI().getPath());
 			images = parser.extractAllNodesThatAre (ImageTag.class);
 			for (int i = 0; i < images.length; i++)
 			{
 				ImageTag imageTag = (ImageTag)images[i];
 				//System.out.println (imageTag.getImageURI ());
 				try {
-					this.downloadManager.addLinkedFile(new URI(imageTag.getImageURL()), depthParent+1);
+					this.downloadManager.addLinkedFile(new URI(imageTag.getImageURL()), depthParent+1, parent);
 				} catch (URISyntaxException e) {
 					System.err.println("INVILID URI: " + imageTag.getImageURL());
 				}
 			}
 
-			parser = new Parser(defaultHost + this.webFile.getURI().getPath());
+			parser = new Parser(this.defaultHost + this.webFile.getURI().getPath());
 			ObjectFindingVisitor visitor = new ObjectFindingVisitor (LinkTag.class);
 			parser.visitAllNodesWith (visitor);
 			Node[] links = visitor.getTags ();
