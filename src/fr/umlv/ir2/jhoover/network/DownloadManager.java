@@ -7,14 +7,19 @@ package fr.umlv.ir2.jhoover.network;
 import java.net.URI;
 import java.util.ArrayList;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
+import fr.umlv.ir2.jhoover.gui.DetailledJButtonEditor;
+import fr.umlv.ir2.jhoover.gui.DetailledJButtonRenderer;
+import fr.umlv.ir2.jhoover.gui.DetailledJProgressBarRenderer;
+import fr.umlv.ir2.jhoover.gui.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.JDiscoveryTreeNode;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.panel.JHMainPanel;
@@ -44,8 +49,8 @@ public class DownloadManager implements Runnable {
 	//for the graphic
 	private JDiscoveryTreeNode treeRoot;
 	private DefaultTreeModel treeModel;
-	private DefaultListModel listModel;
-	private JList list;
+	private DetailledModel detailledModel;
+	private JTable allTable;
 	
 	
 	/*
@@ -78,11 +83,16 @@ public class DownloadManager implements Runnable {
 		setJTreeFashion(tree);
 		
 		
-		//for the JList
-		this.listModel = new DefaultListModel();
-		this.list = new JList(this.listModel);
-		JHDetailledPanel.getInstance().addTabPanel("ALL", list);
-		//TODO: voir pout HTML
+		//for the JTable
+		this.detailledModel = new DetailledModel();		
+		this.allTable = new JTable(this.detailledModel);
+		DetailledJProgressBarRenderer jProgressBarRenderer = new DetailledJProgressBarRenderer();
+		DetailledJButtonRenderer jButtonRenderer = new DetailledJButtonRenderer();
+		this.allTable.setDefaultRenderer(JButton.class, new DetailledJButtonRenderer());
+//		this.allTable.setDefaultEditor(JButton.class, new DetailledJButtonEditor());
+		this.allTable.setDefaultRenderer(JProgressBar.class, new DetailledJProgressBarRenderer());
+		JHDetailledPanel.getInstance().addTabPanel("ALL", this.allTable);
+		//TODO: voir pour HTML
 		JHDetailledPanel.getInstance().addTabPanel("HTML", new JPanel());
 
 	}
@@ -132,7 +142,7 @@ public class DownloadManager implements Runnable {
 				this.htmlFileToDownload.remove(0);
 				this.htmlFileInDownloading.add(webHtmlFile);
 				//start a new download of Html File in a new Thread
-				downloadFile = new DownloadAndParseFile(this, webHtmlFile, defaultHost, this.destDirectory);
+				downloadFile = new DownloadAndParseFile(this, webHtmlFile, defaultHost, this.destDirectory, detailledModel);
 				Thread htmlThread = new Thread(downloadFile);
 				htmlThread.start();
 				this.currentDLHtml++;
@@ -144,7 +154,7 @@ public class DownloadManager implements Runnable {
 				this.linkedFileToDownload.remove(0);
 				this.linkedFileInDownloading.add(webLinkedFile);
 				//start a new download of Linked File in a new Thread
-				downloadFile = new DownloadAndParseFile(this, webLinkedFile, defaultHost, this.destDirectory);
+				downloadFile = new DownloadAndParseFile(this, webLinkedFile, defaultHost, this.destDirectory, detailledModel);
 				Thread linkThread = new Thread(downloadFile);
 				linkThread.start();
 				this.currentDLLink++;
@@ -184,8 +194,8 @@ public class DownloadManager implements Runnable {
 				JDiscoveryTreeNode node = this.treeRoot.add(webHtmlFile);
 				this.treeModel.nodesWereInserted(this.treeRoot, new int[] {this.treeRoot.getIndex(node)});
 				
-				//add the webHtmlFile in the listModel
-				this.listModel.addElement(webHtmlFile);
+				//add the webHtmlFile in the detailledModel
+				this.detailledModel.addElement(webHtmlFile);
 			}
 		}
 	}
@@ -213,8 +223,8 @@ public class DownloadManager implements Runnable {
 				this.treeModel.nodesWereInserted(parentNode, new int[] {parentNode.getIndex(node)});
 				
 				
-				//add the webHtmlFile in the listModel
-				this.listModel.addElement(webLinkedFile);
+				//add the webHtmlFile in the detailledModel
+				this.detailledModel.addElement(webLinkedFile);
 			}
 		}
 	}

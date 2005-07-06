@@ -20,6 +20,8 @@ import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.ObjectFindingVisitor;
 
+import fr.umlv.ir2.jhoover.gui.DetailledModel;
+
 /**
  * @author Romain Papuchon
  *
@@ -30,14 +32,16 @@ public class DownloadAndParseFile implements Runnable {
 	private WebFile webFile;
 	private String defaultHost;
 	private String destDirectory;
+	private DetailledModel detailledModel;
 	
 
 
-	public DownloadAndParseFile(DownloadManager downloadManager, WebFile webFile, String defaultHost, String destDirectory) {
+	public DownloadAndParseFile(DownloadManager downloadManager, WebFile webFile, String defaultHost, String destDirectory, DetailledModel detailledModel) {
 		this.downloadManager = downloadManager;
 		this.webFile = webFile;
 		this.defaultHost = defaultHost;
 		this.destDirectory = destDirectory;
+		this.detailledModel = detailledModel;
 	}
 
 	
@@ -68,6 +72,12 @@ public class DownloadAndParseFile implements Runnable {
 					System.out.println("------parsing: " + this.destDirectory + webFileUri.getPath());
 					parseHtml(this.webFile);
 				}
+			} else {
+				//error during download, set the progression to (-1)
+				this.webFile.setProgression(-2);
+				//do a fire in the detailledModel
+				int indexInModel = detailledModel.getIndexWebFile(this.webFile);
+				detailledModel.fireTableRowsUpdated(indexInModel, indexInModel);
 			}
 		} else {
 			//it is not the same web site or the same protocol
@@ -103,12 +113,18 @@ public class DownloadAndParseFile implements Runnable {
 
 		//tests the response code
 		if (canBeDownloaded(connection)) {
-			inputStream = connection.getInputStream();
+			try {
+				inputStream = connection.getInputStream();
+			} catch (IOException e2) {
+				System.err.println(e2);
+			}
+			
 			/*
 			 * parameters from the file
 			 */
-			this.webFile.setRealSize(connection.getContentLength());
+			//TODO: le getContentLength ne fonctionne pas pour un fichier HTML => retourne -1
 			this.webFile.setContentType(connection.getContentType());
+			this.webFile.setRealSize(connection.getContentLength());
 //			webFile.setBeginDate(new Date(connection.getDate()));
 			
 			
@@ -140,14 +156,15 @@ public class DownloadAndParseFile implements Runnable {
 				System.err.println(e);
 			}
 			int downloadedSize = 0;
-			int progressionInPercent = 0;
 			while (nbBytes > 0) {
 				try {
 					fileOutputStream.write(buffer, 0, nbBytes);
 					downloadedSize += nbBytes;
-					progressionInPercent = downloadedSize * 100 / this.webFile.getRealSize();
-//					System.out.print(" "  + progressionInPercent);
-					//TODO: voir ce que l'on fait du pourcentage de progression
+					//progression in percent
+					this.webFile.setProgression(downloadedSize * 100 / this.webFile.getRealSize());
+					//do a fire in the detailledModel
+					int indexInModel = detailledModel.getIndexWebFile(this.webFile);
+					detailledModel.fireTableRowsUpdated(indexInModel, indexInModel);
 				} catch (IOException e) {
 					System.err.println(e);
 				}

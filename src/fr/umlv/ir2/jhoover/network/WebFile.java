@@ -15,6 +15,7 @@ public abstract class WebFile {
 	private int depth;
 	private String contentType;
 	private int realSize;
+	private int progression;
 //	private int downloadedSize;
 //	private Date beginDate;
 
@@ -27,6 +28,7 @@ public abstract class WebFile {
 		this.depth = depth;
 		this.contentType = "";
 		this.realSize = -1;
+		progression = 0;
 //		downloadedSize = 0;
 //		this.beginDate = null;
 	}
@@ -94,6 +96,15 @@ public abstract class WebFile {
 	
 	public String getPath() {
 		return getURI().getPath();
+	}
+	
+	
+	public int getProgression() {
+		return progression;
+	}
+	
+	public void setProgression(int progression) {
+		this.progression = progression;
 	}
 }
 

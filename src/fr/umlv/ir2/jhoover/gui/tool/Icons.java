@@ -19,6 +19,7 @@ import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 public final class Icons {
 	private static final String	IMAGE_PATH	= "ressources/";
 	public static final Icon JHOOVER_ICON = new ImageIcon (getURL ("jHoover_125x123.jpg"));
+	public static final Icon JHOOVER_JWINDOW = new ImageIcon (getURL ("jHoover_JWindow.png"));
 	public static final Icon NEW_ICON = new ImageIcon (getURL ("new_16x16.png"));
 	public static final Icon STOP_ICON = new ImageIcon (getURL ("stop_16x16.png"));
 	public static final Icon PAUSE_ICON = new ImageIcon (getURL ("pause_16x16.png"));
@@ -35,6 +36,11 @@ public final class Icons {
 	public static final URL LOGO_URL	= getURL ("jHoover_125x123.jpg");
 	public static final Icon ABOUT_ICON = new ImageIcon (getURL ("about_16x16.png"));
 	public static final Icon LEAF_ICON = new ImageIcon (getURL ("leaf_16x16.png"));
+	
+	public static final Icon DOWNLOAD_DISCOVERED_ICON = new ImageIcon (getURL ("grey_ball_16x16.png"));
+	public static final Icon DOWNLOAD_IN_PROGRESS_ICON = new ImageIcon (getURL ("yellow_ball_16x16.png"));
+	public static final Icon DOWNLOAD_STOPPED_ICON = new ImageIcon (getURL ("red_ball_16x16.png"));
+	public static final Icon DOWNLOAD_SUCCESS_ICON = new ImageIcon (getURL ("green_ball_16x16.png"));
 	
 
 	public static URL getURL (final String image) {

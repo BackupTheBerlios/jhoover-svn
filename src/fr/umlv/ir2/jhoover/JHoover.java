@@ -4,10 +4,16 @@
  */
 package fr.umlv.ir2.jhoover;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.swing.JLabel;
+import javax.swing.JWindow;
+
 import fr.umlv.ir2.jhoover.gui.dialog.RunConfigDialog;
+import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.network.DownloadManager;
 
@@ -22,8 +28,33 @@ public class JHoover {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//Running JHoover Frame
-		new RunConfigDialog(Labels.RUN_JHOOVER_LABEL);
+		//TODO: voir si cette methode est OK pour le lancement de l'application
+		
+		//create the SplashScreen
+//		JWindow window = createJHooverSplashScreen();
+		
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+				//Running JHoover Frame
+				new RunConfigDialog(Labels.RUN_JHOOVER_LABEL);
+            }
+        });
+
+		//close the SplashScreen
+//		window.dispose();
+	}
+	
+	private static JWindow createJHooverSplashScreen() {
+		//TODO: mettre une bordure pour fair mieux
+		JWindow window = new JWindow();
+		window.getContentPane().add(new JLabel(Icons.JHOOVER_JWINDOW));
+		window.setAlwaysOnTop(true);
+		window.setVisible(true);
+		window.pack();
+		//center the JWindow
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		window.setLocation(dim.width / 2 - window.getWidth() / 2 , dim.height / 2 - window.getHeight() / 2);
+		return window;
 	}
 	
 	
