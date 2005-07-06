@@ -42,7 +42,13 @@ public final class Icons {
 	public static final Icon DOWNLOAD_STOPPED_ICON = new ImageIcon (getURL ("red_ball_16x16.png"));
 	public static final Icon DOWNLOAD_SUCCESS_ICON = new ImageIcon (getURL ("green_ball_16x16.png"));
 	
-
+	//TODO: mettre des icones vraies ici
+	public static final Icon IMAGE_ICON = new ImageIcon (getURL ("about_16x16.png"));
+	public static final Icon MUSIC_ICON = new ImageIcon (getURL ("about_16x16.png"));
+	public static final Icon VIDEO_ICON = new ImageIcon (getURL ("about_16x16.png"));
+	public static final Icon FOLDER_ICON = new ImageIcon (getURL ("about_16x16.png"));
+	
+	
 	public static URL getURL (final String image) {
 		URL url = JHMainFrame.class.getResource (IMAGE_PATH + image);
 		if (url == null) {

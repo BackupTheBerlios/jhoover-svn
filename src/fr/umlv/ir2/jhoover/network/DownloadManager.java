@@ -12,18 +12,15 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.JTree;
-import javax.swing.SwingConstants;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
-import fr.umlv.ir2.jhoover.gui.DetailledJButtonEditor;
 import fr.umlv.ir2.jhoover.gui.DetailledJButtonRenderer;
 import fr.umlv.ir2.jhoover.gui.DetailledJProgressBarRenderer;
 import fr.umlv.ir2.jhoover.gui.DetailledModel;
-import fr.umlv.ir2.jhoover.gui.JDiscoveryTreeNode;
+import fr.umlv.ir2.jhoover.gui.DiscoveryRenderer;
+import fr.umlv.ir2.jhoover.gui.DiscoveryTreeNode;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.panel.JHMainPanel;
-import fr.umlv.ir2.jhoover.gui.tool.Icons;
 
 /**
  * @author Romain Papuchon
@@ -47,7 +44,7 @@ public class DownloadManager implements Runnable {
 	private String destDirectory;
 	
 	//for the graphic
-	private JDiscoveryTreeNode treeRoot;
+	private DiscoveryTreeNode treeRoot;
 	private DefaultTreeModel treeModel;
 	private DetailledModel detailledModel;
 	private JTable allTable;
@@ -73,14 +70,14 @@ public class DownloadManager implements Runnable {
 		this.destDirectory = destDirectory;
 
 		
-		
-		//fot the JTree
-		this.treeRoot = new JDiscoveryTreeNode(null, null);
+		//for the JTree
+		this.treeRoot = new DiscoveryTreeNode(null, null);
 		this.treeModel = new DefaultTreeModel(this.treeRoot);
-		JTree tree = new JTree(this.treeModel);
-		JHMainPanel.getDiscoveryPanel().getScrollablePanel().add(tree);
 		//TODO: regler les parametres pour que le jTree soit beau
-		setJTreeFashion(tree);
+		DiscoveryRenderer treeRenderer = new DiscoveryRenderer();
+		JTree tree = new JTree(this.treeModel);
+		tree.setCellRenderer(treeRenderer);
+		JHMainPanel.getDiscoveryPanel().getScrollablePanel().add(tree);
 		
 		
 		//for the JTable
@@ -88,30 +85,13 @@ public class DownloadManager implements Runnable {
 		this.allTable = new JTable(this.detailledModel);
 		DetailledJProgressBarRenderer jProgressBarRenderer = new DetailledJProgressBarRenderer();
 		DetailledJButtonRenderer jButtonRenderer = new DetailledJButtonRenderer();
-		this.allTable.setDefaultRenderer(JButton.class, new DetailledJButtonRenderer());
+		this.allTable.setDefaultRenderer(JButton.class, jButtonRenderer);
 //		this.allTable.setDefaultEditor(JButton.class, new DetailledJButtonEditor());
-		this.allTable.setDefaultRenderer(JProgressBar.class, new DetailledJProgressBarRenderer());
+		this.allTable.setDefaultRenderer(JProgressBar.class, jProgressBarRenderer);
 		JHDetailledPanel.getInstance().addTabPanel("ALL", this.allTable);
 		//TODO: voir pour HTML
 		JHDetailledPanel.getInstance().addTabPanel("HTML", new JPanel());
 
-	}
-	
-	
-	private void setJTreeFashion(JTree tree) {
-//		tree.setRootVisible(false);
-//		tree.setShowsRootHandles(true);
-//		tree.setExpandsSelectedPaths(true);
-		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-		renderer.setAutoscrolls(true);
-		renderer.setClosedIcon(Icons.STOP_ICON);
-		renderer.setDisabledIcon(Icons.PAUSE_ICON);
-		renderer.setIcon(Icons.ABOUT_ICON);
-		renderer.setLeafIcon(Icons.LEAF_ICON);
-		renderer.setOpenIcon(Icons.CONFIGURATION_ICON);
-		renderer.setHorizontalAlignment(SwingConstants.LEFT);
-		renderer.setVerticalAlignment(SwingConstants.TOP);
-		tree.setCellRenderer(renderer);
 	}
 
 
@@ -191,7 +171,7 @@ public class DownloadManager implements Runnable {
 				this.htmlFileToDownload.add(webHtmlFile);
 				
 				//add the webHtmlFile in the treeModel
-				JDiscoveryTreeNode node = this.treeRoot.add(webHtmlFile);
+				DiscoveryTreeNode node = this.treeRoot.add(webHtmlFile);
 				this.treeModel.nodesWereInserted(this.treeRoot, new int[] {this.treeRoot.getIndex(node)});
 				
 				//add the webHtmlFile in the detailledModel
@@ -218,8 +198,8 @@ public class DownloadManager implements Runnable {
 				this.linkedFileToDownload.add(webLinkedFile);
 				
 				//add the webHtmlFile in the treeModel
-				JDiscoveryTreeNode parentNode = (JDiscoveryTreeNode) this.treeRoot.getChild(parent);
-				JDiscoveryTreeNode node = parentNode.add(webLinkedFile);
+				DiscoveryTreeNode parentNode = (DiscoveryTreeNode) this.treeRoot.getChild(parent);
+				DiscoveryTreeNode node = parentNode.add(webLinkedFile);
 				this.treeModel.nodesWereInserted(parentNode, new int[] {parentNode.getIndex(node)});
 				
 				

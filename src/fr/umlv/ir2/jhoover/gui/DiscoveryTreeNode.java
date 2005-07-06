@@ -9,14 +9,14 @@ import javax.swing.tree.TreeNode;
 
 import fr.umlv.ir2.jhoover.network.WebFile;
 
-public class JDiscoveryTreeNode implements TreeNode {
+public class DiscoveryTreeNode implements TreeNode {
 	
-	private List<JDiscoveryTreeNode> childrens = new ArrayList<JDiscoveryTreeNode>();
-	private JDiscoveryTreeNode parent;
+	private List<DiscoveryTreeNode> childrens = new ArrayList<DiscoveryTreeNode>();
+	private DiscoveryTreeNode parent;
 	private WebFile webFile;  //data
 	
 	
-	public JDiscoveryTreeNode(JDiscoveryTreeNode parent, WebFile webFile) {
+	public DiscoveryTreeNode(DiscoveryTreeNode parent, WebFile webFile) {
 		super();
 		this.parent = parent;
 		this.webFile = webFile;
@@ -58,9 +58,9 @@ public class JDiscoveryTreeNode implements TreeNode {
 		return this.webFile;
 	}
 	
-	public JDiscoveryTreeNode add(WebFile webFile) {
+	public DiscoveryTreeNode add(WebFile webFile) {
 		if (webFile != null) {
-			JDiscoveryTreeNode child = new JDiscoveryTreeNode(this, webFile);
+			DiscoveryTreeNode child = new DiscoveryTreeNode(this, webFile);
 			this.childrens.add(child);
 			return child;
 		}

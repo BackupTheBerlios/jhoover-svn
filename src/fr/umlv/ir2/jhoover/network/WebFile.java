@@ -106,5 +106,14 @@ public abstract class WebFile {
 	public void setProgression(int progression) {
 		this.progression = progression;
 	}
+
+
+	public String getCompletePath() {
+		//TODO: voir si cette methode renvoie completement ce qu'il faut (bonne syntaxe et bon resultat)
+		if (this.uri.getPort() > 0) {
+			return this.uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.uri.getHost() + ":" + this.uri.getPort() + this.uri.getPath();
+		}
+		return this.uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.uri.getHost() + this.uri.getPath();
+	}
 }
 
