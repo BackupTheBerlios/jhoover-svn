@@ -18,6 +18,7 @@ import fr.umlv.ir2.jhoover.gui.tool.Utils;
  */
 public class DiscoveryRenderer extends DefaultTreeCellRenderer{
 	public DiscoveryRenderer() {
+		setEnabled(true);
 		setAutoscrolls(true);
 //		setClosedIcon(Icons.STOP_ICON);
 //		setDisabledIcon(Icons.PAUSE_ICON);

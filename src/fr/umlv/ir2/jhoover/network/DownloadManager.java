@@ -12,7 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import fr.umlv.ir2.jhoover.gui.DetailledJButtonRenderer;
 import fr.umlv.ir2.jhoover.gui.DetailledJProgressBarRenderer;
@@ -44,6 +47,7 @@ public class DownloadManager implements Runnable {
 	private String destDirectory;
 	
 	//for the graphic
+	private JTree tree;
 	private DiscoveryTreeNode treeRoot;
 	private DefaultTreeModel treeModel;
 	private DetailledModel detailledModel;
@@ -75,9 +79,19 @@ public class DownloadManager implements Runnable {
 		this.treeModel = new DefaultTreeModel(this.treeRoot);
 		//TODO: regler les parametres pour que le jTree soit beau
 		DiscoveryRenderer treeRenderer = new DiscoveryRenderer();
-		JTree tree = new JTree(this.treeModel);
-		tree.setCellRenderer(treeRenderer);
-		JHMainPanel.getDiscoveryPanel().getScrollablePanel().add(tree);
+		this.tree = new JTree(this.treeModel);
+		this.tree.setCellRenderer(treeRenderer);
+//		this.tree.setRootVisible(false);
+//		this.tree.expandRow(0);
+		this.tree.setEnabled(true);
+		this.tree.setShowsRootHandles(true);
+		this.tree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent arg0) {
+				//TODO: faire l'action pour aller selectionner la ligne dans la JTable
+				System.out.println("TODO ACTION: Selection dans la JTable");
+			}
+		});
+		JHMainPanel.getDiscoveryPanel().getScrollablePanel().add(this.tree);
 		
 		
 		//for the JTable
@@ -201,7 +215,6 @@ public class DownloadManager implements Runnable {
 				DiscoveryTreeNode parentNode = (DiscoveryTreeNode) this.treeRoot.getChild(parent);
 				DiscoveryTreeNode node = parentNode.add(webLinkedFile);
 				this.treeModel.nodesWereInserted(parentNode, new int[] {parentNode.getIndex(node)});
-				
 				
 				//add the webHtmlFile in the detailledModel
 				this.detailledModel.addElement(webLinkedFile);

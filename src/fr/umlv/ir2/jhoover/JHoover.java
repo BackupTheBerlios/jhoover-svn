@@ -45,7 +45,7 @@ public class JHoover {
 	}
 	
 	private static JWindow createJHooverSplashScreen() {
-		//TODO: mettre une bordure pour fair mieux
+		//TODO: mettre une bordure pour faire mieux
 		JWindow window = new JWindow();
 		window.getContentPane().add(new JLabel(Icons.JHOOVER_JWINDOW));
 		window.setAlwaysOnTop(true);
