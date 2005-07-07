@@ -6,6 +6,8 @@ package fr.umlv.ir2.jhoover.network;
 
 import java.net.URI;
 
+import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
+
 /**
  * @author Romain Papuchon
  *
@@ -115,5 +117,13 @@ public abstract class WebFile {
 		}
 		return this.uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.uri.getHost() + this.uri.getPath();
 	}
+	
+//	public String getDefaultHost() {
+//		//TODO: voir si cette methode renvoie completement ce qu'il faut (bonne syntaxe et bon resultat)
+//		if (this.uri.getPort() > 0) {
+//			return this.uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.uri.getHost() + ":" + this.uri.getPort();
+//		}
+//		return this.uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.uri.getHost();
+//	}
 }
 

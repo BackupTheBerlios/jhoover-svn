@@ -21,6 +21,7 @@ import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.ObjectFindingVisitor;
 
 import fr.umlv.ir2.jhoover.gui.DetailledModel;
+import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
 
 /**
  * @author Romain Papuchon
@@ -122,9 +123,14 @@ public class DownloadAndParseFile implements Runnable {
 			/*
 			 * parameters from the file
 			 */
-			//TODO: le getContentLength ne fonctionne pas pour un fichier HTML => retourne -1
 			this.webFile.setContentType(connection.getContentType());
-			this.webFile.setRealSize(connection.getContentLength());
+			//we cannot know the realSize (certainly blocked by server)
+			if (connection.getContentLength() == -1) {
+				this.webFile.setRealSize(-2);
+			} else {
+				this.webFile.setRealSize(connection.getContentLength());	
+			}
+			
 //			webFile.setBeginDate(new Date(connection.getDate()));
 			
 			
@@ -161,7 +167,12 @@ public class DownloadAndParseFile implements Runnable {
 					fileOutputStream.write(buffer, 0, nbBytes);
 					downloadedSize += nbBytes;
 					//progression in percent
-					this.webFile.setProgression(downloadedSize * 100 / this.webFile.getRealSize());
+					if (this.webFile.getRealSize() == -2) {
+						//cannot kwnow the progression
+						this.webFile.setProgression(-2);
+					} else {
+						this.webFile.setProgression(downloadedSize * 100 / this.webFile.getRealSize());
+					}
 					//do a fire in the detailledModel
 					int indexInModel = detailledModel.getIndexWebFile(this.webFile);
 					detailledModel.fireTableRowsUpdated(indexInModel, indexInModel);

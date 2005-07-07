@@ -31,7 +31,7 @@ public class JHoover {
 		//TODO: voir si cette methode est OK pour le lancement de l'application
 		
 		//create the SplashScreen
-//		JWindow window = createJHooverSplashScreen();
+		JWindow window = createJHooverSplashScreen();
 		
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -41,7 +41,7 @@ public class JHoover {
         });
 
 		//close the SplashScreen
-//		window.dispose();
+		window.dispose();
 	}
 	
 	private static JWindow createJHooverSplashScreen() {

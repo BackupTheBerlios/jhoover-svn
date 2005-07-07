@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-<depth>4</depth>
+<depth>3</depth>
 <destination>
 <directory>C:/TEMP/</directory>
 </destination>
@@ -13,8 +13,8 @@
 </linked>
 </nb>
 <regexp>*.*</regexp>
-<url>http://membres.lycos.fr/huchon/index.html</url>
+<url>http://www.anthonyplog.com/index.html</url>
 <project>
-<name>huchon</name>
+<name>robert</name>
 </project>
 </configuration>

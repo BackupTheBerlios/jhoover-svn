@@ -1,12 +1,8 @@
 package fr.umlv.ir2.jhoover.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JProgressBar;
 import javax.swing.table.AbstractTableModel;
 
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
@@ -30,17 +26,20 @@ public class DetailledModel extends AbstractTableModel {
 	}
 	
 	public Object getValueAt(final int rowIndex, int colIndex) {
-		//TODO: change the icons
 		switch (colIndex) {
-		
 		case 0:
+			//returns the path of the webFile
 			return webFiles.get(rowIndex).getPath();
 			
 		case 1:
 			int progression = webFiles.get(rowIndex).getProgression();
-			if (progression < -1) {
+			if (progression < -2) {
 				//cannot know: HTML File
 				return Icons.DOWNLOAD_DISCOVERED_ICON;
+			}
+			if (progression == -2) {
+				//we cannot know the progression
+				return Icons.DOWNLOAD_UNKNOWED_ICON;
 			}
 			if (progression == -1) {
 				//error during dowload
@@ -58,26 +57,12 @@ public class DetailledModel extends AbstractTableModel {
 			return Icons.DOWNLOAD_SUCCESS_ICON;
 			
 		case 2:
-			JProgressBar progressBar = new JProgressBar(0, 100);
-			progressBar.setVisible(false);
-			if (webFiles.get(rowIndex).getProgression() <= 100 && webFiles.get(rowIndex).getProgression() >= 0) {
-				progressBar.setValue(webFiles.get(rowIndex).getProgression());
-			} else {
-				progressBar.setIndeterminate(true);
-			}
-			progressBar.setStringPainted(true);
-			return progressBar;
+			//returns the progression of the webFile
+			return new Integer(webFiles.get(rowIndex).getProgression());
 			
 		case 3:
-			JButton cancelButton = new JButton("Cancel");
-			cancelButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					//TODO: faire l'action. La mettre ici ou pas
-					//TODO: faire marcher l'action (ne fonctionne pas)
-					System.err.println("Cancel the Download of: " + webFiles.get(rowIndex).getPath());
-				}
-			});
-			return cancelButton;
+			//returns the webFile
+			return webFiles.get(rowIndex);
 			
 		default:
 			return null;
@@ -96,15 +81,17 @@ public class DetailledModel extends AbstractTableModel {
 		case 1:
 			return ImageIcon.class;
 		case 2:
-			return JProgressBar.class;
+			return Integer.class;
 		case 3:
-			return JButton.class;
+			return WebFile.class;
 		default:
 			return null;
 		}
 	}
 	
 	public boolean isCellEditable(int row, int col) {
+		if (col == 3)
+			return true;
 		return false;
 	}
 	
@@ -116,8 +103,4 @@ public class DetailledModel extends AbstractTableModel {
 	public int getIndexWebFile(WebFile webFile) {
 		return webFiles.indexOf(webFile);
 	}
-	
-//	public WebFile getWebFile(int index) {
-//		return webFiles.get(index);
-//	}
 }

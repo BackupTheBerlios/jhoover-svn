@@ -41,6 +41,8 @@ public final class Icons {
 	public static final Icon DOWNLOAD_IN_PROGRESS_ICON = new ImageIcon (getURL ("yellow_ball_16x16.png"));
 	public static final Icon DOWNLOAD_STOPPED_ICON = new ImageIcon (getURL ("red_ball_16x16.png"));
 	public static final Icon DOWNLOAD_SUCCESS_ICON = new ImageIcon (getURL ("green_ball_16x16.png"));
+	//TODO: changer le DOWNLOAD_UNKNOWED_ICON ?
+	public static final Icon DOWNLOAD_UNKNOWED_ICON = new ImageIcon (getURL ("grey_ball_16x16.png"));
 	
 	//TODO: mettre des icones vraies ici
 	public static final Icon IMAGE_ICON = new ImageIcon (getURL ("about_16x16.png"));

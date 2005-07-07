@@ -8,13 +8,9 @@ import javax.swing.table.TableCellRenderer;
 
 public class DetailledJButtonRenderer extends JButton implements TableCellRenderer{
 
-//	public DetailledJButtonRenderer() {
-//		setOpaque(true);
-//	}
-	
-	public Component getTableCellRendererComponent(JTable table, Object button, boolean isSelected, boolean hasFocus, int rowIndex, int colIndex) {
-		this.setText(((JButton)button).getText());
+	public Component getTableCellRendererComponent(JTable table, Object webFile, boolean isSelected, boolean hasFocus, int rowIndex, int colIndex) {
+		//TODO: rendre le bouton joli ici
+		this.setText("Cancel");
 		return this;
 	}
-
 }

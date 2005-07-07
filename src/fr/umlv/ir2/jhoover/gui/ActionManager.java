@@ -10,7 +10,6 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JPanel;
 
 import fr.umlv.ir2.jhoover.gui.dialog.AddFilterDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.DeleteFilterDialog;
@@ -18,7 +17,6 @@ import fr.umlv.ir2.jhoover.gui.dialog.FindFileDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.ModifyFilterDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.RunConfigDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.SetConfigDialog;
-import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
@@ -37,7 +35,7 @@ public final class ActionManager
 	};
 
 	public static final Action stopAction = new AbstractAction(Labels.STOP_LABEL, Icons.STOP_ICON) {
-		public void actionPerformed (ActionEvent e) {			
+		public void actionPerformed (ActionEvent e) {
 			System.out.println("Stop action");
 		}
 	};

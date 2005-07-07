@@ -7,16 +7,14 @@ package fr.umlv.ir2.jhoover.network;
 import java.net.URI;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 
+import fr.umlv.ir2.jhoover.gui.DetailledJButtonEditor;
 import fr.umlv.ir2.jhoover.gui.DetailledJButtonRenderer;
 import fr.umlv.ir2.jhoover.gui.DetailledJProgressBarRenderer;
 import fr.umlv.ir2.jhoover.gui.DetailledModel;
@@ -24,6 +22,7 @@ import fr.umlv.ir2.jhoover.gui.DiscoveryRenderer;
 import fr.umlv.ir2.jhoover.gui.DiscoveryTreeNode;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.panel.JHMainPanel;
+import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
 
 /**
  * @author Romain Papuchon
@@ -74,13 +73,23 @@ public class DownloadManager implements Runnable {
 		this.destDirectory = destDirectory;
 
 		
-		//for the JTree
+		//creates the JTree in the discovery part
+		createJTree();
+		
+		//creates the JTable in the detailled part
+		createJTable();
+	}
+	
+	
+	/*
+	 * Creates the JTree in the discovery part
+	 */
+	private void createJTree() {
 		this.treeRoot = new DiscoveryTreeNode(null, null);
 		this.treeModel = new DefaultTreeModel(this.treeRoot);
 		//TODO: regler les parametres pour que le jTree soit beau
-		DiscoveryRenderer treeRenderer = new DiscoveryRenderer();
 		this.tree = new JTree(this.treeModel);
-		this.tree.setCellRenderer(treeRenderer);
+		this.tree.setCellRenderer(new DiscoveryRenderer());
 //		this.tree.setRootVisible(false);
 //		this.tree.expandRow(0);
 		this.tree.setEnabled(true);
@@ -88,24 +97,29 @@ public class DownloadManager implements Runnable {
 		this.tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent arg0) {
 				//TODO: faire l'action pour aller selectionner la ligne dans la JTable
-				System.out.println("TODO ACTION: Selection dans la JTable");
+				System.out.println("JTREE ACTION: [TODO] Selectionner dans la JTable");
 			}
 		});
 		JHMainPanel.getDiscoveryPanel().getScrollablePanel().add(this.tree);
-		
-		
-		//for the JTable
+	}
+	
+	
+	/*
+	 * creates the JTable in the detailled part
+	 */
+	private void createJTable() {
 		this.detailledModel = new DetailledModel();		
 		this.allTable = new JTable(this.detailledModel);
-		DetailledJProgressBarRenderer jProgressBarRenderer = new DetailledJProgressBarRenderer();
-		DetailledJButtonRenderer jButtonRenderer = new DetailledJButtonRenderer();
-		this.allTable.setDefaultRenderer(JButton.class, jButtonRenderer);
-//		this.allTable.setDefaultEditor(JButton.class, new DetailledJButtonEditor());
-		this.allTable.setDefaultRenderer(JProgressBar.class, jProgressBarRenderer);
+		this.allTable.setCellSelectionEnabled(true);
+		//JButton
+		this.allTable.getColumnModel().getColumn(3).setCellEditor(new DetailledJButtonEditor());
+		this.allTable.getColumnModel().getColumn(3).setCellRenderer(new DetailledJButtonRenderer());
+		//JProgressBar
+		this.allTable.getColumnModel().getColumn(2).setCellRenderer(new DetailledJProgressBarRenderer());
+		//add new Tabs
 		JHDetailledPanel.getInstance().addTabPanel("ALL", this.allTable);
 		//TODO: voir pour HTML
 		JHDetailledPanel.getInstance().addTabPanel("HTML", new JPanel());
-
 	}
 
 
@@ -126,9 +140,6 @@ public class DownloadManager implements Runnable {
 		DownloadAndParseFile downloadFile;
 		
 		while(this.htmlFileToDownload.isEmpty() == false || this.linkedFileToDownload.isEmpty() == false || this.htmlFileInDownloading.isEmpty() == false || this.linkedFileInDownloading.isEmpty() == false) {
-//			System.out.println("...NEW...");
-//			System.out.println("currentDLHtml: " + currentDLHtml);
-//			System.out.println("currentDLLink: " + currentDLLink);
 			
 			if (this.currentDLHtml < this.maxDLHtml && this.htmlFileToDownload.isEmpty() == false) {
 				WebHtmlFile webHtmlFile;
@@ -162,9 +173,9 @@ public class DownloadManager implements Runnable {
 			}
 		}
 		
+		//TODO: mettre une boite de dialogue ici pour annoncer la fin du téléchargement
+		
 //		System.out.println("...FIN...");
-//		System.out.println("currentDLHtml: " + currentDLHtml);
-//		System.out.println("currentDLLink: " + currentDLLink);
 	}
 	
 	
@@ -243,27 +254,10 @@ public class DownloadManager implements Runnable {
 		return false;
 	}
 	
-//	public void removeHtmlFileFromInDownloading(WebHtmlFile webHtmlFile) {
-//		this.htmlFileInDownloading.remove(webHtmlFile);
-//	}
-//	
-//	public void removeLinkedWebFileFromInDownloading(WebLinkedFile webLinkedFile) {
-//		this.htmlFileInDownloading.remove(webLinkedFile);
-//	}
 	
-//	public void endDownloadHtml(WebHtmlFile webHtmlFile) {
-//		this.currentDLHtml--;
-//		this.htmlFileInDownloading.remove(webHtmlFile);
-////		this.htmlFileDownloaded.add(webHtmlFile);
-//	}
-//	
-//	public void endDownloadLink(WebLinkedFile webLinkedFile) {
-//		this.currentDLLink--;
-//		this.linkedFileInDownloading.remove(webLinkedFile);
-////		this.linkedFileDownloaded.add(webLinkedFile);
-//	}
-	
-	
+	/*
+	 * Permiss to organize the download threads
+	 */
 	public void endDownload(WebFile webFile) {
 		if (webFile instanceof WebHtmlFile) {
 			this.currentDLHtml--;
@@ -273,21 +267,6 @@ public class DownloadManager implements Runnable {
 			this.currentDLLink--;
 			this.linkedFileInDownloading.remove(webFile);
 //			this.linkedFileDownloaded.add(webLinkedFile);
-		} else {
-			//TODO: voir si c'est bon ici
-			System.err.println("ERROR in function DownloadManager=>endDownload()");
 		}
 	}
-	
-	
-
-//	/*
-//	 * Tests if the webFile is a linked File or not
-//	 */
-//	public boolean isALinkedFile(WebFile webFile) {
-//		if (this.linkedFileInDownloading.contains(webFile)) {
-//			return true;
-//		}
-//		return false;
-//	}
 }

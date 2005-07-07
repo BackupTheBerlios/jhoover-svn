@@ -50,5 +50,4 @@ public class DiscoveryRenderer extends DefaultTreeCellRenderer{
 		}
 		return this;
 	}
-	
 }

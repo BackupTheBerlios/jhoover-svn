@@ -18,6 +18,8 @@ public class JHMainPanel extends JSplitPane {
 	
 	public JHMainPanel() {
 		super(JSplitPane.HORIZONTAL_SPLIT, discoveryPanel, manageTabPanel);
+		//put the divider location to 200 pixel
+		setDividerLocation(200);
 		setOneTouchExpandable(true);
 	}
 	
