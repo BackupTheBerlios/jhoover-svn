@@ -4,9 +4,8 @@
  */
 package fr.umlv.ir2.jhoover.gui.tool;
 
-import javax.swing.tree.TreeNode;
-
 import fr.umlv.ir2.jhoover.gui.DiscoveryTreeNode;
+import fr.umlv.ir2.jhoover.network.WebFile;
 
 /**
  * @author Romain Papuchon
@@ -14,31 +13,70 @@ import fr.umlv.ir2.jhoover.gui.DiscoveryTreeNode;
  */
 public class Utils {
 
-	public static boolean isImage(Object node) {
+	public static boolean isImage(DiscoveryTreeNode node) {
 		//TODO: completer cette methode
-		String path = ((DiscoveryTreeNode)node).getWebFile().getPath();
-		if (path.endsWith(".bmp") || path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".gif")) {
-			return true;
+		WebFile webFile = node.getWebFile();
+		if (webFile != null) {
+			String path = webFile.getPath();
+			path = path.toLowerCase();
+			if (path.endsWith(".bmp") || path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".gif")) {
+				return true;
+			}
 		}
 		return false;
 	}
 
-	public static boolean isMusic(Object node) {
+	public static boolean isMusic(DiscoveryTreeNode node) {
 		//TODO: completer cette methode
-		String path = ((DiscoveryTreeNode)node).getWebFile().getPath();
-		if (path.endsWith(".wav") || path.endsWith(".mp3")) {
-			return true;
+		WebFile webFile = node.getWebFile();
+		if (webFile != null) {
+			String path = webFile.getPath();
+			path = path.toLowerCase();
+			if (path.endsWith(".wav") || path.endsWith(".mp3")) {
+				return true;
+			}
 		}
 		return false;
 	}
 
-	public static boolean isVideo(Object node) {
+	public static boolean isVideo(DiscoveryTreeNode node) {
 		//TODO: completer cette methode
-		String path = ((DiscoveryTreeNode)node).getWebFile().getPath();
-		if (path.endsWith(".avi") || path.endsWith(".mpg")) {
-			return true;
+		WebFile webFile = node.getWebFile();
+		if (webFile != null) {
+			String path = webFile.getPath();
+			path = path.toLowerCase();
+			if (path.endsWith(".avi") || path.endsWith(".mpg")) {
+				return true;
+			}
 		}
 		return false;
 	}
 
+	
+	public static boolean isDocument(DiscoveryTreeNode node) {
+		//TODO: completer cette methode
+		WebFile webFile = node.getWebFile();
+		if (webFile != null) {
+			String path = webFile.getPath();
+			path = path.toLowerCase();
+			if (path.endsWith(".doc") || path.endsWith(".txt") || path.endsWith(".pdf")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isWeb(DiscoveryTreeNode node) {
+		//TODO: completer cette methode
+		WebFile webFile = node.getWebFile();
+		if (webFile != null) {
+			String path = webFile.getPath();
+			path = path.toLowerCase();
+			if (path.endsWith(".htm") || path.endsWith(".html") || path.endsWith(".asp") || path.endsWith(".php")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

@@ -13,6 +13,7 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
 import fr.umlv.ir2.jhoover.gui.DetailledJButtonEditor;
 import fr.umlv.ir2.jhoover.gui.DetailledJButtonRenderer;
@@ -85,15 +86,11 @@ public class DownloadManager implements Runnable {
 	 * Creates the JTree in the discovery part
 	 */
 	private void createJTree() {
+		//TODO: regler les parametres pour que le jTree soit beau
 		this.treeRoot = new DiscoveryTreeNode(null, null);
 		this.treeModel = new DefaultTreeModel(this.treeRoot);
-		//TODO: regler les parametres pour que le jTree soit beau
 		this.tree = new JTree(this.treeModel);
 		this.tree.setCellRenderer(new DiscoveryRenderer());
-//		this.tree.setRootVisible(false);
-//		this.tree.expandRow(0);
-		this.tree.setEnabled(true);
-		this.tree.setShowsRootHandles(true);
 		this.tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent arg0) {
 				//TODO: faire l'action pour aller selectionner la ligne dans la JTable
@@ -101,6 +98,16 @@ public class DownloadManager implements Runnable {
 			}
 		});
 		JHMainPanel.getDiscoveryPanel().getScrollablePanel().add(this.tree);
+		this.tree.getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
+//		this.tree.setRootVisible(false);
+//		this.tree.setShowsRootHandles(true);
+//		this.tree.setSelectionRow(0);
+//		this.tree.setExpandsSelectedPaths(true);
+//		this.tree.setRootVisible(false);
+//		this.tree.expandRow(0);
+//		this.tree.setEnabled(true);
+//		this.tree.setShowsRootHandles(true);
 	}
 	
 	

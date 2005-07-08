@@ -44,11 +44,13 @@ public final class Icons {
 	//TODO: changer le DOWNLOAD_UNKNOWED_ICON ?
 	public static final Icon DOWNLOAD_UNKNOWED_ICON = new ImageIcon (getURL ("grey_ball_16x16.png"));
 	
-	//TODO: mettre des icones vraies ici
-	public static final Icon IMAGE_ICON = new ImageIcon (getURL ("about_16x16.png"));
-	public static final Icon MUSIC_ICON = new ImageIcon (getURL ("about_16x16.png"));
-	public static final Icon VIDEO_ICON = new ImageIcon (getURL ("about_16x16.png"));
-	public static final Icon FOLDER_ICON = new ImageIcon (getURL ("about_16x16.png"));
+	public static final Icon IMAGE_ICON = new ImageIcon (getURL ("image_16x16.png"));
+	public static final Icon MUSIC_ICON = new ImageIcon (getURL ("music_16x16.png"));
+	public static final Icon VIDEO_ICON = new ImageIcon (getURL ("video_16x16.png"));
+	public static final Icon DOCUMENT_ICON = new ImageIcon (getURL ("document_16x16.png"));
+	public static final Icon WEB_ICON = new ImageIcon (getURL ("web_16x16.png"));
+	public static final Icon UNKNOWN_ICON = new ImageIcon (getURL ("unknown_16x16.png"));
+	public static final Icon FOLDER_ICON = new ImageIcon (getURL ("folder_16x16.png"));
 	
 	
 	public static URL getURL (final String image) {

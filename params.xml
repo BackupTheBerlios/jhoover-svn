@@ -2,7 +2,7 @@
 <configuration>
 <depth>3</depth>
 <destination>
-<directory>C:/TEMP/</directory>
+<directory>C:\TEMP/</directory>
 </destination>
 <nb>
 <html>
@@ -15,6 +15,6 @@
 <regexp>*.*</regexp>
 <url>http://www.anthonyplog.com/index.html</url>
 <project>
-<name>robert</name>
+<name>anthony</name>
 </project>
 </configuration>
