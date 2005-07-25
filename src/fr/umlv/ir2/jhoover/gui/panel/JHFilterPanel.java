@@ -17,6 +17,8 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+import fr.umlv.ir2.jhoover.gui.tool.Utils;
+
 /**
  * @author Romain Papuchon
  *
@@ -71,11 +73,20 @@ public class JHFilterPanel extends JPanel {
 	 * Add a filter in the DetailledPanel
 	 */
 	private ActionListener addAction() {
+		//TODO: voir pour mettre cette action dans ActionManager (cf. AddFilterDialog, meme methode)
+		//TODO: gerer le cas du label null
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO: voir pour le null + verifier si filtre ok
-				System.out.println("Ajoute un onglet dans DetailledPanel");
-//				JHDetailledPanel.getInstance().addTabPanel(regexpTextField.getText(), null);
+				int index = 0;
+				if (regexpTextField.getText() != "") {
+					index = Utils.createNewTable(regexpTextField.getText(), regexpTextField.getText());
+				} else {
+					//TODO: gerer ce cas
+				}
+				regexpTextField.setText("");
+				JHDetailledPanel.getInstance().setSelectedIndex(index);
+				//TODO: faire marcher le dispose pour fermer la fenetre
+//				dispose();
 			}
 		};
 	}

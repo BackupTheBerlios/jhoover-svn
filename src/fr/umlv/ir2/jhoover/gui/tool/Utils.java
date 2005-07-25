@@ -1,82 +1,29 @@
-/**
- * jHoover - UMLV IR2
- * UI Project
- */
 package fr.umlv.ir2.jhoover.gui.tool;
 
-import fr.umlv.ir2.jhoover.gui.DiscoveryTreeNode;
-import fr.umlv.ir2.jhoover.network.WebFile;
+import javax.swing.JTable;
 
-/**
- * @author Romain Papuchon
- *
- */
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledAdapter;
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledJButtonEditor;
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledJButtonRenderer;
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledJProgressBarRenderer;
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
+import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
+
 public class Utils {
-
-	public static boolean isImage(DiscoveryTreeNode node) {
-		//TODO: completer cette methode
-		WebFile webFile = node.getWebFile();
-		if (webFile != null) {
-			String path = webFile.getPath();
-			path = path.toLowerCase();
-			if (path.endsWith(".bmp") || path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".gif")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static boolean isMusic(DiscoveryTreeNode node) {
-		//TODO: completer cette methode
-		WebFile webFile = node.getWebFile();
-		if (webFile != null) {
-			String path = webFile.getPath();
-			path = path.toLowerCase();
-			if (path.endsWith(".wav") || path.endsWith(".mp3")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static boolean isVideo(DiscoveryTreeNode node) {
-		//TODO: completer cette methode
-		WebFile webFile = node.getWebFile();
-		if (webFile != null) {
-			String path = webFile.getPath();
-			path = path.toLowerCase();
-			if (path.endsWith(".avi") || path.endsWith(".mpg")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	
-	public static boolean isDocument(DiscoveryTreeNode node) {
-		//TODO: completer cette methode
-		WebFile webFile = node.getWebFile();
-		if (webFile != null) {
-			String path = webFile.getPath();
-			path = path.toLowerCase();
-			if (path.endsWith(".doc") || path.endsWith(".txt") || path.endsWith(".pdf")) {
-				return true;
-			}
-		}
-		return false;
+	public static int createNewTable(String label, String regexp) {
+		//creates the adapter
+		DetailledAdapter detailledAdapter = new DetailledAdapter(DetailledModel.getInstance(), regexp);
+		//creates the JTable
+		JTable table = new JTable(detailledAdapter);
+		table.setCellSelectionEnabled(true);
+		//JButton
+		table.getColumnModel().getColumn(3).setCellEditor(new DetailledJButtonEditor());
+		table.getColumnModel().getColumn(3).setCellRenderer(new DetailledJButtonRenderer());
+		//JProgressBar
+		table.getColumnModel().getColumn(2).setCellRenderer(new DetailledJProgressBarRenderer());
+		JHDetailledPanel.getInstance().addTabPanel(label, table);
+		return JHDetailledPanel.getInstance().getIndex(label);
 	}
-	
-	public static boolean isWeb(DiscoveryTreeNode node) {
-		//TODO: completer cette methode
-		WebFile webFile = node.getWebFile();
-		if (webFile != null) {
-			String path = webFile.getPath();
-			path = path.toLowerCase();
-			if (path.endsWith(".htm") || path.endsWith(".html") || path.endsWith(".asp") || path.endsWith(".php")) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+
 }

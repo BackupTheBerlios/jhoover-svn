@@ -59,10 +59,10 @@ public class DeleteFilterDialog extends AbstractDialog {
 
 	
 	protected ActionListener validButtonAction() {
-		// TODO: faire l'action necessaire
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("faire l'action necessaire pour effacer le filtre");		
+				//Delete the Filter
+				JHDetailledPanel.getInstance().removeTabPanel((String)filterList.getSelectedItem());
 				dispose();
 			}
 		};

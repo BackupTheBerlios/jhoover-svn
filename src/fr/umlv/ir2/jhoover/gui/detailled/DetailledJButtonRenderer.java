@@ -1,4 +1,4 @@
-package fr.umlv.ir2.jhoover.gui;
+package fr.umlv.ir2.jhoover.gui.detailled;
 
 import java.awt.Component;
 

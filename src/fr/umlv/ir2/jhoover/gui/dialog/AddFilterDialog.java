@@ -18,7 +18,10 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import fr.umlv.ir2.jhoover.gui.ActionManager;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
+import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
+import fr.umlv.ir2.jhoover.gui.tool.Utils;
 
 /**
  * @author Romain Papuchon
@@ -28,11 +31,11 @@ public class AddFilterDialog extends AbstractDialog {
 
 	private JTextField regexpTextField;
 	
+	
 	public AddFilterDialog() {
 		super(JHMainFrame.getInstance(), "Add a filter");
 		buildPanel(new JPanel[]{createPanel(), createButtonPanel()});
 	}
-	
 	
 	/*
 	 * Create the regexp panel
@@ -82,7 +85,21 @@ public class AddFilterDialog extends AbstractDialog {
 
 	
 	protected ActionListener validButtonAction() {
-		return ActionManager.okRegexpDialogAction;
+		//TODO: voir pour mettre cette action: return ActionManager.okRegexpDialogAction; (cf. JHFilterPanel, meme methode)
+		//TODO: gerer le cas du label null
+		return new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				int index = 0;
+				if (regexpTextField.getText() != "") {
+					index = Utils.createNewTable(regexpTextField.getText(), regexpTextField.getText());
+				} else {
+					//TODO: gerer ce cas
+				}
+				regexpTextField.setText("");
+				JHDetailledPanel.getInstance().setSelectedIndex(index);
+				dispose();
+			}
+		};
 	}
 
 
@@ -107,5 +124,4 @@ public class AddFilterDialog extends AbstractDialog {
 		
 		return buttonBuilder.getPanel();
 	}
-	
 }

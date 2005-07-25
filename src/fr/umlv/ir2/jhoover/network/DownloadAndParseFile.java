@@ -20,7 +20,7 @@ import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.ObjectFindingVisitor;
 
-import fr.umlv.ir2.jhoover.gui.DetailledModel;
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
 
 /**

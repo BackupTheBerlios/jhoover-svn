@@ -1,21 +1,32 @@
-package fr.umlv.ir2.jhoover.gui;
+package fr.umlv.ir2.jhoover.gui.detailled;
 
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
+import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
+import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.network.WebFile;
 
 public class DetailledModel extends AbstractTableModel {
 	
-	String[] columns = {"Name", "State", "Progression", "Cancel The Download"};   
-	ArrayList<WebFile> webFiles;
+	private String[] columns = Labels.COLUMS_LABELS;   
+	private ArrayList<WebFile> webFiles;
+	private static DetailledModel INSTANCE = null;
 	
-	public DetailledModel() {
+	private DetailledModel() {
 		webFiles = new ArrayList<WebFile>();
 	}
+	
+	public static DetailledModel getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new DetailledModel();
+		}
+		return INSTANCE;
+	}
+	
 	
 	public int getRowCount() {
 		return webFiles.size();
@@ -102,5 +113,9 @@ public class DetailledModel extends AbstractTableModel {
 	
 	public int getIndexWebFile(WebFile webFile) {
 		return webFiles.indexOf(webFile);
+	}
+	
+	public ArrayList<WebFile> getWebFiles() {
+		return webFiles;
 	}
 }

@@ -36,4 +36,9 @@ public final class Labels {
 	public static final String TOOLBAR_LABEL = "ToolBar";
 	public static final String OK_LABEL = "Ok";
 	public static final String RESET_LABEL = "Reset";
+	public static final String DOWNLOAD_STATUS_LABEL = "Download Status";
+	public static final String DOWNLOAD_FINISHED_LABEL = "Download Finished";
+	public static final String[] COLUMS_LABELS = {"Name", "State", "Progression", "Cancel The Download"};
+	//TODO: faire la bonne requete avec extention en '.html' ou en '.htm'
+	public static final String HTML_REGEXP_LABEL = ".html";
 }

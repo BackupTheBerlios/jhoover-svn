@@ -7,7 +7,8 @@ package fr.umlv.ir2.jhoover.network;
 import java.net.URI;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -15,14 +16,14 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import fr.umlv.ir2.jhoover.gui.DetailledJButtonEditor;
-import fr.umlv.ir2.jhoover.gui.DetailledJButtonRenderer;
-import fr.umlv.ir2.jhoover.gui.DetailledJProgressBarRenderer;
-import fr.umlv.ir2.jhoover.gui.DetailledModel;
-import fr.umlv.ir2.jhoover.gui.DiscoveryRenderer;
-import fr.umlv.ir2.jhoover.gui.DiscoveryTreeNode;
+import fr.umlv.ir2.jhoover.gui.JHMainFrame;
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
+import fr.umlv.ir2.jhoover.gui.discovery.DiscoveryRenderer;
+import fr.umlv.ir2.jhoover.gui.discovery.DiscoveryTreeNode;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.panel.JHMainPanel;
+import fr.umlv.ir2.jhoover.gui.tool.Labels;
+import fr.umlv.ir2.jhoover.gui.tool.Utils;
 import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
 
 /**
@@ -77,8 +78,14 @@ public class DownloadManager implements Runnable {
 		//creates the JTree in the discovery part
 		createJTree();
 		
-		//creates the JTable in the detailled part
-		createJTable();
+		//creates the model
+		this.detailledModel = DetailledModel.getInstance();
+		
+		//creates the JTable "ALL" in the detailled part
+		Utils.createNewTable("ALL", null);
+		
+		//creates the JTable "HTML" in the detailled part
+		Utils.createNewTable("HTML", Labels.HTML_REGEXP_LABEL);
 	}
 	
 	
@@ -98,8 +105,7 @@ public class DownloadManager implements Runnable {
 			}
 		});
 		JHMainPanel.getDiscoveryPanel().getScrollablePanel().add(this.tree);
-		this.tree.getSelectionModel().setSelectionMode(
-				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 //		this.tree.setRootVisible(false);
 //		this.tree.setShowsRootHandles(true);
 //		this.tree.setSelectionRow(0);
@@ -109,27 +115,9 @@ public class DownloadManager implements Runnable {
 //		this.tree.setEnabled(true);
 //		this.tree.setShowsRootHandles(true);
 	}
+
 	
 	
-	/*
-	 * creates the JTable in the detailled part
-	 */
-	private void createJTable() {
-		this.detailledModel = new DetailledModel();		
-		this.allTable = new JTable(this.detailledModel);
-		this.allTable.setCellSelectionEnabled(true);
-		//JButton
-		this.allTable.getColumnModel().getColumn(3).setCellEditor(new DetailledJButtonEditor());
-		this.allTable.getColumnModel().getColumn(3).setCellRenderer(new DetailledJButtonRenderer());
-		//JProgressBar
-		this.allTable.getColumnModel().getColumn(2).setCellRenderer(new DetailledJProgressBarRenderer());
-		//add new Tabs
-		JHDetailledPanel.getInstance().addTabPanel("ALL", this.allTable);
-		//TODO: voir pour HTML
-		JHDetailledPanel.getInstance().addTabPanel("HTML", new JPanel());
-	}
-
-
 	/*
 	 * Thread to download files
 	 * 
@@ -180,9 +168,9 @@ public class DownloadManager implements Runnable {
 			}
 		}
 		
-		//TODO: mettre une boite de dialogue ici pour annoncer la fin du téléchargement
-		
-//		System.out.println("...FIN...");
+		//TODO: voir pour mettre une alternative (cancelled ou pas)
+		//End of Download
+		JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_FINISHED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	

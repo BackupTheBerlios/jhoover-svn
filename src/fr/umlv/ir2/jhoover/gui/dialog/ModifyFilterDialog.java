@@ -21,6 +21,7 @@ import fr.umlv.ir2.jhoover.gui.ActionManager;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
+import fr.umlv.ir2.jhoover.gui.tool.Utils;
 
 /**
  * @author Romain Papuchon
@@ -66,10 +67,12 @@ public class ModifyFilterDialog extends AbstractDialog {
 
 	
 	protected ActionListener validButtonAction() {
-		// TODO: faire l'action necessaire
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("faire l'action necessaire pour changer le filtre");		
+				//Delete the Filter
+				JHDetailledPanel.getInstance().removeTabPanel((String)filterList.getSelectedItem());
+				//Add a new one
+				Utils.createNewTable(newRegexpTextField.getText(), newRegexpTextField.getText());
 				dispose();
 			}
 		};

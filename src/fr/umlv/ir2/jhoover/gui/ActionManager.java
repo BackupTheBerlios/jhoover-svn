@@ -82,13 +82,13 @@ public final class ActionManager
 		}
 	};
 
-	public static final Action	okRegexpDialogAction = new AbstractAction() {
-			public void actionPerformed(ActionEvent arg0) {
-				//TODO: voir pour le null + verifier si filtre ok
-				System.out.println("Ajoute un onglet dans DetailledPanel");
-//				JHDetailledPanel.getInstance().addTabPanel(regexpTextField.getText(), new JPanel());
-			}
-	};
+//	public static final Action	okRegexpDialogAction = new AbstractAction() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				//TODO: voir pour le null + verifier si filtre ok
+//				System.out.println("Ajoute un onglet dans DetailledPanel");
+//				JHDetailledPanel.getInstance().addTabPanel(regexpTextField().getText(), new JPanel());
+//			}
+//	};
 	
 	
 	public static final Action	findAction = new AbstractAction(Labels.FIND_LABEL, Icons.FIND_ICON) {
@@ -127,10 +127,10 @@ public final class ActionManager
 		public void actionPerformed (ActionEvent arg0) {
 			final JHToolBar toolBar = JHMainFrame.getInstance().getJHToolBar ();
 			if (!JHMainFrame.getInstance().getJHMenuBar().getToolBarItem().isSelected ()) {
-				toolBar.setVisible (false);
+				toolBar.setVisible(false);
 			}
 			else {
-				toolBar.setVisible (true);
+				toolBar.setVisible(true);
 			}
 		}
 	};

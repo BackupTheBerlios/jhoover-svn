@@ -2,7 +2,7 @@
  * jHoover - UMLV IR2
  * UI Project
  */
-package fr.umlv.ir2.jhoover.gui;
+package fr.umlv.ir2.jhoover.gui.discovery;
 
 import java.awt.Component;
 
@@ -10,7 +10,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
-import fr.umlv.ir2.jhoover.gui.tool.Utils;
+import fr.umlv.ir2.jhoover.gui.tool.Extentions;
 import fr.umlv.ir2.jhoover.network.WebFile;
 
 /**
@@ -36,19 +36,19 @@ public class DiscoveryRenderer extends DefaultTreeCellRenderer{
 		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		//TODO: faire marcher le toolTipText
 		if (value instanceof DiscoveryTreeNode) {
-			if (leaf && Utils.isImage((DiscoveryTreeNode)value)) {
+			if (leaf && Extentions.isImage((DiscoveryTreeNode)value)) {
 				setIcon(Icons.IMAGE_ICON);
 				setToolTipText(((DiscoveryTreeNode)value).getWebFile().getCompletePath());
-			} else if (leaf && Utils.isMusic((DiscoveryTreeNode)value)) {
+			} else if (leaf && Extentions.isMusic((DiscoveryTreeNode)value)) {
 				setIcon(Icons.MUSIC_ICON);
 				setToolTipText(((DiscoveryTreeNode)value).getWebFile().getCompletePath());
-			} else if (leaf && Utils.isVideo((DiscoveryTreeNode)value)) {
+			} else if (leaf && Extentions.isVideo((DiscoveryTreeNode)value)) {
 				setIcon(Icons.VIDEO_ICON);
 				setToolTipText(((DiscoveryTreeNode)value).getWebFile().getCompletePath());
-			} else if (leaf && Utils.isDocument((DiscoveryTreeNode)value)) {
+			} else if (leaf && Extentions.isDocument((DiscoveryTreeNode)value)) {
 				setIcon(Icons.DOCUMENT_ICON);
 				setToolTipText(((DiscoveryTreeNode)value).getWebFile().getCompletePath());
-			} else if (leaf && Utils.isWeb((DiscoveryTreeNode)value)) {
+			} else if (leaf && Extentions.isWeb((DiscoveryTreeNode)value)) {
 				setIcon(Icons.WEB_ICON);
 				setToolTipText(((DiscoveryTreeNode)value).getWebFile().getCompletePath());
 			} else if (leaf) {
