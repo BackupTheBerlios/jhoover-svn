@@ -16,20 +16,20 @@ import javax.swing.JTabbedPane;
  * Represents the detailed vue of the download
  */
 public class JHDetailledPanel extends JTabbedPane {
-
 	private static JHDetailledPanel INSTANCE = null;
-	
 	private ArrayList<String> tabbedList;
 	
-	/*
-	 * Default Constructor
+	
+	/**
+	 * Creates a JHDetailledPanel
 	 */
 	private JHDetailledPanel() {
 		super();
 		this.tabbedList = new ArrayList<String>();
 	}
 	
-	/*
+
+	/**
 	 * Returns the singleton of JHDetailledPanel
 	 */
 	public static JHDetailledPanel getInstance() {

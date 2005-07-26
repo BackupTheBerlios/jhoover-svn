@@ -8,6 +8,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
+
 
 /**
  * @author Romain Papuchon
@@ -15,10 +17,13 @@ import javax.swing.JPanel;
  */
 public class JHManageTabPanel extends JPanel {
 
-	private final JHFilterPanel regexpPanel = new JHFilterPanel();
-//	private final JHDetailledPanel detailledPanel = new JHDetailledPanel();
+	private final JHFilterPanel regexpPanel;
 	
+	/**
+	 * Creates a JHManageTabPanel
+	 */
 	public JHManageTabPanel() {
+		regexpPanel = new JHFilterPanel();
 		setLayout(new BorderLayout());
 		add(this.regexpPanel, BorderLayout.NORTH);
 		add(JHDetailledPanel.getInstance(), BorderLayout.CENTER);

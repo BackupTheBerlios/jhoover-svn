@@ -23,6 +23,9 @@ import fr.umlv.ir2.jhoover.network.DownloadManager;
  * 
  */
 public class JHoover {
+	
+	private static Thread downloadManagerThread;
+	
 	/**
 	 * Main class
 	 * @param args
@@ -84,10 +87,15 @@ public class JHoover {
 			System.exit(0);
 		}			
 		
-		DownloadManager downloadManager = new DownloadManager(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
+		DownloadManager downloadManager = DownloadManager.getInstance(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
 		//add the file pointed by startURI in the downloadList from the downloadManager
 		downloadManager.addHtmlFile(startURI, 0);
-		Thread downloadManagerThread = new Thread(downloadManager);
+		downloadManagerThread = new Thread(downloadManager);
 		downloadManagerThread.start();
+	}
+	
+	
+	public static Thread getDownloadManagerThread() {
+		return downloadManagerThread;
 	}
 }

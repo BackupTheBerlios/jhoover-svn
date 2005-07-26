@@ -11,12 +11,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.tool.Utils;
 
 /**
@@ -26,7 +29,6 @@ import fr.umlv.ir2.jhoover.gui.tool.Utils;
 public class JHFilterPanel extends JPanel {
 
 	private JTextField regexpTextField;
-
 	
 	/*
 	 * Constructor
@@ -74,12 +76,11 @@ public class JHFilterPanel extends JPanel {
 	 */
 	private ActionListener addAction() {
 		//TODO: voir pour mettre cette action dans ActionManager (cf. AddFilterDialog, meme methode)
-		//TODO: gerer le cas du label null
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int index = 0;
-				if (regexpTextField.getText() != "") {
-					index = Utils.createNewTable(regexpTextField.getText(), regexpTextField.getText());
+				if (!regexpTextField.getText().equals("")) {
+					index = Utils.createNewTable(DetailledModel.getInstance(), regexpTextField.getText(), regexpTextField.getText());
 				} else {
 					//TODO: gerer ce cas
 				}

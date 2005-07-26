@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-<depth>3</depth>
+<depth>2</depth>
 <destination>
 <directory>C:\TEMP/</directory>
 </destination>
@@ -15,6 +15,6 @@
 <regexp>*.*</regexp>
 <url>http://www.anthonyplog.com/index.html</url>
 <project>
-<name>anthony</name>
+<name>anthon</name>
 </project>
 </configuration>

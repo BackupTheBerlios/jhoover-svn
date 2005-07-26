@@ -6,19 +6,27 @@ import javax.swing.ImageIcon;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import org.apache.regexp.RE;
 
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.network.WebFile;
+import fr.umlv.ir2.jhoover.network.WebHtmlFile;
+import fr.umlv.ir2.jhoover.network.WebLinkedFile;
 
 public class DetailledAdapter extends AbstractTableModel {
-
 	private DetailledModel model;
 	private String regexpRequest;
 	private ArrayList<WebFile> matchedWebFiles;
 	
+	
+	/**
+	 * Creates a new DetailledAdapter
+	 * @param model The full model of data
+	 * @param regexpRequest The filter in a regular Expression
+	 */
 	public DetailledAdapter(DetailledModel model, String regexpRequest) {
 		this.model = model;
 		this.regexpRequest = regexpRequest;
@@ -27,14 +35,41 @@ public class DetailledAdapter extends AbstractTableModel {
 		//add a listener on the model
 		model.addTableModelListener(new TableModelListener() {
 			public void tableChanged(TableModelEvent event) {
-				//TODO: voir cette methode (surement un peu gourmande - bcp d'appels ici avec les meme numeros...)
-				//add the new datas in the list
-				updateData(event.getFirstRow(), event.getLastRow());
-				fireTableRowsInserted(event.getFirstRow(), event.getLastRow());
+				switch (event.getType()){
+				case TableModelEvent.INSERT:
+					//add the datas in the list matchedWebFiles
+					if (DetailledAdapter.this.regexpRequest == "HTML" || DetailledAdapter.this.regexpRequest == "FILES") {
+						updateDataWithoutRegex(event.getFirstRow(), event.getLastRow(), DetailledAdapter.this.regexpRequest);
+					} else {
+						updateDataWithRegex(event.getFirstRow(), event.getLastRow(), DetailledAdapter.this.regexpRequest);
+					}
+					fireTableRowsInserted(event.getFirstRow(), event.getLastRow());
+					break;
+					
+				case TableModelEvent.DELETE:					
+					deleteAllData();
+					fireTableRowsDeleted(event.getFirstRow(), event.getLastRow());
+					break;
+					
+				case TableModelEvent.UPDATE:
+					fireTableRowsUpdated(event.getFirstRow(), event.getLastRow());
+					break;
+					
+				default:
+					//TODO: gerer ce cas	
+					fireTableDataChanged();
+					break;
+				}
 			}
 		});
 		
-		updateData(0, model.getWebFiles().size()-1);
+		//adding the datas in the list matchedWebFiles
+		if (regexpRequest == "HTML" || regexpRequest == "FILES") {
+			updateDataWithoutRegex(0, this.model.getWebFiles().size()-1, regexpRequest);
+		} else {
+			updateDataWithRegex(0, this.model.getWebFiles().size()-1, regexpRequest);
+		}
+		fireTableRowsInserted(0, this.model.getWebFiles().size()-1);
 	}
 	
 	public int getRowCount() {
@@ -122,27 +157,62 @@ public class DetailledAdapter extends AbstractTableModel {
 	
 	
 	/**
-	 * adds the datas from fistRow to lastRow in the matchedWebFiles list
-	 * @param firstRow
-	 * @param lastRow
+	 * Add the datas from fistRow to lastRow in the matchedWebFiles list (filter with regular expression)
+	 * @param firstRow the first index to load
+	 * @param lastRow the last index to load
 	 */
-	private void updateData(int firstRow, int lastRow) {
+	private void updateDataWithRegex(int firstRow, int lastRow, String regex) {
 		ArrayList<WebFile> webFiles = model.getWebFiles();
-		if (regexpRequest != null) {
-			RE r = new RE(regexpRequest);
+		if (regex != null) {
+			RE r = new RE(regex);
 			for (int i=firstRow; i<=lastRow; i++) {
 				WebFile webFile = webFiles.get(i);
 				if (!matchedWebFiles.contains(webFile) && r.match(webFile.getPath())) {
-					matchedWebFiles.add(webFiles.get(i));
+					matchedWebFiles.add(webFile);
 				}
 			}
 		} else {
 			for (int i=firstRow; i<=lastRow; i++) {
 				WebFile webFile = webFiles.get(i);
 				if (!matchedWebFiles.contains(webFile)) {
-					matchedWebFiles.add(webFiles.get(i));
+					matchedWebFiles.add(webFile);
 				}
 			}
 		}
+	}
+	
+	
+	
+	/**
+	 * Add the datas from fistRow to lastRow in the matchedWebFiles list (filter without regular expression)
+	 * @param firstRow the first index to load
+	 * @param lastRow the last index to load
+	 */
+	private void updateDataWithoutRegex(int firstRow, int lastRow, String regex) {
+		ArrayList<WebFile> webFiles = model.getWebFiles();
+		if (regex == "HTML") {
+			for (int i=firstRow; i<=lastRow; i++) {
+				WebFile webFile = webFiles.get(i);
+				if (!matchedWebFiles.contains(webFile) && (webFile instanceof WebHtmlFile)) {
+					matchedWebFiles.add(webFile);
+				}
+			}
+		} else if (regex == "FILES") {
+			for (int i=firstRow; i<=lastRow; i++) {
+				WebFile webFile = webFiles.get(i);
+				if (!matchedWebFiles.contains(webFile) && (webFile instanceof WebLinkedFile)) {
+					matchedWebFiles.add(webFile);
+				}
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * Delete all the datas from the matchedWebFiles list
+	 */
+	private void deleteAllData() {
+		matchedWebFiles = new ArrayList<WebFile>();
 	}
 }

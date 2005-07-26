@@ -89,7 +89,7 @@ public final class JHMainFrame extends JFrame {
 
 	
 	public void build() {
-		mainPanel = new JHMainPanel();
+		mainPanel = JHMainPanel.getInstance();
 		toolBar = new JHToolBar();
 		menuBar = new JHMenuBar();
 		// Add the menu bar

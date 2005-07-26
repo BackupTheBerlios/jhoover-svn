@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -18,6 +19,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
+import fr.umlv.ir2.jhoover.gui.tool.Utils;
 
 /**
  * @author Romain Papuchon
@@ -30,7 +32,12 @@ public class DeleteFilterDialog extends AbstractDialog {
 	public DeleteFilterDialog() {
 		super(JHMainFrame.getInstance(), Labels.DELETE_FILTER_LABEL);
 		validButton.setText(Labels.DELETE_FILTER_LABEL);
-		buildPanel(new JPanel[]{createPanel(), createButtonPanel()});
+		Object[] tabList = Utils.removeFixedTabFromList();
+		if (tabList == null) {
+			JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.NO_FILTER_TO_DELETE_LABEL, Labels.NO_FILTER_TO_DELETE_LABEL, JOptionPane.ERROR_MESSAGE);
+		} else {
+			buildPanel(new JPanel[]{createPanel(), createButtonPanel()});
+		}
 	}
 	
 	
@@ -46,8 +53,7 @@ public class DeleteFilterDialog extends AbstractDialog {
 		
 		JLabel selectFilterLabel = new JLabel("Select Filter");
 		
-		//TODO: faire un traitement pour enlever 'ALL' et 'HTML' de la liste qui suit
-		filterList = new JComboBox(JHDetailledPanel.getInstance().getTabbedList().toArray());
+		filterList = new JComboBox(Utils.removeFixedTabFromList());
 		
 		//Adding the Fields to the builder
 		CellConstraints ccHeader = new CellConstraints();
@@ -58,6 +64,9 @@ public class DeleteFilterDialog extends AbstractDialog {
 	}
 
 	
+	
+
+
 	protected ActionListener validButtonAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

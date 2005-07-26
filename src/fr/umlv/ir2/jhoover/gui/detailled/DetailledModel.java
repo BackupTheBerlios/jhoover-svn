@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
-import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.network.WebFile;
@@ -117,5 +116,15 @@ public class DetailledModel extends AbstractTableModel {
 	
 	public ArrayList<WebFile> getWebFiles() {
 		return webFiles;
+	}
+
+	
+	/**
+	 * Init the model in deleting all the WebFiles
+	 */
+	public void initModel() {
+		int max = webFiles.size();
+		webFiles = new ArrayList<WebFile>();
+		fireTableRowsDeleted(0, max);
 	}
 }

@@ -5,12 +5,12 @@
 package fr.umlv.ir2.jhoover.gui;
 
 import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import fr.umlv.ir2.jhoover.JHoover;
 import fr.umlv.ir2.jhoover.gui.dialog.AddFilterDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.DeleteFilterDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.FindFileDialog;
@@ -19,6 +19,7 @@ import fr.umlv.ir2.jhoover.gui.dialog.RunConfigDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.SetConfigDialog;
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
+import fr.umlv.ir2.jhoover.network.DownloadManager;
 
 /**
  * @author Romain Papuchon
@@ -26,23 +27,45 @@ import fr.umlv.ir2.jhoover.gui.tool.Labels;
  */
 public final class ActionManager
 {
-	private static final Set myActions = new HashSet();
-
 	public static final Action newAction = new AbstractAction(Labels.NEW_LABEL, Icons.NEW_ICON) {
-		public void actionPerformed (ActionEvent e) {			
+		public void actionPerformed (ActionEvent e) {
 			new RunConfigDialog(Labels.RUN_JHOOVER_LABEL);
 		}
 	};
 
 	public static final Action stopAction = new AbstractAction(Labels.STOP_LABEL, Icons.STOP_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			System.out.println("Stop action");
+			//stop the downloadManager Thread
+			JHoover.getDownloadManagerThread().interrupt();
+			//stop all the Threads
+			ArrayList<Thread> threadList = DownloadManager.getInstance(0, 0, 0, null, null).getThreadList();
+			for (int i=0; i<threadList.size(); i++) {
+				//TODO: voir si cela foncionne
+				threadList.get(i).interrupt();
+			}
 		}
 	};
 	
 	public static final Action pauseAction = new AbstractAction(Labels.PAUSE_LABEL, Icons.PAUSE_ICON) {
 		public void actionPerformed (ActionEvent e) {			
-			System.out.println("Pause action");
+			//stop the downloadManager Thread
+//			try {
+//				JHoover.getDownloadManagerThread().join();
+//			} catch (InterruptedException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			//stop all the Threads
+//			ArrayList<Thread> threadList = DownloadManager.getInstance(0, 0, 0, null, null).getThreadList();
+//			for (int i=0; i<threadList.size(); i++) {
+//				//TODO: voir si cela foncionne
+//				try {
+//					threadList.get(i).join();
+//				} catch (InterruptedException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			}
 		}
 	};
 	
@@ -58,52 +81,43 @@ public final class ActionManager
 		}
 	};
 	
-	public static final Action	exitAction = new AbstractAction(Labels.EXIT_LABEL, Icons.EXIT_ICON) {
+	public static final Action exitAction = new AbstractAction(Labels.EXIT_LABEL, Icons.EXIT_ICON) {
 		public void actionPerformed (ActionEvent e) {
 			System.out.println("Exit action");
 		}
 	};
 
-	public static final Action	addFilterAction = new AbstractAction(Labels.ADD_FILTER_LABEL, Icons.ADD_FILTER_ICON) {
+	public static final Action addFilterAction = new AbstractAction(Labels.ADD_FILTER_LABEL, Icons.ADD_FILTER_ICON) {
 		public void actionPerformed (ActionEvent e) {
 			new AddFilterDialog();
 		}
 	};
 	
-	public static final Action	modifyFilterAction = new AbstractAction(Labels.MODIFY_FILTER_LABEL, Icons.MODIFY_FILTER_ICON) {
+	public static final Action modifyFilterAction = new AbstractAction(Labels.MODIFY_FILTER_LABEL, Icons.MODIFY_FILTER_ICON) {
 		public void actionPerformed (ActionEvent e) {
 			new ModifyFilterDialog();
 		}
 	};
 	
-	public static final Action	deleteFilterAction = new AbstractAction(Labels.DELETE_FILTER_LABEL, Icons.DELETE_FILTER_ICON) {
+	public static final Action deleteFilterAction = new AbstractAction(Labels.DELETE_FILTER_LABEL, Icons.DELETE_FILTER_ICON) {
 		public void actionPerformed (ActionEvent e) {
 			new DeleteFilterDialog();
 		}
 	};
-
-//	public static final Action	okRegexpDialogAction = new AbstractAction() {
-//			public void actionPerformed(ActionEvent arg0) {
-//				//TODO: voir pour le null + verifier si filtre ok
-//				System.out.println("Ajoute un onglet dans DetailledPanel");
-//				JHDetailledPanel.getInstance().addTabPanel(regexpTextField().getText(), new JPanel());
-//			}
-//	};
 	
-	
-	public static final Action	findAction = new AbstractAction(Labels.FIND_LABEL, Icons.FIND_ICON) {
+	public static final Action findAction = new AbstractAction(Labels.FIND_LABEL, Icons.FIND_ICON) {
 		public void actionPerformed (ActionEvent e) {
 			new FindFileDialog();
 		}
 	};
 	
-	public static final Action	configurationAction = new AbstractAction(Labels.CONFIGURATION_LABEL, Icons.CONFIGURATION_ICON) {
+	public static final Action configurationAction = new AbstractAction(Labels.CONFIGURATION_LABEL, Icons.CONFIGURATION_ICON) {
 		public void actionPerformed (ActionEvent e) {
 			new SetConfigDialog(Labels.CONFIGURATION_OF_JHOOVER_LABEL);
 		}
 	};
 	
-	public static final Action	colorsAction = new AbstractAction(Labels.COLORS_LABEL, Icons.COLORS_ICON) {
+	public static final Action colorsAction = new AbstractAction(Labels.COLORS_LABEL, Icons.COLORS_ICON) {
 		public void actionPerformed (ActionEvent e) {
 			System.out.println("Colors action");
 		}
@@ -120,8 +134,6 @@ public final class ActionManager
 			System.out.println("About action");
 		}
 	};
-
-	
 
 	public static final Action visibleToolBar = new AbstractAction () {
 		public void actionPerformed (ActionEvent arg0) {

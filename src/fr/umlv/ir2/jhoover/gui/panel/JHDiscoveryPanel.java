@@ -15,12 +15,21 @@ import javax.swing.JScrollPane;
  */
 public class JHDiscoveryPanel extends JPanel {
 	private JPanel scrollablePanel;
+	
+	
+	/**
+	 * Create a JHDiscoveryPanel
+	 */
 	public JHDiscoveryPanel() {
 		super(new BorderLayout());
 		this.scrollablePanel = new JPanel();
 		add(new JScrollPane(this.scrollablePanel), BorderLayout.CENTER);
 	}
 	
+	
+	/**
+	 * @return the scrollablePanel
+	 */
 	public JPanel getScrollablePanel() {
 		return this.scrollablePanel;
 	}

@@ -10,7 +10,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -19,6 +22,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import fr.umlv.ir2.jhoover.gui.ActionManager;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.gui.tool.Utils;
@@ -28,14 +32,19 @@ import fr.umlv.ir2.jhoover.gui.tool.Utils;
  *
  */
 public class ModifyFilterDialog extends AbstractDialog {
-	
 	JTextField newRegexpTextField;
 	JComboBox filterList;
+	
 	
 	public ModifyFilterDialog() {
 		super(JHMainFrame.getInstance(), Labels.MODIFY_FILTER_LABEL);
 		validButton.setText(Labels.MODIFY_FILTER_LABEL);
-		buildPanel(new JPanel[]{createPanel(), createButtonPanel()});
+		Object[] tabList = Utils.removeFixedTabFromList();
+		if (tabList == null) {
+			JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.NO_FILTER_TO_MODIFY_LABEL, Labels.NO_FILTER_TO_MODIFY_LABEL, JOptionPane.ERROR_MESSAGE);
+		} else {
+			buildPanel(new JPanel[]{createPanel(), createButtonPanel()});
+		}
 	}
 	
 	/*
@@ -52,8 +61,7 @@ public class ModifyFilterDialog extends AbstractDialog {
 		JLabel newRexexpLabel = new JLabel("New Regular Expression");
 		newRegexpTextField = new JTextField(20);
 		
-		//TODO: faire un traitement pour enlever 'ALL' et 'HTML' de la liste qui suit
-		filterList = new JComboBox(JHDetailledPanel.getInstance().getTabbedList().toArray());
+		filterList = new JComboBox(Utils.removeFixedTabFromList());
 		
 		//Adding the Fields to the builder
 		CellConstraints ccHeader = new CellConstraints();
@@ -72,7 +80,7 @@ public class ModifyFilterDialog extends AbstractDialog {
 				//Delete the Filter
 				JHDetailledPanel.getInstance().removeTabPanel((String)filterList.getSelectedItem());
 				//Add a new one
-				Utils.createNewTable(newRegexpTextField.getText(), newRegexpTextField.getText());
+				Utils.createNewTable(DetailledModel.getInstance(), newRegexpTextField.getText(), newRegexpTextField.getText());
 				dispose();
 			}
 		};
