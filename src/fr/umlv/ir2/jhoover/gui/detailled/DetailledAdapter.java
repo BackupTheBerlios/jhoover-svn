@@ -6,7 +6,6 @@ import javax.swing.ImageIcon;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import org.apache.regexp.RE;
 
@@ -24,8 +23,8 @@ public class DetailledAdapter extends AbstractTableModel {
 	
 	/**
 	 * Creates a new DetailledAdapter
-	 * @param model The full model of data
-	 * @param regexpRequest The filter in a regular Expression
+	 * @param model the full model of data
+	 * @param regexpRequest the filter in a regular Expression
 	 */
 	public DetailledAdapter(DetailledModel model, String regexpRequest) {
 		this.model = model;
@@ -52,7 +51,16 @@ public class DetailledAdapter extends AbstractTableModel {
 					break;
 					
 				case TableModelEvent.UPDATE:
-					fireTableRowsUpdated(event.getFirstRow(), event.getLastRow());
+					if (DetailledAdapter.this.regexpRequest == null) {
+						fireTableRowsUpdated(event.getFirstRow(), event.getLastRow());
+					} else {
+						ArrayList<WebFile> webFiles = ((DetailledModel)event.getSource()).getWebFiles();
+						for (int i=event.getFirstRow(); i<=event.getLastRow(); i++) {
+							WebFile webTmp = webFiles.get(i);
+							int n = matchedWebFiles.indexOf(webTmp);
+							fireTableRowsUpdated(n, n);
+						}
+					}
 					break;
 					
 				default:
@@ -167,11 +175,12 @@ public class DetailledAdapter extends AbstractTableModel {
 			RE r = new RE(regex);
 			for (int i=firstRow; i<=lastRow; i++) {
 				WebFile webFile = webFiles.get(i);
-				if (!matchedWebFiles.contains(webFile) && r.match(webFile.getPath())) {
+				if ((!matchedWebFiles.contains(webFile)) && r.match(webFile.getPath())) {
 					matchedWebFiles.add(webFile);
 				}
 			}
 		} else {
+			//ALL
 			for (int i=firstRow; i<=lastRow; i++) {
 				WebFile webFile = webFiles.get(i);
 				if (!matchedWebFiles.contains(webFile)) {
@@ -193,20 +202,19 @@ public class DetailledAdapter extends AbstractTableModel {
 		if (regex == "HTML") {
 			for (int i=firstRow; i<=lastRow; i++) {
 				WebFile webFile = webFiles.get(i);
-				if (!matchedWebFiles.contains(webFile) && (webFile instanceof WebHtmlFile)) {
+				if ((!matchedWebFiles.contains(webFile)) && (webFile instanceof WebHtmlFile)) {
 					matchedWebFiles.add(webFile);
 				}
 			}
 		} else if (regex == "FILES") {
 			for (int i=firstRow; i<=lastRow; i++) {
 				WebFile webFile = webFiles.get(i);
-				if (!matchedWebFiles.contains(webFile) && (webFile instanceof WebLinkedFile)) {
+				if ((!matchedWebFiles.contains(webFile)) && (webFile instanceof WebLinkedFile)) {
 					matchedWebFiles.add(webFile);
 				}
 			}
 		}
 	}
-	
 	
 	
 	/**

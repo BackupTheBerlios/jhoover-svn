@@ -72,7 +72,7 @@ public class RunConfigDialog extends AbstractConfigDialog {
 				configuration.setNbLinkedThread(nbLinkedThread);
 				configuration.setDestDirectory(destDirectory);
 				configuration.save();
-				JHoover.startDownload(projectName, url, destDirectory, depth, nbHtmlThread, nbLinkedThread, regExp);
+				JHoover.getInstance().startDownload(projectName, url, destDirectory, depth, nbHtmlThread, nbLinkedThread, regExp);
 				dispose();
 			}
 		};

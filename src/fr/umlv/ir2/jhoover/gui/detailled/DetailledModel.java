@@ -10,7 +10,6 @@ import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.network.WebFile;
 
 public class DetailledModel extends AbstractTableModel {
-	
 	private String[] columns = Labels.COLUMS_LABELS;   
 	private ArrayList<WebFile> webFiles;
 	private static DetailledModel INSTANCE = null;

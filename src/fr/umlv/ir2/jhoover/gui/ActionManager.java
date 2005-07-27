@@ -9,16 +9,20 @@ import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 
 import fr.umlv.ir2.jhoover.JHoover;
+import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.dialog.AddFilterDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.DeleteFilterDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.FindFileDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.ModifyFilterDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.RunConfigDialog;
 import fr.umlv.ir2.jhoover.gui.dialog.SetConfigDialog;
+import fr.umlv.ir2.jhoover.gui.panel.JHMainPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
+import fr.umlv.ir2.jhoover.network.DownloadAndParseFile;
 import fr.umlv.ir2.jhoover.network.DownloadManager;
 
 /**
@@ -29,55 +33,80 @@ public final class ActionManager
 {
 	public static final Action newAction = new AbstractAction(Labels.NEW_LABEL, Icons.NEW_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			new RunConfigDialog(Labels.RUN_JHOOVER_LABEL);
+			if (DownloadManager.isRunning()) {
+				Object[] options = {"Yes", "No"};			
+				int n = JOptionPane.showOptionDialog(JHMainFrame.getInstance(), Labels.CANCEL_THE_DOWNLOAD_AND_NEW_QUESTION_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+				if (n==0) {
+					//YES
+					stopAction();
+					new RunConfigDialog(Labels.RUN_JHOOVER_LABEL);					
+				}
+			} else {
+				new RunConfigDialog(Labels.RUN_JHOOVER_LABEL);
+			}
 		}
 	};
 
 	public static final Action stopAction = new AbstractAction(Labels.STOP_LABEL, Icons.STOP_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			//stop the downloadManager Thread
-			JHoover.getDownloadManagerThread().interrupt();
-			//stop all the Threads
-			ArrayList<Thread> threadList = DownloadManager.getInstance(0, 0, 0, null, null).getThreadList();
-			for (int i=0; i<threadList.size(); i++) {
-				//TODO: voir si cela foncionne
-				threadList.get(i).interrupt();
+			if (DownloadManager.isRunning()) {
+				Object[] options = {"Yes", "No"};			
+				int n = JOptionPane.showOptionDialog(JHMainFrame.getInstance(), Labels.CANCEL_THE_DOWNLOAD_QUESTION_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+				if (n==0) {
+					//YES
+					stopAction();					
+				}
 			}
 		}
 	};
 	
 	public static final Action pauseAction = new AbstractAction(Labels.PAUSE_LABEL, Icons.PAUSE_ICON) {
-		public void actionPerformed (ActionEvent e) {			
-			//stop the downloadManager Thread
-//			try {
-//				JHoover.getDownloadManagerThread().join();
-//			} catch (InterruptedException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			//stop all the Threads
-//			ArrayList<Thread> threadList = DownloadManager.getInstance(0, 0, 0, null, null).getThreadList();
-//			for (int i=0; i<threadList.size(); i++) {
-//				//TODO: voir si cela foncionne
-//				try {
-//					threadList.get(i).join();
-//				} catch (InterruptedException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			}
+		public void actionPerformed (ActionEvent e) {	
+			if (DownloadManager.isRunning()) {
+				if (!DownloadManager.getInstance(0, 0, 0, null, null).isPaused()) {
+					//pause the downloadManager Thread
+					JHoover.getInstance().getDownloadManager().setPauseStatus(true);
+					//pause all the Download Threads
+					ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance(0, 0, 0, null, null).getThreadList();
+					for (int i=0; i<threadList.size(); i++) {
+						synchronized (threadList.get(i)) {
+							threadList.get(i).setPauseStatus(true);
+						}
+					}
+					JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_PAUSED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_ALREADY_PAUSED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
 		}
 	};
-	
+
 	public static final Action resumeAction = new AbstractAction(Labels.RESUME_LABEL, Icons.RESUME_ICON) {
-		public void actionPerformed (ActionEvent e) {			
-			System.out.println("Resume action");
-		}
+		public void actionPerformed (ActionEvent e) {
+			if (DownloadManager.isRunning()) {
+				if (DownloadManager.getInstance(0, 0, 0, null, null).isPaused()) {
+					resumeAction();
+					JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_RESUMED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_ALREADY_RESUMED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		}	
 	};
 	
 	public static final Action closeAction = new AbstractAction(Labels.CLOSE_LABEL, Icons.CLOSE_ICON) {
-		public void actionPerformed (ActionEvent e) {			
-			System.out.println("Close action");
+		public void actionPerformed (ActionEvent e) {
+			if (DownloadManager.isRunning()) {
+				Object[] options = {"Yes", "No"};			
+				int n = JOptionPane.showOptionDialog(JHMainFrame.getInstance(), Labels.CANCEL_THE_DOWNLOAD_QUESTION_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+				if (n==0) {
+					//YES
+					stopAction();
+					initAction();					
+				}
+			} else {
+				initAction();
+			}
 		}
 	};
 	
@@ -135,6 +164,10 @@ public final class ActionManager
 		}
 	};
 
+	
+	/**
+	 * Set visible or unvisible the toolbar
+	 */
 	public static final Action visibleToolBar = new AbstractAction () {
 		public void actionPerformed (ActionEvent arg0) {
 			final JHToolBar toolBar = JHMainFrame.getInstance().getJHToolBar ();
@@ -146,4 +179,48 @@ public final class ActionManager
 			}
 		}
 	};
+	
+	
+	/**
+	 * To stop the download
+	 */
+	private static void stopAction() {
+		ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance(0, 0, 0, null, null).getThreadList();
+		//stop the downloadManager Thread
+		JHoover.getInstance().getDownloadManager().interrupt();
+		//stop all the Download Threads
+		for (int i=0; i<threadList.size(); i++) {
+			threadList.get(i).interrupt();
+		}
+		JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_CANCELLED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.ERROR_MESSAGE);
+	}
+	
+	/**
+	 * To resume the download 
+	 */
+	private static void resumeAction() {
+		//resume the downloadManager Thread
+		JHoover.getInstance().getDownloadManager().setPauseStatus(false);
+		JHoover.getInstance().getDownloadManager().interrupt();
+		//resume all the Download Threads
+		ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance(0, 0, 0, null, null).getThreadList();
+		for (int i=0; i<threadList.size(); i++) {
+			synchronized (threadList.get(i)) {
+				threadList.get(i).setPauseStatus(false);
+				threadList.get(i).notify();
+			}
+		}
+	}
+	
+	/**
+	 * Raz the current jHoover project
+	 */
+	public static void initAction() {
+		//init the discoveryPanel: remove the JTree
+		JHMainPanel.initDiscoveryPanel();
+		//init the detailled model: init the model and fire
+		if (!DetailledModel.getInstance().getWebFiles().isEmpty()) {
+			DetailledModel.getInstance().initModel();
+		}
+	}
 }

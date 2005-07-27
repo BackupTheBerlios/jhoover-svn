@@ -24,7 +24,17 @@ import fr.umlv.ir2.jhoover.network.DownloadManager;
  */
 public class JHoover {
 	
-	private static Thread downloadManagerThread;
+	private DownloadManager downloadManager;
+	private static JHoover INSTANCE = null;
+	
+	
+	public static JHoover getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new JHoover();
+		}
+		return INSTANCE;
+	}
+	
 	
 	/**
 	 * Main class
@@ -72,7 +82,7 @@ public class JHoover {
 	}
 	
 	
-	public static void startDownload(String projectName, String startURIString, String destDirectory, int maxDepth, int maxDLHtml, int maxDLLink, String regExp) {
+	public void startDownload(String projectName, String startURIString, String destDirectory, int maxDepth, int maxDLHtml, int maxDLLink, String regExp) {
 		//TODO: utiliser la RegExp
 		URI startURI = null;
 		
@@ -87,15 +97,14 @@ public class JHoover {
 			System.exit(0);
 		}			
 		
-		DownloadManager downloadManager = DownloadManager.getInstance(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
+		downloadManager = DownloadManager.getInstance(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
 		//add the file pointed by startURI in the downloadList from the downloadManager
 		downloadManager.addHtmlFile(startURI, 0);
-		downloadManagerThread = new Thread(downloadManager);
-		downloadManagerThread.start();
+		downloadManager.start();
 	}
 	
 	
-	public static Thread getDownloadManagerThread() {
-		return downloadManagerThread;
+	public DownloadManager getDownloadManager() {
+		return downloadManager;
 	}
 }

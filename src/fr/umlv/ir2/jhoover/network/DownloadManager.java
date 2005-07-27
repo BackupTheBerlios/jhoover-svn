@@ -14,6 +14,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import fr.umlv.ir2.jhoover.gui.ActionManager;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.discovery.DiscoveryRenderer;
@@ -28,42 +29,38 @@ import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
  *
  * Manage the download
  */
-public class DownloadManager implements Runnable {	
-	private ArrayList<Thread> threadList = new ArrayList<Thread>();
-	private ArrayList<WebHtmlFile> htmlFileToDownload;
-	private ArrayList<WebLinkedFile> linkedFileToDownload;
-//	private ArrayList<WebHtmlFile> htmlFileDownloaded;
-//	private ArrayList<WebLinkedFile> linkedFileDownloaded;
-	private ArrayList<WebHtmlFile> htmlFileInDownloading;
-	private ArrayList<WebLinkedFile> linkedFileInDownloading;
+public class DownloadManager extends Thread {	
+	private ArrayList<DownloadAndParseFile> threadList;
+	private ArrayList<WebHtmlFile> htmlFileToDownload, htmlFileInDownloading;
+	private ArrayList<WebLinkedFile> linkedFileToDownload, linkedFileInDownloading;
 	private ArrayList<String> discoveredURI; 
-	private int maxDLHtml;
-	private int maxDLLink;
-	private int currentDLHtml;
-	private int currentDLLink;
-	private int maxDepth;
+	private int maxDLHtml, maxDLLink, currentDLHtml, currentDLLink, maxDepth;
 	private URI startURI;
 	private String destDirectory;
 	
 	private static DownloadManager INSTANCE = null;
+	private boolean pauseThread = false; //to pause the Thread
 	
 	//for the graphic
 	private JTree tree;
 	private DiscoveryTreeNode treeRoot;
 	private DefaultTreeModel treeModel;
 	private DetailledModel detailledModel;
+
 	
-	
-	/*
-	 * Creates a DownloadManager
+	/**
+	 * Create a DownloadManager
+	 * @param maxDLHtml number of maximum simultaneous html download file
+	 * @param maxDLLink number of maximum simultaneous linked download file
+	 * @param maxDepth depth of the download in the WebSite
+	 * @param startURI URI from which the download begin
+	 * @param destDirectory directory where the datas will be stored
 	 */
 	private DownloadManager(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory) {
 		this.htmlFileToDownload = new ArrayList<WebHtmlFile>();
 		this.linkedFileToDownload = new ArrayList<WebLinkedFile>();
 		this.htmlFileInDownloading = new ArrayList<WebHtmlFile>();
 		this.linkedFileInDownloading = new ArrayList<WebLinkedFile>();
-//		this.htmlFileDownloaded = new ArrayList<WebHtmlFile>();
-//		this.linkedFileDownloaded = new ArrayList<WebLinkedFile>();
 		this.discoveredURI = new ArrayList<String>();
 		this.maxDLHtml = maxDLHtml;
 		this.maxDLLink = maxDLLink;
@@ -72,28 +69,33 @@ public class DownloadManager implements Runnable {
 		this.maxDepth = maxDepth;
 		this.startURI = startURI;
 		this.destDirectory = destDirectory;
-
-		//init the discoveryPanel: remove the JTree
-		JHMainPanel.initDiscoveryPanel();
+		this.threadList = new ArrayList<DownloadAndParseFile>();
 		
-		//init the detailled model: init the model and fire
-		if (!DetailledModel.getInstance().getWebFiles().isEmpty()) {
-			DetailledModel.getInstance().initModel();
-		}
+		//raz the current jHoover project
+		ActionManager.initAction();
+		
 		this.detailledModel = DetailledModel.getInstance();
-		
 		
 		//creates the JTree in the discovery part
 		createJTree();
 		//creates the JTable "ALL" in the detailled part
-		Utils.createNewTable(detailledModel, "ALL", Labels.ALL_REGEXP_LABEL);
+		Utils.createNewTable(detailledModel, Labels.ALL_LABEL, Labels.ALL_REGEXP_LABEL);
 		//creates the JTable "HTML" in the detailled part
-		Utils.createNewTable(detailledModel, "HTML", Labels.HTML_REGEXP_LABEL);
+		Utils.createNewTable(detailledModel, Labels.HTML_LABEL, Labels.HTML_REGEXP_LABEL);
 		//creates the JTable "FILES" in the detailled part
-		Utils.createNewTable(detailledModel, "FILES", Labels.FILES_REGEXP_LABEL);
+		Utils.createNewTable(detailledModel, Labels.FILES_LABEL, Labels.FILES_REGEXP_LABEL);
 	}
 	
 	
+	/**
+	 * Return a DownloadManager per session
+	 * @param maxDLHtml number of maximum simultaneous html download file
+	 * @param maxDLLink number of maximum simultaneous linked download file
+	 * @param maxDepth depth of the download in the WebSite
+	 * @param startURI URI from which the download begin
+	 * @param destDirectory directory where the datas will be stored
+	 * @return an instance of DownloadManager
+	 */
 	public static DownloadManager getInstance(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory) {
 		if (INSTANCE == null) {
 			INSTANCE = new DownloadManager(maxDLHtml ,maxDLLink, maxDepth, startURI, destDirectory);
@@ -103,84 +105,47 @@ public class DownloadManager implements Runnable {
 	
 	
 	/**
-	 * Creates the JTree in the discovery part
-	 */
-	private void createJTree() {
-		//TODO: regler les parametres pour que le jTree soit beau
-		this.treeRoot = new DiscoveryTreeNode(null, null);
-		this.treeModel = new DefaultTreeModel(this.treeRoot);
-		this.tree = new JTree(this.treeModel);
-		this.tree.setCellRenderer(new DiscoveryRenderer());
-		this.tree.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent arg0) {
-				//TODO: faire l'action pour aller selectionner la ligne dans la JTable
-				System.out.println("JTREE ACTION: [TODO] Selectionner dans la JTable");
-			}
-		});
-		JHMainPanel.getInstance().getDiscoveryPanel().getScrollablePanel().add(this.tree);
-		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-//		this.tree.setRootVisible(false);
-//		this.tree.setShowsRootHandles(true);
-//		this.tree.setSelectionRow(0);
-//		this.tree.setExpandsSelectedPaths(true);
-//		this.tree.setRootVisible(false);
-//		this.tree.expandRow(0);
-//		this.tree.setEnabled(true);
-//		this.tree.setShowsRootHandles(true);
-	}
-
-	
-	
-	/**
 	 * Thread to download files
-	 * 
 	 * Take all the webLinkedFile contained in the htmlFileToDownload list and download them  
 	 */
 	public void run() {
 		String defaultHost;		
-	
+		testIfPaused();
 		if (this.startURI.getPort() > 0) {
 			defaultHost = this.startURI.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.startURI.getHost() + ":" + this.startURI.getPort();
 		} else {
 			defaultHost = this.startURI.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.startURI.getHost();
 		}
-		
 		DownloadAndParseFile downloadFile;
 		boolean isInterrupted = false;
-		
 		while(!Thread.interrupted() && (this.htmlFileToDownload.isEmpty() == false || this.linkedFileToDownload.isEmpty() == false || this.htmlFileInDownloading.isEmpty() == false || this.linkedFileInDownloading.isEmpty() == false)) {
-			
 			if (this.currentDLHtml < this.maxDLHtml && this.htmlFileToDownload.isEmpty() == false) {
 				WebHtmlFile webHtmlFile;
 				webHtmlFile = this.htmlFileToDownload.get(0);
 				this.htmlFileToDownload.remove(0);
 				this.htmlFileInDownloading.add(webHtmlFile);
 				//start a new download of Html File in a new Thread
-				downloadFile = new DownloadAndParseFile(this, webHtmlFile, defaultHost, this.destDirectory, detailledModel);
-				Thread htmlThread = new Thread(downloadFile);
-				htmlThread.start();
-				threadList.add(htmlThread);
+				downloadFile = new DownloadAndParseFile(this, webHtmlFile, defaultHost, this.destDirectory);
+				downloadFile.start();
+				threadList.add(downloadFile);
 				this.currentDLHtml++;
 			}
-			
+			testIfPaused();
 			if (this.currentDLLink < this.maxDLLink && this.linkedFileToDownload.isEmpty() == false) {
 				WebLinkedFile webLinkedFile;
 				webLinkedFile = this.linkedFileToDownload.get(0);
 				this.linkedFileToDownload.remove(0);
 				this.linkedFileInDownloading.add(webLinkedFile);
 				//start a new download of Linked File in a new Thread
-				downloadFile = new DownloadAndParseFile(this, webLinkedFile, defaultHost, this.destDirectory, detailledModel);
-				Thread linkThread = new Thread(downloadFile);
-				linkThread.start();
-				threadList.add(linkThread);
+				downloadFile = new DownloadAndParseFile(this, webLinkedFile, defaultHost, this.destDirectory);
+				downloadFile.start();
+				threadList.add(downloadFile);
 				this.currentDLLink++;
 			}
-			
-			//TODO: tmp, a voir
 			try {
-				Thread.sleep(500);
+				Thread.sleep(HtmlConstants.TIME_BETWEEN_EACH_DOWNLOAD);
 			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
+				interrupt();
 				isInterrupted = true;
 			}
 		}
@@ -188,16 +153,42 @@ public class DownloadManager implements Runnable {
 		//TODO: mettre en rouge tous les downloads dans la JTable
 		if (isInterrupted) {
 			//Download was cancelled
-			JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_CANCELLED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.ERROR_MESSAGE);
 		} else {	
 			//End of Download
 			JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_FINISHED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.INFORMATION_MESSAGE);	
 		}
+		//free the DownloadManager
+		freeDownloadManager();
 	}
 	
 	
-	/*
-	 * Add a webHtmlFile in the queue if it hasn't been already downloaded 
+	/**
+	 * Free the DownloadManager (free memory)
+	 */
+	private void freeDownloadManager() {
+		threadList = new ArrayList<DownloadAndParseFile>();
+		htmlFileToDownload = null;
+		linkedFileToDownload = null;
+		htmlFileInDownloading = null;
+		linkedFileInDownloading = null;
+		discoveredURI = null;
+		maxDLHtml = 0;
+		maxDLLink = 0;
+		currentDLHtml = 0;
+		currentDLLink = 0;
+		maxDepth = 0;
+		startURI = null;
+		destDirectory = null;
+		INSTANCE = null;
+		pauseThread = false;
+		System.gc();
+	}
+
+
+	/**
+	 * Add a webHtmlFile in the queue if it hasn't been already downloaded
+	 * @param uri the URI to add
+	 * @param depth the depth of the URI
 	 */
 	public void addHtmlFile(URI uri, int depth) {
 		//creates the webHtmlFile according to the URI 
@@ -223,8 +214,11 @@ public class DownloadManager implements Runnable {
 	}
 	
 	
-	/*
-	 * Add a webLinkedFile in the queue if it hasn't been already downloaded 
+	/**
+	 * Add a webLinkedFile in the queue if it hasn't been already downloaded
+	 * @param uri the URI to add
+	 * @param depth the depth of the URI
+	 * @param parent the webHtmlFile parent
 	 */
 	public void addLinkedFile(URI uri, int depth, WebFile parent) {
 		//creates the webLinkedFile according to the URI 
@@ -251,8 +245,10 @@ public class DownloadManager implements Runnable {
 	}
 	
 	
-	/*
-	 * Return true if the file has already been downloaded or if we shoutd not try to download it, else false
+	/**
+	 * Return if the URI has already been downloaded 
+	 * @param uri the URI to test
+	 * @return true if the file has already been downloaded or if we shoutd not try to download it, else false
 	 */
 	public boolean isUriAlreadyDownloaded(URI uri) {
 		String discoveredURIString;
@@ -272,8 +268,9 @@ public class DownloadManager implements Runnable {
 	}
 	
 	
-	/*
+	/**
 	 * Permiss to organize the download threads
+	 * @param webFile the webFile which is finished to download
 	 */
 	public void endDownload(WebFile webFile) {
 		if (webFile instanceof WebHtmlFile) {
@@ -288,7 +285,81 @@ public class DownloadManager implements Runnable {
 	}
 	
 	
-	public ArrayList<Thread> getThreadList() {
+	/**
+	 * Creates the JTree in the discovery part
+	 */
+	private void createJTree() {
+		//TODO: regler les parametres pour que le jTree soit beau
+		this.treeRoot = new DiscoveryTreeNode(null, null);
+		this.treeModel = new DefaultTreeModel(this.treeRoot);
+		this.tree = new JTree(this.treeModel);
+		this.tree.setCellRenderer(new DiscoveryRenderer());
+		this.tree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent arg0) {
+				//TODO: faire l'action pour aller selectionner la ligne dans la JTable
+				System.out.println("JTREE ACTION: [TODO] Selectionner dans la JTable");
+			}
+		});
+		JHMainPanel.getInstance().getDiscoveryPanel().getScrollablePanel().add(this.tree);
+		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+//		this.tree.setRootVisible(false);
+//		this.tree.setShowsRootHandles(true);
+//		this.tree.setSelectionRow(0);
+//		this.tree.setExpandsSelectedPaths(true);
+//		this.tree.expandRow(0);
+	}
+	
+	
+	/**
+	 * Returns the list of download Threads
+	 * @return the list of Threads
+	 */
+	public ArrayList<DownloadAndParseFile> getThreadList() {
 		return threadList;
+	}
+	
+	
+	/**
+	 * Check if the Thread has been paused
+	 */
+	private void testIfPaused() {
+        synchronized (this) {
+            while (pauseThread) {
+                try {
+                    wait();
+                } catch (Exception e) {
+                }
+            }
+        }
+	}
+	
+	
+	/**
+	 * Pause or Resume the Thread
+	 * @param pause true to pause the thread or false to resume it
+	 */
+	public void setPauseStatus(boolean pause) {
+		this.pauseThread = pause;
+	}
+	
+	
+	/**
+	 * Status of the Thread
+	 * @return true if the Thread is paused, false else
+	 */
+	public boolean isPaused() {
+		return pauseThread;
+	}
+	
+	
+	/**
+	 * Tests if the DownloadManager is running
+	 * @return true if the downloadManager is running, false else
+	 */
+	public static boolean isRunning() {
+		if (INSTANCE == null) {
+			return false;
+		}
+		return true;
 	}
 }

@@ -27,22 +27,26 @@ import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
  * @author Romain Papuchon
  *
  */
-public class DownloadAndParseFile implements Runnable {
-	
+public class DownloadAndParseFile extends Thread {
 	private DownloadManager downloadManager;
 	private WebFile webFile;
 	private String defaultHost;
 	private String destDirectory;
-	private DetailledModel detailledModel;
+	private boolean pauseThread = false; //to pause the Thread
 	
 
-
-	public DownloadAndParseFile(DownloadManager downloadManager, WebFile webFile, String defaultHost, String destDirectory, DetailledModel detailledModel) {
+	/**
+	 * Creates a DownloadAndParseFile
+	 * @param downloadManager to manage the Download
+	 * @param webFile webFile to parse
+	 * @param defaultHost url given in the configuration
+	 * @param destDirectory directory on the hard drive to save the distant webSite
+	 */
+	public DownloadAndParseFile(DownloadManager downloadManager, WebFile webFile, String defaultHost, String destDirectory) {
 		this.downloadManager = downloadManager;
 		this.webFile = webFile;
 		this.defaultHost = defaultHost;
 		this.destDirectory = destDirectory;
-		this.detailledModel = detailledModel;
 	}
 
 	
@@ -55,43 +59,47 @@ public class DownloadAndParseFile implements Runnable {
 		} else {
 			webFileHostURI = webFileUri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + webFileUri.getHost();
 		}
-		
+		testIfPaused();
 		//download the webFile
-		System.out.println("--Downloading: " + webFileHostURI + webFileUri.getPath() + " - depth: " + this.webFile.getDepth());
+			System.out.println("--Downloading: " + webFileHostURI + webFileUri.getPath() + " - depth: " + this.webFile.getDepth());
 		
 		//filter the links which have not the same host
 		if (webFileHostURI.equals(this.defaultHost)) {
 			boolean downloadedFile = false;
+			testIfPaused();
 			try {
 				downloadedFile = download();
 			} catch (IOException e1) {
 				System.err.println(e1);
 			}
+			testIfPaused();
 			if (downloadedFile) {
 				//parsing of the webFile if it is a HTML document
 				if (this.webFile.getContentType().contains(HtmlConstants.TEXT_HTML)) {
 					System.out.println("------parsing: " + this.destDirectory + webFileUri.getPath());
+					testIfPaused();
 					parseHtml(this.webFile);
 				}
 			} else {
 				//error during download, set the progression to (-1)
 				this.webFile.setProgression(-2);
 				//do a fire in the detailledModel
-				int indexInModel = detailledModel.getIndexWebFile(this.webFile);
-				detailledModel.fireTableRowsUpdated(indexInModel, indexInModel);
+				int indexInModel = DetailledModel.getInstance().getIndexWebFile(this.webFile);
+				DetailledModel.getInstance().fireTableRowsUpdated(indexInModel, indexInModel);
 			}
 		} else {
 			//it is not the same web site or the same protocol
 			System.err.println(webFileHostURI + " / " + this.defaultHost + ": NOT THE SAME HOST OR THE SAME PROTOCOL");
 		}
-		
+		testIfPaused();
 		this.downloadManager.endDownload(this.webFile);
 	}
 	
 	
-	/*
+	/**
 	 * Download the file and return the status
 	 * @return true if the file has been downloaded, false else
+	 * @throws IOException
 	 */
 	public boolean download() throws IOException {
 		HttpURLConnection connection = null;
@@ -102,107 +110,97 @@ public class DownloadAndParseFile implements Runnable {
 		String localPath = this.destDirectory + this.webFile.getURI().getPath();
 		
 		
-		/*
-		 * Open the connexion
-		 */
-		try {
-			connection = (HttpURLConnection) this.webFile.getURI().toURL().openConnection();
-			connection.connect();
-		} catch (IOException e) {			
-			System.err.println(e);
-		}
-
-		//tests the response code
-		if (canBeDownloaded(connection)) {
+		if (!isCancelled()) {
+			
+			//Open the connexion
 			try {
-				inputStream = connection.getInputStream();
-			} catch (IOException e2) {
-				System.err.println(e2);
-			}
-			
-			/*
-			 * parameters from the file
-			 */
-			this.webFile.setContentType(connection.getContentType());
-			//we cannot know the realSize (certainly blocked by server)
-			if (connection.getContentLength() == -1) {
-				this.webFile.setRealSize(-2);
-			} else {
-				this.webFile.setRealSize(connection.getContentLength());	
-			}
-			
-//			webFile.setBeginDate(new Date(connection.getDate()));
-			
-			
-			/*
-			 * Opening File for writing 
-			 */
-			File file = new File(localPath);
-			//creates the directory if it doesn't yet exist
-			if (!file.getParentFile().exists()) {
-				if (!file.getParentFile().mkdirs()) {
-					throw new IOException("Cannot create ancestor directories: '" + localPath + "'");
-					//TODO: voir si on quitte le programme ou pas
-				}
-			}
-			
-			try {
-				fileOutputStream = new FileOutputStream(file);
-			} catch (FileNotFoundException e1) {
-				System.err.println(e1);
-			}
-			
-			
-			/*
-			 * Writing the data in the File
-			 */
-			try {
-				nbBytes = inputStream.read(buffer);
-			} catch (IOException e) {
+				connection = (HttpURLConnection) this.webFile.getURI().toURL().openConnection();
+				connection.connect();
+			} catch (IOException e) {			
 				System.err.println(e);
 			}
-			int downloadedSize = 0;
-			while (nbBytes > 0) {
+			testIfPaused();
+			//tests the response code
+			if (canBeDownloaded(connection)) {
 				try {
-					fileOutputStream.write(buffer, 0, nbBytes);
-					downloadedSize += nbBytes;
-					//progression in percent
-					if (this.webFile.getRealSize() == -2) {
-						//cannot kwnow the progression
-						this.webFile.setProgression(-2);
-					} else {
-						this.webFile.setProgression(downloadedSize * 100 / this.webFile.getRealSize());
-					}
-					//do a fire in the detailledModel
-					int indexInModel = detailledModel.getIndexWebFile(this.webFile);
-					detailledModel.fireTableRowsUpdated(indexInModel, indexInModel);
-				} catch (IOException e) {
-					System.err.println(e);
+					inputStream = connection.getInputStream();
+				} catch (IOException e2) {
+					System.err.println(e2);
 				}
+				testIfPaused();
+				//parameters from the file
+				this.webFile.setContentType(connection.getContentType());
+				//we cannot know the realSize (certainly blocked by server)
+				if (connection.getContentLength() == -1) {
+					this.webFile.setRealSize(-2);
+				} else {
+					this.webFile.setRealSize(connection.getContentLength());	
+				}
+				testIfPaused();
+				//Opening File for writing
+				File file = new File(localPath);
+				//creates the directory if it doesn't yet exist
+				if (!file.getParentFile().exists()) {
+					if (!file.getParentFile().mkdirs()) {
+						throw new IOException("Cannot create ancestor directories: '" + localPath + "'");
+						//TODO: voir si on quitte le programme ou pas
+					}
+				}
+				try {
+					fileOutputStream = new FileOutputStream(file);
+				} catch (FileNotFoundException e1) {
+					System.err.println(e1);
+				}
+				testIfPaused();
+				//Writing the data in the File
 				try {
 					nbBytes = inputStream.read(buffer);
 				} catch (IOException e) {
 					System.err.println(e);
 				}
+				int downloadedSize = 0;
+				while (nbBytes > 0) {
+					if (!isCancelled()) {
+						testIfPaused();
+						try {
+							fileOutputStream.write(buffer, 0, nbBytes);
+							downloadedSize += nbBytes;
+							//progression in percent
+							if (this.webFile.getRealSize() == -2) {
+								//cannot kwnow the progression
+								this.webFile.setProgression(-2);
+							} else {
+								this.webFile.setProgression(downloadedSize * 100 / this.webFile.getRealSize());
+							}
+							//do a fire in the detailledModel
+							int indexInModel = DetailledModel.getInstance().getIndexWebFile(this.webFile);
+							DetailledModel.getInstance().fireTableRowsUpdated(indexInModel, indexInModel);
+						} catch (IOException e) {
+							System.err.println(e);
+						}
+						try {
+							nbBytes = inputStream.read(buffer);
+						} catch (IOException e) {
+							System.err.println(e);
+						}
+					}
+				}
+				
+				//closing the streams
+				try {
+					inputStream.close();
+					fileOutputStream.close();
+				} catch (IOException e) {
+					System.err.println(e);
+				}
+				return true;
 			}
-			
-			
-			/*
-			 * closing the streams
-			 */
-			try {
-				inputStream.close();
-				fileOutputStream.close();
-			} catch (IOException e) {
-				System.err.println(e);
-			}
-			return true;
 		}
 		return false;
 	}
 
 	
-	/*
+	/**
 	 * Tests the response code returned by the connection
 	 * 
 	 * 200 - Ok (always considered 'good')
@@ -239,43 +237,92 @@ public class DownloadAndParseFile implements Runnable {
 		return false;
 	}
 
+	
 
+	/**
+	 * Parse the WebFile: extract linked files and html files 
+	 * @param parent parent of the webFile
+	 */
 	public void parseHtml(WebFile parent) {
-		
 		int depthParent = parent.getDepth();
 		Parser parser;
 		Node [] images;
 		try {
 			parser = new Parser(this.defaultHost + this.webFile.getURI().getPath());
 			images = parser.extractAllNodesThatAre (ImageTag.class);
-			for (int i = 0; i < images.length; i++)
-			{
-				ImageTag imageTag = (ImageTag)images[i];
-				//System.out.println (imageTag.getImageURI ());
-				try {
-					this.downloadManager.addLinkedFile(new URI(imageTag.getImageURL()), depthParent+1, parent);
-				} catch (URISyntaxException e) {
-					System.err.println("INVILID URI: " + imageTag.getImageURL());
+			for (int i = 0; i < images.length; i++)	{
+				if (!isCancelled()) {
+					ImageTag imageTag = (ImageTag)images[i];
+					//System.out.println (imageTag.getImageURI ());
+					try {
+						this.downloadManager.addLinkedFile(new URI(imageTag.getImageURL()), depthParent+1, parent);
+					} catch (URISyntaxException e) {
+						System.err.println("INVILID URI: " + imageTag.getImageURL());
+					}
+				} else {
+					break;
 				}
 			}
 
-			parser = new Parser(this.defaultHost + this.webFile.getURI().getPath());
-			ObjectFindingVisitor visitor = new ObjectFindingVisitor (LinkTag.class);
-			parser.visitAllNodesWith (visitor);
-			Node[] links = visitor.getTags ();
-			for (int i = 0; i < links.length; i++)
-			{
-				LinkTag linkTag = (LinkTag)links[i];
-				//System.out.print ("\"" + linkTag.getLinkText () + "\" => ");
-				//System.out.println (linkTag.getLink ());
-				try {
-					this.downloadManager.addHtmlFile(new URI(linkTag.getLink()), depthParent+1);
-				} catch (URISyntaxException e) {
-					System.err.println("INVILID URI: " + linkTag.getLink());
+			if (!isCancelled()) {
+				parser = new Parser(this.defaultHost + this.webFile.getURI().getPath());
+				ObjectFindingVisitor visitor = new ObjectFindingVisitor (LinkTag.class);
+				parser.visitAllNodesWith (visitor);
+				Node[] links = visitor.getTags ();
+				for (int i = 0; i < links.length; i++) {
+					if (!isCancelled()) {
+						LinkTag linkTag = (LinkTag)links[i];
+						//System.out.print ("\"" + linkTag.getLinkText () + "\" => ");
+						//System.out.println (linkTag.getLink ());
+						try {
+							this.downloadManager.addHtmlFile(new URI(linkTag.getLink()), depthParent+1);
+						} catch (URISyntaxException e) {
+							System.err.println("INVILID URI: " + linkTag.getLink());
+						}
+					} else {
+						break;
+					}
 				}
 			}
 		} catch (ParserException e) {
 			System.err.println(e);
 		}
+	}
+	
+	
+	/**
+	 * Check if the Thread has been paused
+	 */
+	private void testIfPaused() {
+        synchronized (this) {
+            while (pauseThread) {
+                try {
+                    wait();
+                } catch (Exception e) {
+                }
+            }
+        }
+	}
+	
+	
+	/**
+	 * Check if the Thread has been cancelled
+	 * @return true if the Thread has been cancelled, false else
+	 */
+	private boolean isCancelled() {
+		if (Thread.interrupted()) {
+			interrupt();
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * Pause or Resume the Thread
+	 * @param pause true to pause the thread or false to resume it
+	 */
+	public void setPauseStatus(boolean pause) {
+		this.pauseThread = pause;
 	}
 }
