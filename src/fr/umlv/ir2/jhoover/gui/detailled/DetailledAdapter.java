@@ -50,21 +50,7 @@ public class DetailledAdapter extends AbstractTableModel {
 					fireTableRowsDeleted(event.getFirstRow(), event.getLastRow());
 					break;
 					
-				case TableModelEvent.UPDATE:
-					if (DetailledAdapter.this.regexpRequest == null) {
-						fireTableRowsUpdated(event.getFirstRow(), event.getLastRow());
-					} else {
-						ArrayList<WebFile> webFiles = ((DetailledModel)event.getSource()).getWebFiles();
-						for (int i=event.getFirstRow(); i<=event.getLastRow(); i++) {
-							WebFile webTmp = webFiles.get(i);
-							int n = matchedWebFiles.indexOf(webTmp);
-							fireTableRowsUpdated(n, n);
-						}
-					}
-					break;
-					
 				default:
-					//TODO: gerer ce cas	
 					fireTableDataChanged();
 					break;
 				}

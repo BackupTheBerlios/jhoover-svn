@@ -249,7 +249,7 @@ public class DownloadAndParseFile extends Thread {
 		Node [] images;
 		try {
 			parser = new Parser(this.defaultHost + this.webFile.getURI().getPath());
-			images = parser.extractAllNodesThatAre (ImageTag.class);
+			images = parser.extractAllNodesThatAre(ImageTag.class);
 			for (int i = 0; i < images.length; i++)	{
 				if (!isCancelled()) {
 					ImageTag imageTag = (ImageTag)images[i];
@@ -266,16 +266,19 @@ public class DownloadAndParseFile extends Thread {
 
 			if (!isCancelled()) {
 				parser = new Parser(this.defaultHost + this.webFile.getURI().getPath());
-				ObjectFindingVisitor visitor = new ObjectFindingVisitor (LinkTag.class);
-				parser.visitAllNodesWith (visitor);
+				ObjectFindingVisitor visitor = new ObjectFindingVisitor(LinkTag.class);
+				parser.visitAllNodesWith(visitor);
 				Node[] links = visitor.getTags ();
 				for (int i = 0; i < links.length; i++) {
 					if (!isCancelled()) {
 						LinkTag linkTag = (LinkTag)links[i];
-						//System.out.print ("\"" + linkTag.getLinkText () + "\" => ");
-						//System.out.println (linkTag.getLink ());
+//						System.out.print ("\"" + linkTag.getLinkText () + "\" => ");
+//						System.out.println (linkTag.getLink ());
 						try {
-							this.downloadManager.addHtmlFile(new URI(linkTag.getLink()), depthParent+1);
+							if (linkTag.isHTTPLikeLink()) {
+								//TODO: faire un filtre ici sur linkTag.getLink()
+								this.downloadManager.addHtmlFile(new URI(linkTag.getLink()), depthParent+1);
+							}
 						} catch (URISyntaxException e) {
 							System.err.println("INVILID URI: " + linkTag.getLink());
 						}
@@ -324,5 +327,14 @@ public class DownloadAndParseFile extends Thread {
 	 */
 	public void setPauseStatus(boolean pause) {
 		this.pauseThread = pause;
+	}
+	
+	
+	/**
+	 * Return the WebFile of the DownloadAndParseFile
+	 * @return the webFile
+	 */
+	public WebFile getWebFile() {
+		return webFile;
 	}
 }
