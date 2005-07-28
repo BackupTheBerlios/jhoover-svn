@@ -19,7 +19,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
-import fr.umlv.ir2.jhoover.gui.tool.Utils;
+import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
 
 /**
  * @author Romain Papuchon
@@ -32,7 +32,7 @@ public class DeleteFilterDialog extends AbstractDialog {
 	public DeleteFilterDialog() {
 		super(JHMainFrame.getInstance(), Labels.DELETE_FILTER_LABEL);
 		validButton.setText(Labels.DELETE_FILTER_LABEL);
-		Object[] tabList = Utils.removeFixedTabFromList();
+		Object[] tabList = GuiUtils.removeFixedTabFromList();
 		if (tabList == null) {
 			JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.NO_FILTER_TO_DELETE_LABEL, Labels.NO_FILTER_TO_DELETE_LABEL, JOptionPane.ERROR_MESSAGE);
 		} else {
@@ -53,7 +53,7 @@ public class DeleteFilterDialog extends AbstractDialog {
 		
 		JLabel selectFilterLabel = new JLabel("Select Filter");
 		
-		filterList = new JComboBox(Utils.removeFixedTabFromList());
+		filterList = new JComboBox(GuiUtils.removeFixedTabFromList());
 		
 		//Adding the Fields to the builder
 		CellConstraints ccHeader = new CellConstraints();

@@ -78,7 +78,7 @@ public class DiscoveryTreeNode implements TreeNode {
 	
 	public String toString() {
 		if (this.webFile != null) {
-			return this.webFile.getPath();
+			return this.webFile.getFileName();
 		}
 		return "";
 	}

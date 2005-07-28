@@ -25,7 +25,7 @@ import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
-import fr.umlv.ir2.jhoover.gui.tool.Utils;
+import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
 
 /**
  * @author Romain Papuchon
@@ -39,7 +39,7 @@ public class ModifyFilterDialog extends AbstractDialog {
 	public ModifyFilterDialog() {
 		super(JHMainFrame.getInstance(), Labels.MODIFY_FILTER_LABEL);
 		validButton.setText(Labels.MODIFY_FILTER_LABEL);
-		Object[] tabList = Utils.removeFixedTabFromList();
+		Object[] tabList = GuiUtils.removeFixedTabFromList();
 		if (tabList == null) {
 			JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.NO_FILTER_TO_MODIFY_LABEL, Labels.NO_FILTER_TO_MODIFY_LABEL, JOptionPane.ERROR_MESSAGE);
 		} else {
@@ -61,7 +61,7 @@ public class ModifyFilterDialog extends AbstractDialog {
 		JLabel newRexexpLabel = new JLabel("New Regular Expression");
 		newRegexpTextField = new JTextField(20);
 		
-		filterList = new JComboBox(Utils.removeFixedTabFromList());
+		filterList = new JComboBox(GuiUtils.removeFixedTabFromList());
 		
 		//Adding the Fields to the builder
 		CellConstraints ccHeader = new CellConstraints();
@@ -80,7 +80,7 @@ public class ModifyFilterDialog extends AbstractDialog {
 				//Delete the Filter
 				JHDetailledPanel.getInstance().removeTabPanel((String)filterList.getSelectedItem());
 				//Add a new one
-				Utils.createNewTable(DetailledModel.getInstance(), newRegexpTextField.getText(), newRegexpTextField.getText());
+				GuiUtils.createNewTable(DetailledModel.getInstance(), newRegexpTextField.getText(), newRegexpTextField.getText());
 				dispose();
 			}
 		};

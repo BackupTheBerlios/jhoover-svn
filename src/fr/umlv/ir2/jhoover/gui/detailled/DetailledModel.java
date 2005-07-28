@@ -35,48 +35,7 @@ public class DetailledModel extends AbstractTableModel {
 	}
 	
 	public Object getValueAt(final int rowIndex, int colIndex) {
-		switch (colIndex) {
-		case 0:
-			//returns the path of the webFile
-			return webFiles.get(rowIndex).getPath();
-			
-		case 1:
-			int progression = webFiles.get(rowIndex).getProgression();
-			if (progression < -2) {
-				//cannot know: HTML File
-				return Icons.DOWNLOAD_DISCOVERED_ICON;
-			}
-			if (progression == -2) {
-				//we cannot know the progression
-				return Icons.DOWNLOAD_UNKNOWED_ICON;
-			}
-			if (progression == -1) {
-				//error during dowload
-				return Icons.DOWNLOAD_STOPPED_ICON;
-			}
-			if (progression == 0) {
-				//download not started
-				return Icons.DOWNLOAD_DISCOVERED_ICON;
-			}
-			if (progression < 100) {
-				//download in progress
-				return Icons.DOWNLOAD_IN_PROGRESS_ICON;
-			}
-			//download finished
-			return Icons.DOWNLOAD_SUCCESS_ICON;
-			
-		case 2:
-			//returns the progression of the webFile
-			return new Integer(webFiles.get(rowIndex).getProgression());
-			
-		case 3:
-			//returns the webFile
-			return webFiles.get(rowIndex);
-			
-		default:
-			return null;
-		}
-		
+		return null;
 	}
 	
 	public String getColumnName(int colIndex) {
@@ -115,6 +74,10 @@ public class DetailledModel extends AbstractTableModel {
 	
 	public ArrayList<WebFile> getWebFiles() {
 		return webFiles;
+	}
+	
+	public WebFile getWebFile(int index) {
+		return webFiles.get(index);
 	}
 
 	

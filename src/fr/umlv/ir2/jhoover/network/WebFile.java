@@ -5,6 +5,7 @@
 package fr.umlv.ir2.jhoover.network;
 
 import java.net.URI;
+import java.util.StringTokenizer;
 
 import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
 
@@ -18,8 +19,6 @@ public abstract class WebFile {
 	private String contentType;
 	private int realSize;
 	private int progression;
-//	private int downloadedSize;
-//	private Date beginDate;
 
 	
 	/*
@@ -31,42 +30,8 @@ public abstract class WebFile {
 		this.contentType = "";
 		this.realSize = -1;
 		progression = 0;
-//		downloadedSize = 0;
-//		this.beginDate = null;
 	}
 			
-
-//	/*
-//	 * Returns true if the webFile is completely downloaded, false else
-//	 */
-//	public boolean isDownloaded() {
-//		if (downloadedSize == realSize) return true;
-//		return false;
-//	}
-	
-//	/*
-//	 * Returns true if the download of the webFile is in progress, false else
-//	 */
-//	public boolean isInProgress() {
-//		if (downloadedSize != 0 && downloadedSize < realSize) return true;
-//		return false;
-//	}
-	
-//	/*
-//	 * Returns true if the download of the webFile is not in progress, false else
-//	 */
-//	public boolean isNotInProgress() {
-//		if (downloadedSize == 0 && realSize != 0) return true;
-//		return false;
-//	}
-	
-//	public int getDownloadedSize() {
-//		return downloadedSize;
-//	}
-	
-//	public void setDownloadedSize(int downloadedSize) {
-//		this.downloadedSize = downloadedSize;
-//	}
 	
 	public int getRealSize() {
 		return this.realSize;
@@ -91,10 +56,7 @@ public abstract class WebFile {
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
-	
-//	public void setBeginDate(Date beginDate) {
-//		this.beginDate = beginDate;
-//	}
+
 	
 	public String getPath() {
 		return getURI().getPath();
@@ -110,20 +72,29 @@ public abstract class WebFile {
 	}
 
 
-	public String getCompletePath() {
-		//TODO: voir si cette methode renvoie completement ce qu'il faut (bonne syntaxe et bon resultat)
-		if (this.uri.getPort() > 0) {
-			return this.uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.uri.getHost() + ":" + this.uri.getPort() + this.uri.getPath();
+	/**
+	 * Return the file name of the WebFile
+	 * @return the file name
+	 */
+	public String getFileName() {
+		String path = getPath();
+		StringBuffer fileName = new StringBuffer();
+		for (int i=path.length()-1; i>=0; i--) {
+			if (path.charAt(i) == '/') {
+				if (i == path.length()-1) {
+					//the last slash
+					
+				} else {
+					//not the last slash
+					//string de i+1 a path.length()
+					for (int j=i+1; j<path.length(); j++) {
+						fileName.append(path.charAt(j));						
+					}
+					break;
+				}
+			}			
 		}
-		return this.uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.uri.getHost() + this.uri.getPath();
+		return fileName.toString();		
 	}
-	
-//	public String getDefaultHost() {
-//		//TODO: voir si cette methode renvoie completement ce qu'il faut (bonne syntaxe et bon resultat)
-//		if (this.uri.getPort() > 0) {
-//			return this.uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.uri.getHost() + ":" + this.uri.getPort();
-//		}
-//		return this.uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.uri.getHost();
-//	}
 }
 

@@ -34,7 +34,7 @@ public class DownloadAndParseFile extends Thread {
 	private String destDirectory;
 	private boolean pauseThread = false; //to pause the Thread
 	
-
+	
 	/**
 	 * Creates a DownloadAndParseFile
 	 * @param downloadManager to manage the Download
@@ -51,47 +51,30 @@ public class DownloadAndParseFile extends Thread {
 
 	
 	public void run() {
-		URI webFileUri = this.webFile.getURI();
-		String webFileHostURI;
-		
-		if (webFileUri.getPort() > 0) {
-			webFileHostURI = webFileUri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + webFileUri.getHost() + ":" + webFileUri.getPort();
-		} else {
-			webFileHostURI = webFileUri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + webFileUri.getHost();
+		testIfPaused();
+		boolean downloadedFile = false;
+		testIfPaused();
+		try {
+			downloadedFile = download();				
+		} catch (IOException e1) {
+			System.err.println(e1);
 		}
 		testIfPaused();
-		//download the webFile
-			System.out.println("--Downloading: " + webFileHostURI + webFileUri.getPath() + " - depth: " + this.webFile.getDepth());
-		
-		//filter the links which have not the same host
-		if (webFileHostURI.equals(this.defaultHost)) {
-			boolean downloadedFile = false;
-			testIfPaused();
-			try {
-				downloadedFile = download();
-			} catch (IOException e1) {
-				System.err.println(e1);
-			}
-			testIfPaused();
-			if (downloadedFile) {
-				//parsing of the webFile if it is a HTML document
-				if (this.webFile.getContentType().contains(HtmlConstants.TEXT_HTML)) {
-					System.out.println("------parsing: " + this.destDirectory + webFileUri.getPath());
-					testIfPaused();
-					parseHtml(this.webFile);
-				}
-			} else {
-				//error during download, set the progression to (-1)
-				this.webFile.setProgression(-2);
-				//do a fire in the detailledModel
-				int indexInModel = DetailledModel.getInstance().getIndexWebFile(this.webFile);
-				DetailledModel.getInstance().fireTableRowsUpdated(indexInModel, indexInModel);
+		if (downloadedFile) {
+			//parsing of the webFile if it is a HTML document
+			if (this.webFile.getContentType().contains(HtmlConstants.TEXT_HTML)) {
+				System.out.println("------parsing: " + this.destDirectory + webFile.getURI().getPath());
+				testIfPaused();
+				parseHtml(this.webFile);
 			}
 		} else {
-			//it is not the same web site or the same protocol
-			System.err.println(webFileHostURI + " / " + this.defaultHost + ": NOT THE SAME HOST OR THE SAME PROTOCOL");
+			//error during download, set the progression to (-1)
+			this.webFile.setProgression(-2);
+			//do a fire in the detailledModel
+			int indexInModel = DetailledModel.getInstance().getIndexWebFile(this.webFile);
+			DetailledModel.getInstance().fireTableRowsUpdated(indexInModel, indexInModel);
 		}
-		testIfPaused();
+		testIfPaused();		
 		this.downloadManager.endDownload(this.webFile);
 	}
 	
@@ -109,9 +92,7 @@ public class DownloadAndParseFile extends Thread {
 		int nbBytes = 0;
 		String localPath = this.destDirectory + this.webFile.getURI().getPath();
 		
-		
 		if (!isCancelled()) {
-			
 			//Open the connexion
 			try {
 				connection = (HttpURLConnection) this.webFile.getURI().toURL().openConnection();
@@ -183,6 +164,8 @@ public class DownloadAndParseFile extends Thread {
 						} catch (IOException e) {
 							System.err.println(e);
 						}
+					} else {						
+						nbBytes = 0;
 					}
 				}
 				
@@ -275,8 +258,7 @@ public class DownloadAndParseFile extends Thread {
 //						System.out.print ("\"" + linkTag.getLinkText () + "\" => ");
 //						System.out.println (linkTag.getLink ());
 						try {
-							if (linkTag.isHTTPLikeLink()) {
-								//TODO: faire un filtre ici sur linkTag.getLink()
+							if (isAGoodLink(linkTag)) {
 								this.downloadManager.addHtmlFile(new URI(linkTag.getLink()), depthParent+1);
 							}
 						} catch (URISyntaxException e) {
@@ -292,7 +274,34 @@ public class DownloadAndParseFile extends Thread {
 		}
 	}
 	
-	
+	/**
+	 * Test if the link is okay to doanload or not
+	 * @param linkTag the link to test
+	 * @return true if we can download the file, false else
+	 */
+	private boolean isAGoodLink(LinkTag linkTag) {
+		if (!linkTag.isHTTPLikeLink()) {
+			return false;
+		}
+		if (linkTag.isEmptyXmlTag()) {
+			return false;
+		}
+		if (linkTag.getLink().equals("/")) {
+			return false;
+		}
+		if (linkTag.getLink().equals("")) {
+			return false;
+		}
+		if (linkTag.getLink().equals(null)) {
+			return false;
+		}
+		if (linkTag.getLink().endsWith("/")) {
+			return false;
+		}
+		return true;
+	}
+
+
 	/**
 	 * Check if the Thread has been paused
 	 */

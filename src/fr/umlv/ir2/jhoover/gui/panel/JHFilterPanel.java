@@ -20,7 +20,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
-import fr.umlv.ir2.jhoover.gui.tool.Utils;
+import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
 
 /**
  * @author Romain Papuchon
@@ -80,7 +80,7 @@ public class JHFilterPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				int index = 0;
 				if (!regexpTextField.getText().equals("")) {
-					index = Utils.createNewTable(DetailledModel.getInstance(), regexpTextField.getText(), regexpTextField.getText());
+					index = GuiUtils.createNewTable(DetailledModel.getInstance(), regexpTextField.getText(), regexpTextField.getText());
 				} else {
 					//TODO: gerer ce cas
 				}

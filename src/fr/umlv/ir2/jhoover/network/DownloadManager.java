@@ -12,7 +12,6 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import fr.umlv.ir2.jhoover.gui.ActionManager;
@@ -21,9 +20,10 @@ import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.discovery.DiscoveryRenderer;
 import fr.umlv.ir2.jhoover.gui.discovery.DiscoveryTreeNode;
 import fr.umlv.ir2.jhoover.gui.panel.JHMainPanel;
+import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
-import fr.umlv.ir2.jhoover.gui.tool.Utils;
 import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
+import fr.umlv.ir2.jhoover.network.util.Utils;
 
 /**
  * @author Romain Papuchon
@@ -38,6 +38,7 @@ public class DownloadManager extends Thread {
 	private int maxDLHtml, maxDLLink, currentDLHtml, currentDLLink, maxDepth;
 	private URI startURI;
 	private String destDirectory;
+	private String defaultHost;
 	
 	private static DownloadManager INSTANCE = null;
 	private boolean pauseThread = false; //to pause the Thread
@@ -58,33 +59,34 @@ public class DownloadManager extends Thread {
 	 * @param destDirectory directory where the datas will be stored
 	 */
 	private DownloadManager(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory) {
-		this.htmlFileToDownload = new ArrayList<WebHtmlFile>();
-		this.linkedFileToDownload = new ArrayList<WebLinkedFile>();
-		this.htmlFileInDownloading = new ArrayList<WebHtmlFile>();
-		this.linkedFileInDownloading = new ArrayList<WebLinkedFile>();
-		this.discoveredURI = new ArrayList<String>();
+		htmlFileToDownload = new ArrayList<WebHtmlFile>();
+		linkedFileToDownload = new ArrayList<WebLinkedFile>();
+		htmlFileInDownloading = new ArrayList<WebHtmlFile>();
+		linkedFileInDownloading = new ArrayList<WebLinkedFile>();
+		discoveredURI = new ArrayList<String>();
 		this.maxDLHtml = maxDLHtml;
 		this.maxDLLink = maxDLLink;
-		this.currentDLHtml = 0;
-		this.currentDLLink = 0;
+		currentDLHtml = 0;
+		currentDLLink = 0;
 		this.maxDepth = maxDepth;
 		this.startURI = startURI;
 		this.destDirectory = destDirectory;
-		this.threadList = new ArrayList<DownloadAndParseFile>();
+		threadList = new ArrayList<DownloadAndParseFile>();
+		defaultHost = Utils.getCompleteHost(startURI);
 		
 		//raz the current jHoover project
 		ActionManager.initAction();
 		
-		this.detailledModel = DetailledModel.getInstance();
+		detailledModel = DetailledModel.getInstance();
 		
 		//creates the JTree in the discovery part
 		createJTree();
 		//creates the JTable "ALL" in the detailled part
-		Utils.createNewTable(detailledModel, Labels.ALL_LABEL, Labels.ALL_REGEXP_LABEL);
+		GuiUtils.createNewTable(detailledModel, Labels.ALL_LABEL, Labels.ALL_REGEXP_LABEL);
 		//creates the JTable "HTML" in the detailled part
-		Utils.createNewTable(detailledModel, Labels.HTML_LABEL, Labels.HTML_REGEXP_LABEL);
+		GuiUtils.createNewTable(detailledModel, Labels.HTML_LABEL, Labels.HTML_REGEXP_LABEL);
 		//creates the JTable "FILES" in the detailled part
-		Utils.createNewTable(detailledModel, Labels.FILES_LABEL, Labels.FILES_REGEXP_LABEL);
+		GuiUtils.createNewTable(detailledModel, Labels.FILES_LABEL, Labels.FILES_REGEXP_LABEL);
 	}
 	
 	
@@ -109,14 +111,8 @@ public class DownloadManager extends Thread {
 	 * Thread to download files
 	 * Take all the webLinkedFile contained in the htmlFileToDownload list and download them  
 	 */
-	public void run() {
-		String defaultHost;		
+	public void run() {			
 		testIfPaused();
-		if (this.startURI.getPort() > 0) {
-			defaultHost = this.startURI.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.startURI.getHost() + ":" + this.startURI.getPort();
-		} else {
-			defaultHost = this.startURI.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + this.startURI.getHost();
-		}
 		DownloadAndParseFile downloadFile;
 		boolean isInterrupted = false;
 		while(!Thread.interrupted() && (this.htmlFileToDownload.isEmpty() == false || this.linkedFileToDownload.isEmpty() == false || this.htmlFileInDownloading.isEmpty() == false || this.linkedFileInDownloading.isEmpty() == false)) {
@@ -124,24 +120,28 @@ public class DownloadManager extends Thread {
 				WebHtmlFile webHtmlFile;
 				webHtmlFile = this.htmlFileToDownload.get(0);
 				this.htmlFileToDownload.remove(0);
-				this.htmlFileInDownloading.add(webHtmlFile);
-				//start a new download of Html File in a new Thread
-				downloadFile = new DownloadAndParseFile(this, webHtmlFile, defaultHost, this.destDirectory);
-				downloadFile.start();
-				threadList.add(downloadFile);
-				this.currentDLHtml++;
+				if (webHtmlFile.getProgression() != -1) {  //was not cancelled
+					this.htmlFileInDownloading.add(webHtmlFile);
+					//start a new download of Html File in a new Thread
+					downloadFile = new DownloadAndParseFile(this, webHtmlFile, defaultHost, this.destDirectory);
+					downloadFile.start();
+					threadList.add(downloadFile);
+					this.currentDLHtml++;
+				}
 			}
 			testIfPaused();
 			if (this.currentDLLink < this.maxDLLink && this.linkedFileToDownload.isEmpty() == false) {
 				WebLinkedFile webLinkedFile;
 				webLinkedFile = this.linkedFileToDownload.get(0);
 				this.linkedFileToDownload.remove(0);
-				this.linkedFileInDownloading.add(webLinkedFile);
-				//start a new download of Linked File in a new Thread
-				downloadFile = new DownloadAndParseFile(this, webLinkedFile, defaultHost, this.destDirectory);
-				downloadFile.start();
-				threadList.add(downloadFile);
-				this.currentDLLink++;
+				if (webLinkedFile.getProgression() != -1) {  //was not cancelled
+					this.linkedFileInDownloading.add(webLinkedFile);
+					//start a new download of Linked File in a new Thread
+					downloadFile = new DownloadAndParseFile(this, webLinkedFile, defaultHost, this.destDirectory);
+					downloadFile.start();
+					threadList.add(downloadFile);
+					this.currentDLLink++;
+				}
 			}
 			try {
 				Thread.sleep(HtmlConstants.TIME_BETWEEN_EACH_DOWNLOAD);
@@ -151,11 +151,15 @@ public class DownloadManager extends Thread {
 			}
 		}
 		
-		//TODO: mettre en rouge tous les downloads dans la JTable
 		if (isInterrupted) {
 			//Download was cancelled
+			ArrayList<WebFile> webList = DetailledModel.getInstance().getWebFiles();
+			for (int i=0; i<webList.size(); i++) {
+				webList.get(i).setProgression(-1);
+			}
+			DetailledModel.getInstance().fireTableDataChanged();
 		} else {	
-			//End of Download
+			//End of Download (successfull)
 			JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_FINISHED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.INFORMATION_MESSAGE);	
 		}
 		//free the DownloadManager
@@ -187,7 +191,7 @@ public class DownloadManager extends Thread {
 
 
 	/**
-	 * Add a webHtmlFile in the queue if it hasn't been already downloaded
+	 * Add a webHtmlFile in the queue if it hasn't been already downloaded and if it respect the good host or protocol
 	 * @param uri the URI to add
 	 * @param depth the depth of the URI
 	 */
@@ -196,27 +200,28 @@ public class DownloadManager extends Thread {
 		if (!isUriAlreadyDownloaded(uri)) {
 			//verification if the depth is good
 			if (depth <= this.maxDepth) {
-				if (uri.getPort() > 0) {
-					this.discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + ":" + uri.getPort() + uri.getPath());
-				} else {
-					this.discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + uri.getPath());
-				}
+				discoveredURI.add(Utils.getCompletePath(uri));
 				WebHtmlFile webHtmlFile = new WebHtmlFile(uri, depth);
-				this.htmlFileToDownload.add(webHtmlFile);
+				String webFileHost = Utils.getCompleteHost(webHtmlFile.getURI());;
 				
-				//add the webHtmlFile in the treeModel
-				DiscoveryTreeNode node = this.treeRoot.add(webHtmlFile);
-				this.treeModel.nodesWereInserted(this.treeRoot, new int[] {this.treeRoot.getIndex(node)});
-				
-				//add the webHtmlFile in the detailledModel
-				this.detailledModel.addElement(webHtmlFile);
+				if (webFileHost.equals(defaultHost)) {
+					this.htmlFileToDownload.add(webHtmlFile);
+					//add the webHtmlFile in the treeModel
+					DiscoveryTreeNode node = this.treeRoot.add(webHtmlFile);
+					this.treeModel.nodesWereInserted(this.treeRoot, new int[] {this.treeRoot.getIndex(node)});
+					//add the webHtmlFile in the detailledModel
+					this.detailledModel.addElement(webHtmlFile);
+				} else {
+					//it is not the same web site or the same protocol
+					System.err.println(webHtmlFile.getURI() + " / " + defaultHost + ": NOT THE SAME HOST OR THE SAME PROTOCOL");
+				}
 			}
 		}
 	}
 	
 	
 	/**
-	 * Add a webLinkedFile in the queue if it hasn't been already downloaded
+	 * Add a webLinkedFile in the queue if it hasn't been already downloaded and if it respect the good host or protocol
 	 * @param uri the URI to add
 	 * @param depth the depth of the URI
 	 * @param parent the webHtmlFile parent
@@ -226,21 +231,22 @@ public class DownloadManager extends Thread {
 		if (!isUriAlreadyDownloaded(uri)) {
 			//verification if the depth is good
 			if (depth <= this.maxDepth) {
-				if (uri.getPort() > 0) {
-					this.discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + ":" + uri.getPort() + uri.getPath());
-				} else {
-					this.discoveredURI.add(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + uri.getPath());
-				}
+				discoveredURI.add(Utils.getCompletePath(uri));
 				WebLinkedFile webLinkedFile = new WebLinkedFile(uri, depth, parent);
-				this.linkedFileToDownload.add(webLinkedFile);
+				String webFileHost = Utils.getCompleteHost(webLinkedFile.getURI());
 				
-				//add the webHtmlFile in the treeModel
-				DiscoveryTreeNode parentNode = (DiscoveryTreeNode) this.treeRoot.getChild(parent);
-				DiscoveryTreeNode node = parentNode.add(webLinkedFile);
-				this.treeModel.nodesWereInserted(parentNode, new int[] {parentNode.getIndex(node)});
-				
-				//add the webHtmlFile in the detailledModel
-				this.detailledModel.addElement(webLinkedFile);
+				if (webFileHost.equals(defaultHost)) {
+					this.linkedFileToDownload.add(webLinkedFile);
+					//add the webHtmlFile in the treeModel
+					DiscoveryTreeNode parentNode = (DiscoveryTreeNode) this.treeRoot.getChild(parent);
+					DiscoveryTreeNode node = parentNode.add(webLinkedFile);
+					this.treeModel.nodesWereInserted(parentNode, new int[] {parentNode.getIndex(node)});
+					//add the webHtmlFile in the detailledModel
+					this.detailledModel.addElement(webLinkedFile);
+				} else {
+					//it is not the same web site or the same protocol
+					System.err.println(webLinkedFile.getURI() + " / " + defaultHost + ": NOT THE SAME HOST OR THE SAME PROTOCOL");
+				}
 			}
 		}
 	}
@@ -255,14 +261,9 @@ public class DownloadManager extends Thread {
 		String discoveredURIString;
 		for (int i=0; i<this.discoveredURI.size(); i++) {
 			discoveredURIString = this.discoveredURI.get(i);
-			if (uri.getPort() > 0) {
-				if (discoveredURIString.compareTo(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + ":" + uri.getPort() + uri.getPath()) == 0){
-					return true;
-				}
-			} else {
-				if (discoveredURIString.compareTo(uri.getScheme() + HtmlConstants.SCHEME_AND_AUTHORITY_SEPARATOR + uri.getHost() + uri.getPath()) == 0){
-					return true;
-				}
+			String uriPathToCompare = Utils.getCompletePath(uri);
+			if (discoveredURIString.compareTo(uriPathToCompare) == 0){
+				return true;
 			}
 		}
 		return false;
