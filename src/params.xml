@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<depth>7</depth>
+<destination>
+<directory>C:\TEMP/</directory>
+</destination>
+<nb>
+<html>
+<thread>10</thread>
+</html>
+<linked>
+<thread>10</thread>
+</linked>
+</nb>
+<regexp></regexp>
+<url>http://www.anthonyplog.com/index.html</url>
+<project>
+<name>anthony</name>
+</project>
+</configuration>
