@@ -18,9 +18,8 @@ import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.network.DownloadManager;
 
 /** 
+ * jHoover Project
  * @author Romain Papuchon 
- * 
- * 
  */
 public class JHoover {
 	
