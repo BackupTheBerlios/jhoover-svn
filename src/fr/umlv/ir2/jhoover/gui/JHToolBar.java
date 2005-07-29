@@ -12,12 +12,11 @@ import javax.swing.SwingConstants;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
+ * ToolBar of jHoover
  * @author Romain Papuchon
- *
  */
 public final class JHToolBar extends JToolBar
 {
-
 	/**
 	 * Default constructor which builds the toolbar with all its components and
 	 * actions associated
@@ -40,6 +39,11 @@ public final class JHToolBar extends JToolBar
 		addButtonToToolBar(ActionManager.helpAction, Labels.HELP_LABEL);
 	}
 
+	/**
+	 * Add a button in the toolbar with an action and a toolTip
+	 * @param action the action
+	 * @param toolTip the toolTip
+	 */
 	private void addButtonToToolBar (final Action action, final String toolTip) {
 		JButton myButton = new JButton (action);
 		myButton.setToolTipText (toolTip);

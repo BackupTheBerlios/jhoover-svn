@@ -7,8 +7,8 @@ package fr.umlv.ir2.jhoover.gui.dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -17,17 +17,18 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
-import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
+ * Find a file Dialog
  * @author Romain Papuchon
- *
  */
 public class FindFileDialog extends AbstractDialog {
+	private JTextField searchFile;
 	
-	JTextField searchFile;
-	
+	/**
+	 * Create a FindFileDialog
+	 */
 	public FindFileDialog() {
 		super(JHMainFrame.getInstance(), Labels.SEARCH_FILE_LABEL);
 		validButton.setText(Labels.SEARCH_FILE_LABEL);
@@ -35,8 +36,9 @@ public class FindFileDialog extends AbstractDialog {
 	}
 	
 	
-	/*
+	/**
 	 * Create the search file panel
+	 * @return the panel
 	 */
 	private JPanel createPanel() {
 		FormLayout regexpLayout = new FormLayout(
@@ -57,18 +59,24 @@ public class FindFileDialog extends AbstractDialog {
 	}
 
 	
+	/**
+	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#validButtonAction()
+	 */
 	protected ActionListener validButtonAction() {
 		// TODO: faire l'action necessaire
 		return new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("faire l'action necessaire pour rechercher le fichier");		
+			public void actionPerformed(ActionEvent arg0) {				
 				dispose();
+				JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.NOT_IMPLEMENTED_LABEL, Labels.NOT_IMPLEMENTED_LABEL, JOptionPane.ERROR_MESSAGE);
 			}
 		};
 	}
 
 	
 	
+	/**
+	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#createButtonPanel()
+	 */
 	protected JPanel createButtonPanel() {
 		FormLayout buttonLayout = new FormLayout(
 			    "p, 3dlu, p", 		// columns

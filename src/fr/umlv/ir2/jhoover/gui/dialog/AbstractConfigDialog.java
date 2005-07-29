@@ -24,12 +24,12 @@ import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.network.util.JHooverConfiguration;
 
 /**
+ * Abstract Class for Configuration of jHoover Dialog
  * @author Romain Papuchon
- *
  */
 public abstract class AbstractConfigDialog extends AbstractDialog {
 	
-//	Configuration of jHoover
+	//Configuration of jHoover
 	protected JHooverConfiguration configuration;
 	
 	//fields
@@ -42,6 +42,11 @@ public abstract class AbstractConfigDialog extends AbstractDialog {
 	protected JTextField rDestDirectory;
 	
 	
+	/**
+	 * Create an AbstractConfigDialog
+	 * @param parent the jFrame parent of the Dialog
+	 * @param title the title of the Dialog
+	 */
 	public AbstractConfigDialog(JFrame parent, String title) {
 		super(parent, title);
 		configuration = JHooverConfiguration.getInstance();
@@ -58,7 +63,10 @@ public abstract class AbstractConfigDialog extends AbstractDialog {
 	
 	
 	
-	
+	/**
+	 * Create the main panel of the configuration
+	 * @return the panel
+	 */
 	protected JPanel createFieldPanel() {
 		FormLayout fieldsLayout = new FormLayout(
 			    "right:80dlu, 3dlu, p, 100dlu, 3dlu, p", // columns
@@ -111,7 +119,10 @@ public abstract class AbstractConfigDialog extends AbstractDialog {
 	
 	
 	
-	
+	/**
+	 * Reset the fields of the configuration
+	 * @return the ActionListener
+	 */
 	private ActionListener resetButtonAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -128,7 +139,10 @@ public abstract class AbstractConfigDialog extends AbstractDialog {
 	}
 	
 	
-	
+	/**
+	 * Creates the Button Panel
+	 * @return the Panel
+	 */
 	protected JPanel createButtonPanel() {
 		FormLayout buttonLayout = new FormLayout(
 			    "p, 3dlu, p, 3dlu, p", 		// columns

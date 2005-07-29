@@ -10,12 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
+ * Represents the discovery vue of the download
  * @author Romain Papuchon
- *
  */
 public class JHDiscoveryPanel extends JPanel {
 	private JPanel scrollablePanel;
-	
 	
 	/**
 	 * Create a JHDiscoveryPanel

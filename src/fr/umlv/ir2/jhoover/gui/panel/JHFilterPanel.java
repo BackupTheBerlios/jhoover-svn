@@ -11,8 +11,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -23,15 +21,15 @@ import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
 
 /**
+ * Represents the filter panel
  * @author Romain Papuchon
- *
  */
 public class JHFilterPanel extends JPanel {
 
 	private JTextField regexpTextField;
 	
-	/*
-	 * Constructor
+	/**
+	 * Create a JHFilterPanel
 	 */
 	public JHFilterPanel() {
 		super();
@@ -39,8 +37,9 @@ public class JHFilterPanel extends JPanel {
 	}
 	
 	
-	/*
+	/**
 	 * Create the regexp panel
+	 * @return the panel
 	 */
 	private JPanel createPanel() {
 		FormLayout regexpLayout = new FormLayout(
@@ -71,8 +70,9 @@ public class JHFilterPanel extends JPanel {
 	};
 	
 	
-	/*
+	/**
 	 * Add a filter in the DetailledPanel
+	 * @return the action
 	 */
 	private ActionListener addAction() {
 		//TODO: voir pour mettre cette action dans ActionManager (cf. AddFilterDialog, meme methode)
@@ -93,8 +93,9 @@ public class JHFilterPanel extends JPanel {
 	}
 	
 	
-	/*
+	/**
 	 * Print the help
+	 * @return the action
 	 */
 	private ActionListener helpAction() {
 		return new ActionListener() {

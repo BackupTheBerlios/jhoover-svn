@@ -1,3 +1,7 @@
+/**
+ * jHoover - UMLV IR2
+ * UI Project
+ */
 package fr.umlv.ir2.jhoover.gui.tool;
 
 import javax.swing.JTable;
@@ -10,13 +14,19 @@ import fr.umlv.ir2.jhoover.gui.detailled.DetailledJProgressBarRenderer;
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 
+/** 
+ * @author Romain Papuchon 
+ * 
+ * 
+ */
 public class GuiUtils {
 	
 	/**
 	 * Creates a new JTable in a new TabPanel in the detailled view 
-	 * @param label The label of the Tab
-	 * @param regexp The filter in a Regular Expression
-	 * @return The index of the Tab
+	 * @param model the model to give to the tab
+	 * @param label the label of the Tab
+	 * @param regexp the filter in a Regular Expression
+	 * @return the index of the Tab
 	 */
 	public static int createNewTable(DetailledModel model, String label, String regexp) {
 		//creates the adapter

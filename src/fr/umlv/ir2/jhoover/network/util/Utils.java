@@ -1,9 +1,16 @@
+/**
+ * jHoover - UMLV IR2
+ * UI Project
+ */
 package fr.umlv.ir2.jhoover.network.util;
 
 import java.net.URI;
 
+/** 
+ * Utils Class
+ * @author Romain Papuchon 
+ */
 public class Utils {
-	
 	
 	/**
 	 * Return the complete path of the uri

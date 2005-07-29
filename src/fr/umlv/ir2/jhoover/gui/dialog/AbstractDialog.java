@@ -4,7 +4,6 @@
  */
 package fr.umlv.ir2.jhoover.gui.dialog;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -26,17 +25,17 @@ import com.jgoodies.forms.layout.FormLayout;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
+ * Abstract Class to creates the other Dialog
  * @author Romain Papuchon
- *
  */
 public abstract class AbstractDialog extends JDialog {
-	
 	protected JButton cancelButton;
 	protected JButton validButton;
-	
-	
-	/*
-	 * Constructor
+
+	/**
+	 * Create an AnstractDialog
+	 * @param parent
+	 * @param title
 	 */
 	public AbstractDialog(JFrame parent, String title) {
 		super(parent, title, true);
@@ -47,7 +46,7 @@ public abstract class AbstractDialog extends JDialog {
 	}
 	
 	
-	/*
+	/**
 	 * Set the graphical parameters from the JDialog
 	 */
 	private void setdesign() {
@@ -56,7 +55,7 @@ public abstract class AbstractDialog extends JDialog {
 	}
 	
 	
-	/*
+	/**
 	 * Center the JDialog
 	 */
 	private void center() {
@@ -66,11 +65,11 @@ public abstract class AbstractDialog extends JDialog {
 	
 	
 	
-	/*
+	/**
 	 * Add the Panels to the content Pane of the JDialog
+	 * @param allJPanel the panels to add
 	 */
 	protected void buildPanel(JPanel[] allJPanel) {
-		Container container = getContentPane();
 		int nbPanel = allJPanel.length;
 		String rows = "";
 		String single = "center:p";		
@@ -101,7 +100,9 @@ public abstract class AbstractDialog extends JDialog {
 	
 	
 	
-	
+	/**
+	 * Init the button action
+	 */
 	private void initButtonAction() {
 		ActionListener actionListenerEscape = new ActionListener() {
 			public void actionPerformed (ActionEvent actionEvent) {
@@ -128,7 +129,17 @@ public abstract class AbstractDialog extends JDialog {
 		((JComponent)getContentPane()).registerKeyboardAction(actionListenerValidate , strokeEnter , JComponent.WHEN_IN_FOCUSED_WINDOW);
 	}
 
+	
+	/**
+	 * Action of validation
+	 * @return the action
+	 */
 	abstract ActionListener validButtonAction();
 	
+	
+	/**
+	 * Create the button panel 
+	 * @return the panel
+	 */
 	abstract JPanel createButtonPanel();
 }

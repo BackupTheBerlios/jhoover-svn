@@ -14,12 +14,17 @@ import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
+ * Set the Configuration of jHoover Dialog
  * @author Romain Papuchon
  *
  */
 public class SetConfigDialog extends AbstractConfigDialog {
 		
 	
+	/**
+	 * Create a SetConfigDialog
+	 * @param title the title of the dialog
+	 */
 	public SetConfigDialog(String title) {
 		super(JHMainFrame.getInstance(), title);
 		validButton.setText(Labels.OK_LABEL);
@@ -28,6 +33,9 @@ public class SetConfigDialog extends AbstractConfigDialog {
 	}
 	
 		
+	/**
+	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#validButtonAction()
+	 */
 	ActionListener validButtonAction() {
 		//TODO: mettre dans ActionManager si possible
 		return new ActionListener() {

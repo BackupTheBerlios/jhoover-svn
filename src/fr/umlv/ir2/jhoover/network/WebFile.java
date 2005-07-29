@@ -5,13 +5,10 @@
 package fr.umlv.ir2.jhoover.network;
 
 import java.net.URI;
-import java.util.StringTokenizer;
-
-import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
 
 /**
+ * Represents a web File
  * @author Romain Papuchon
- *
  */
 public abstract class WebFile {
 	private URI uri;
@@ -21,8 +18,10 @@ public abstract class WebFile {
 	private int progression;
 
 	
-	/*
-	 * Creates a WebFile
+	/**
+	 * Creates a WebFile with an uri an the depth on the webSite
+	 * @param uri the uri
+	 * @param depth the depth
 	 */
 	protected WebFile(URI uri, int depth) {
 		this.uri = uri;
@@ -33,40 +32,76 @@ public abstract class WebFile {
 	}
 			
 	
+	/**
+	 * Return the real size
+	 * @return the real size
+	 */
 	public int getRealSize() {
 		return this.realSize;
 	}
 	
+	/**
+	 * Set the real Size
+	 * @param realSize the size to set
+	 */
 	public void setRealSize(int realSize) {
 		this.realSize = realSize;
 	}
 	
+	/**
+	 * Return the uri of the webFile
+	 * @return the uri
+	 */
 	public URI getURI() {
 		return this.uri;
 	}
 	
+	/**
+	 * Return the depth of the WebFile on the webSite
+	 * @return the depth
+	 */
 	public int getDepth() {
 		return this.depth;
 	}	
 	
+	/**
+	 * Return the content type of the WebFile
+	 * @return the content type
+	 */
 	public String getContentType() {
 		return this.contentType;
 	}
 	
+	/**
+	 * Set the content type of the WebFile
+	 * @param contentType the content type
+	 */
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
 
 	
+	/**
+	 * Return the path of the WebFile
+	 * @return the path
+	 */
 	public String getPath() {
 		return getURI().getPath();
 	}
 	
 	
+	/**
+	 * Return the progression of the WebFile
+	 * @return the progression
+	 */
 	public int getProgression() {
 		return progression;
 	}
 	
+	/**
+	 * Set the progression if the WebFile
+	 * @param progression the progression
+	 */
 	public void setProgression(int progression) {
 		this.progression = progression;
 	}

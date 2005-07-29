@@ -1,8 +1,11 @@
+/**
+ * jHoover - UMLV IR2
+ * UI Project
+ */
 package fr.umlv.ir2.jhoover.gui.detailled;
 
 import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -16,6 +19,11 @@ import fr.umlv.ir2.jhoover.network.WebHtmlFile;
 import fr.umlv.ir2.jhoover.network.WebLinkedFile;
 import fr.umlv.ir2.jhoover.network.util.Utils;
 
+/** 
+ * Adapter for the DetailledModel for a table
+ * 
+ * @author Romain Papuchon 
+ */
 public class DetailledAdapter extends AbstractTableModel {
 	private DetailledModel model;
 	private String regexpRequest;
@@ -80,16 +88,27 @@ public class DetailledAdapter extends AbstractTableModel {
 		fireTableRowsInserted(0, this.model.getWebFiles().size()-1);
 	}
 	
+	
+	/**
+	 * @see javax.swing.table.TableModel#getRowCount()
+	 */
 	public int getRowCount() {
 		return matchedWebFiles.size();
 	}
 
 	
+
+	/**
+	 * @see javax.swing.table.TableModel#getColumnCount()
+	 */
 	public int getColumnCount() {
 		return model.getColumnCount();
 	}
 
 	
+	/**
+	 * @see javax.swing.table.TableModel#getValueAt(int, int)
+	 */
 	public Object getValueAt(int rowIndex, int colIndex) {
 		switch (colIndex) {
 		case 0:
@@ -126,17 +145,17 @@ public class DetailledAdapter extends AbstractTableModel {
 			int prog = matchedWebFiles.get(rowIndex).getProgression();
 			if (prog < -2) {
 				//cannot know: HTML File
-				return new Integer(0);
+				return 0;
 			}
 			if (prog == -2) {
 				//we cannot know the progression
-				return new Integer(0);
+				return 0;
 			}
 			if (prog == -1) {
 				//error during dowload or cancelled
-				return new Integer(100);
+				return 100;
 			}
-			return new Integer(matchedWebFiles.get(rowIndex).getProgression());
+			return prog;
 			
 		case 3:
 			//returns the webFile
@@ -148,16 +167,25 @@ public class DetailledAdapter extends AbstractTableModel {
 	}
 	
 	
+	/**
+	 * @see javax.swing.table.AbstractTableModel#getColumnName(int)
+	 */
 	public String getColumnName(int colIndex) {
 		return Labels.COLUMS_LABELS[colIndex];
 	}
 	
 	
+	/**
+	 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
+	 */
 	public Class<?> getColumnClass(int col) {
 		return model.getColumnClass(col);
 	}
 	
 	
+	/**
+	 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+	 */
 	public boolean isCellEditable(int row, int col) {
 		return model.isCellEditable(row, col);
 	}
@@ -168,6 +196,7 @@ public class DetailledAdapter extends AbstractTableModel {
 	 * Add the datas from fistRow to lastRow in the matchedWebFiles list (filter with regular expression)
 	 * @param firstRow the first index to load
 	 * @param lastRow the last index to load
+	 * @param regex the regular expression
 	 */
 	private void updateDataWithRegex(int firstRow, int lastRow, String regex) {
 		ArrayList<WebFile> webFiles = model.getWebFiles();
@@ -196,6 +225,7 @@ public class DetailledAdapter extends AbstractTableModel {
 	 * Add the datas from fistRow to lastRow in the matchedWebFiles list (filter without regular expression)
 	 * @param firstRow the first index to load
 	 * @param lastRow the last index to load
+	 * @param regex the regular expression
 	 */
 	private void updateDataWithoutRegex(int firstRow, int lastRow, String regex) {
 		ArrayList<WebFile> webFiles = model.getWebFiles();

@@ -22,13 +22,16 @@ import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
 
 /**
+ * Delete a filter Dialog
  * @author Romain Papuchon
- *
  */
 public class DeleteFilterDialog extends AbstractDialog {
 	
 	JComboBox filterList;
 	
+	/**
+	 * Create a DeleteFilterDialog
+	 */
 	public DeleteFilterDialog() {
 		super(JHMainFrame.getInstance(), Labels.DELETE_FILTER_LABEL);
 		validButton.setText(Labels.DELETE_FILTER_LABEL);
@@ -41,8 +44,9 @@ public class DeleteFilterDialog extends AbstractDialog {
 	}
 	
 	
-	/*
+	/**
 	 * Create the delete regexp panel
+	 * @return the panel
 	 */
 	private JPanel createPanel() {
 		FormLayout regexpLayout = new FormLayout(
@@ -66,7 +70,9 @@ public class DeleteFilterDialog extends AbstractDialog {
 	
 	
 
-
+	/**
+	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#validButtonAction()
+	 */
 	protected ActionListener validButtonAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -79,6 +85,9 @@ public class DeleteFilterDialog extends AbstractDialog {
 
 	
 	
+	/**
+	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#createButtonPanel()
+	 */
 	protected JPanel createButtonPanel() {
 		FormLayout buttonLayout = new FormLayout(
 			    "p, 3dlu, p", 		// columns

@@ -11,9 +11,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 /**
- * @author Romain Papuchon
- *
  * Represents the detailed vue of the download
+ * @author Romain Papuchon
  */
 public class JHDetailledPanel extends JTabbedPane {
 	private static JHDetailledPanel INSTANCE = null;
@@ -31,6 +30,7 @@ public class JHDetailledPanel extends JTabbedPane {
 
 	/**
 	 * Returns the singleton of JHDetailledPanel
+	 * @return the singleton
 	 */
 	public static JHDetailledPanel getInstance() {
 		if (INSTANCE == null) {
@@ -40,21 +40,17 @@ public class JHDetailledPanel extends JTabbedPane {
 	}
 	
 
-	/*
+	/**
 	 * Add a new Tab in the Panel
+	 * @param label the label of the tab
+	 * @param component the component to add in the tab
 	 */
 	public void addTabPanel(String label, JComponent component) {
 		if (label != "") {
 			if (!tabbedList.contains(label)) {
 				addTab(label, new JScrollPane(component));
 				this.tabbedList.add(label);
-			} else {
-				//tab already exist
-				//TODO: gerer ce cas
 			}
-		} else {
-			//label empty
-			//TODO: gerer ce cas
 		}
 	}
 	
@@ -73,14 +69,20 @@ public class JHDetailledPanel extends JTabbedPane {
 	}
 
 	
-	/*
-	 * Returns the list of the tabs
+	/**
+	 * Returns the list of tab
+	 * @return the list of Tab
 	 */
 	public ArrayList<String> getTabbedList() {
-		return this.tabbedList;
+		return tabbedList;
 	}
 	
 	
+	/**
+	 * Return the index of the tab corresponding to the label
+	 * @param label the label
+	 * @return the index
+	 */
 	public int getIndex(String label) {
 		return tabbedList.indexOf(label);
 	}

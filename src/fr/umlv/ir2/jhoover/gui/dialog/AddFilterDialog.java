@@ -10,36 +10,36 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
-import fr.umlv.ir2.jhoover.gui.ActionManager;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
-import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
-import fr.umlv.ir2.jhoover.network.DownloadManager;
+import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
+ * Add a filter Dialog
  * @author Romain Papuchon
- *
  */
 public class AddFilterDialog extends AbstractDialog {
 	private JTextField regexpTextField;
 	
+	/**
+	 * Create an AddFilterDialog
+	 */
 	public AddFilterDialog() {
 		super(JHMainFrame.getInstance(), "Add a filter");
 		buildPanel(new JPanel[]{createPanel(), createButtonPanel()});
 	}
 	
-	/*
+	/**
 	 * Create the regexp panel
+	 * @return  the panel
 	 */
 	private JPanel createPanel() {
 		FormLayout regexpLayout = new FormLayout(
@@ -61,7 +61,10 @@ public class AddFilterDialog extends AbstractDialog {
 	};
 
 
-
+	/**
+	 * Cancel Button action
+	 * @return the action
+	 */
 	private ActionListener cancelButtonAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -72,8 +75,9 @@ public class AddFilterDialog extends AbstractDialog {
 	}
 	
 	
-	/*
-	 * Print the help
+	/**
+	 * Help Button action
+	 * @return the help action
 	 */
 	private ActionListener helpAction() {
 		return new ActionListener() {
@@ -84,7 +88,10 @@ public class AddFilterDialog extends AbstractDialog {
 		};
 	}
 
-	
+	/**
+	 * Valid Button action
+	 * @return the help action
+	 */
 	protected ActionListener validButtonAction() {
 		//TODO: voir pour mettre cette action: return ActionManager.okRegexpDialogAction; (cf. JHFilterPanel, meme methode)
 		return new ActionListener(){
@@ -103,7 +110,10 @@ public class AddFilterDialog extends AbstractDialog {
 	}
 
 
-	
+	/**
+	 * Create the button panel 
+	 * @return the panel
+	 */
 	protected JPanel createButtonPanel() {
 		FormLayout buttonLayout = new FormLayout(
 			    "p, 9dlu, p, 9dlu, p",	 // columns

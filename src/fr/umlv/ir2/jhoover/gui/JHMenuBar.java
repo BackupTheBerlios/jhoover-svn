@@ -17,20 +17,27 @@ import javax.swing.KeyStroke;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
+ * MenuBar of jHoover
  * @author Romain Papuchon
- *
  */
 public class JHMenuBar extends JMenuBar
 {
 	private JCheckBoxMenuItem toolBarItem = null;
 	
-	public JHMenuBar () {
+	/**
+	 * Create the menu bar
+	 */
+	public JHMenuBar() {
 		add (createFileMenu());
 		add (createEditMenu());
 		add (createPreferencesMenu());
 		add (createHelpMenu());
 	}
 
+	/**
+	 * Create the file menu of the menuBar
+	 * @return the menu
+	 */
 	private JMenu createFileMenu () {
 		JMenu fileMenu = new JMenu (Labels.MENUFILE_LABEL);
 		fileMenu.setMnemonic ('F');
@@ -44,8 +51,11 @@ public class JHMenuBar extends JMenuBar
 		fileMenu.add (createItem (ActionManager.exitAction, KeyStroke.getKeyStroke (KeyEvent.VK_Q , ActionEvent.CTRL_MASK)));
 		return fileMenu;
 	}
-
-
+	
+	/**
+	 * Create the edit menu of the menuBar
+	 * @return the menu
+	 */
 	private JMenu createEditMenu () {
 		JMenu editMenu = new JMenu (Labels.MENUEDIT_LABEL);
 		editMenu.setMnemonic ('E');
@@ -57,7 +67,10 @@ public class JHMenuBar extends JMenuBar
 		return editMenu;
 	}
 
-
+	/**
+	 * Create the preferences menu of the menuBar
+	 * @return the menu
+	 */
 	private JMenu createPreferencesMenu () {
 		JMenu prefMenu = new JMenu (Labels.PREFERENCES_LABEL);
 		prefMenu.setMnemonic ('P');
@@ -71,7 +84,10 @@ public class JHMenuBar extends JMenuBar
 		return prefMenu;
 	}
 
-
+	/**
+	 * Create the help menu of the menuBar
+	 * @return the menu
+	 */
 	private JMenu createHelpMenu () {
 		JMenu helpMenu = new JMenu (Labels.HELP_LABEL);
 		helpMenu.setMnemonic ('H');
@@ -81,14 +97,22 @@ public class JHMenuBar extends JMenuBar
 		return helpMenu;
 	}
 
-
+	/**
+	 * Create a menu item with an action and a keyStroke
+	 * @param action the action
+	 * @param keyStroke the keyStroke
+	 * @return the menu item
+	 */
 	private JMenuItem createItem (Action action, KeyStroke keyStroke) {
 		JMenuItem item = new JMenuItem(action);
-//		item.setIcon(null);
 		item.setAccelerator(keyStroke);
 		return item;
 	}
 
+	/**
+	 * Return the toolBarItem
+	 * @return the toolBarItem
+	 */
 	public JCheckBoxMenuItem getToolBarItem() {
 		return toolBarItem;
 	}

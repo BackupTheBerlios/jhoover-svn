@@ -28,6 +28,10 @@ public class JHoover {
 	private static JHoover INSTANCE = null;
 	
 	
+	/**
+	 * Return a singleton of a jHoover
+	 * @return an instance of jHoover
+	 */
 	public static JHoover getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new JHoover();
@@ -57,6 +61,10 @@ public class JHoover {
 		window.dispose();
 	}
 	
+	/**
+	 * Create the SplashScreen
+	 * @return the SplashScreen
+	 */
 	private static JWindow createJHooverSplashScreen() {
 		//TODO: mettre une bordure pour faire mieux
 		JWindow window = new JWindow();
@@ -71,8 +79,10 @@ public class JHoover {
 	}
 	
 	
-	/*
-	 * Return the destDirectory with an "/" at the end
+	/**
+	 * Test the destDirectory and return it with an '/' at the end
+	 * @param destDirectory the directory
+	 * @return the directory with an '/' at the end
 	 */
 	public static String validDestDirectory(String destDirectory) {		
 		if (destDirectory.endsWith("/")) {
@@ -82,6 +92,16 @@ public class JHoover {
 	}
 	
 	
+	/**
+	 * Start the download
+	 * @param projectName the name of the project
+	 * @param startURIString the URI from which the download can start
+	 * @param destDirectory the local directory where the datas will be saved (local webSite)
+	 * @param maxDepth the maximum depth of the webSite to scan
+	 * @param maxDLHtml the maximum html download thread
+	 * @param maxDLLink the maximum link download thread
+	 * @param regExp the filter
+	 */
 	public void startDownload(String projectName, String startURIString, String destDirectory, int maxDepth, int maxDLHtml, int maxDLLink, String regExp) {
 		//TODO: utiliser la RegExp
 		URI startURI = null;
@@ -97,13 +117,17 @@ public class JHoover {
 			System.exit(0);
 		}			
 		
-		downloadManager = DownloadManager.getInstance(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory);
+		downloadManager = DownloadManager.getInstance(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory, regExp);
 		//add the file pointed by startURI in the downloadList from the downloadManager
 		downloadManager.addHtmlFile(startURI, 0);
 		downloadManager.start();
 	}
 	
 	
+	/**
+	 * Return the Download Manager
+	 * @return the downloadManager
+	 */
 	public DownloadManager getDownloadManager() {
 		return downloadManager;
 	}

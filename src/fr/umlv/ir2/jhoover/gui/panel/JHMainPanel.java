@@ -41,6 +41,7 @@ public class JHMainPanel extends JSplitPane {
 	
 	
 	/**
+	 * Return the discoveryPanel
 	 * @return the discoveryPanel
 	 */
 	public JHDiscoveryPanel getDiscoveryPanel() {
@@ -62,6 +63,7 @@ public class JHMainPanel extends JSplitPane {
 	
 	
 	/**
+	 * Return the manageTabPanel
 	 * @return the manageTabPanel
 	 */
 	public static JHManageTabPanel getManageTabPanel() {

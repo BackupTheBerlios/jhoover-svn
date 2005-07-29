@@ -12,8 +12,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -24,18 +22,21 @@ import fr.umlv.ir2.jhoover.gui.ActionManager;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
-import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
+import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
+ * Modify a filter Dialog
  * @author Romain Papuchon
- *
  */
 public class ModifyFilterDialog extends AbstractDialog {
 	JTextField newRegexpTextField;
 	JComboBox filterList;
 	
 	
+	/**
+	 * Create a ModifyFilterDialog
+	 */
 	public ModifyFilterDialog() {
 		super(JHMainFrame.getInstance(), Labels.MODIFY_FILTER_LABEL);
 		validButton.setText(Labels.MODIFY_FILTER_LABEL);
@@ -47,8 +48,9 @@ public class ModifyFilterDialog extends AbstractDialog {
 		}
 	}
 	
-	/*
+	/**
 	 * Create the modify regexp panel
+	 * @return the panel
 	 */
 	private JPanel createPanel() {
 		FormLayout regexpLayout = new FormLayout(
@@ -74,6 +76,9 @@ public class ModifyFilterDialog extends AbstractDialog {
 	}
 
 	
+	/**
+	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#validButtonAction()
+	 */
 	protected ActionListener validButtonAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -88,6 +93,9 @@ public class ModifyFilterDialog extends AbstractDialog {
 
 	
 	
+	/**
+	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#createButtonPanel()
+	 */
 	protected JPanel createButtonPanel() {
 		FormLayout buttonLayout = new FormLayout(
 			    "p, 3dlu, p, 3dlu, p", 		// columns

@@ -4,6 +4,7 @@
  */
 package fr.umlv.ir2.jhoover.network;
 
+import java.awt.event.MouseEvent;
 import java.net.URI;
 import java.util.ArrayList;
 
@@ -12,7 +13,10 @@ import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+
+import org.apache.regexp.RE;
 
 import fr.umlv.ir2.jhoover.gui.ActionManager;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
@@ -26,9 +30,8 @@ import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
 import fr.umlv.ir2.jhoover.network.util.Utils;
 
 /**
- * @author Romain Papuchon
- *
  * Manage the download
+ * @author Romain Papuchon
  */
 public class DownloadManager extends Thread {	
 	private ArrayList<DownloadAndParseFile> threadList;
@@ -36,8 +39,8 @@ public class DownloadManager extends Thread {
 	private ArrayList<WebLinkedFile> linkedFileToDownload, linkedFileInDownloading;
 	private ArrayList<String> discoveredURI; 
 	private int maxDLHtml, maxDLLink, currentDLHtml, currentDLLink, maxDepth;
-	private URI startURI;
 	private String destDirectory;
+	private String regExp;
 	private String defaultHost;
 	
 	private static DownloadManager INSTANCE = null;
@@ -57,8 +60,9 @@ public class DownloadManager extends Thread {
 	 * @param maxDepth depth of the download in the WebSite
 	 * @param startURI URI from which the download begin
 	 * @param destDirectory directory where the datas will be stored
+	 * @param regExp the filter of the linked WebFiles
 	 */
-	private DownloadManager(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory) {
+	private DownloadManager(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory, String regExp) {
 		htmlFileToDownload = new ArrayList<WebHtmlFile>();
 		linkedFileToDownload = new ArrayList<WebLinkedFile>();
 		htmlFileInDownloading = new ArrayList<WebHtmlFile>();
@@ -69,8 +73,8 @@ public class DownloadManager extends Thread {
 		currentDLHtml = 0;
 		currentDLLink = 0;
 		this.maxDepth = maxDepth;
-		this.startURI = startURI;
 		this.destDirectory = destDirectory;
+		this.regExp = regExp;
 		threadList = new ArrayList<DownloadAndParseFile>();
 		defaultHost = Utils.getCompleteHost(startURI);
 		
@@ -97,11 +101,12 @@ public class DownloadManager extends Thread {
 	 * @param maxDepth depth of the download in the WebSite
 	 * @param startURI URI from which the download begin
 	 * @param destDirectory directory where the datas will be stored
+	 * @param regExp the filter of the linked WebFiles
 	 * @return an instance of DownloadManager
 	 */
-	public static DownloadManager getInstance(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory) {
+	public static DownloadManager getInstance(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory, String regExp) {
 		if (INSTANCE == null) {
-			INSTANCE = new DownloadManager(maxDLHtml ,maxDLLink, maxDepth, startURI, destDirectory);
+			INSTANCE = new DownloadManager(maxDLHtml ,maxDLLink, maxDepth, startURI, destDirectory, regExp);
 		}
 		return INSTANCE;
 	}
@@ -115,32 +120,32 @@ public class DownloadManager extends Thread {
 		testIfPaused();
 		DownloadAndParseFile downloadFile;
 		boolean isInterrupted = false;
-		while(!Thread.interrupted() && (this.htmlFileToDownload.isEmpty() == false || this.linkedFileToDownload.isEmpty() == false || this.htmlFileInDownloading.isEmpty() == false || this.linkedFileInDownloading.isEmpty() == false)) {
-			if (this.currentDLHtml < this.maxDLHtml && this.htmlFileToDownload.isEmpty() == false) {
+		while(!Thread.interrupted() && (htmlFileToDownload.isEmpty() == false || linkedFileToDownload.isEmpty() == false || htmlFileInDownloading.isEmpty() == false || linkedFileInDownloading.isEmpty() == false)) {
+			if (currentDLHtml < maxDLHtml && htmlFileToDownload.isEmpty() == false) {
 				WebHtmlFile webHtmlFile;
-				webHtmlFile = this.htmlFileToDownload.get(0);
+				webHtmlFile = htmlFileToDownload.get(0);
 				this.htmlFileToDownload.remove(0);
 				if (webHtmlFile.getProgression() != -1) {  //was not cancelled
-					this.htmlFileInDownloading.add(webHtmlFile);
+					htmlFileInDownloading.add(webHtmlFile);
 					//start a new download of Html File in a new Thread
-					downloadFile = new DownloadAndParseFile(this, webHtmlFile, defaultHost, this.destDirectory);
+					downloadFile = new DownloadAndParseFile(this, webHtmlFile, defaultHost, destDirectory);
 					downloadFile.start();
 					threadList.add(downloadFile);
-					this.currentDLHtml++;
+					currentDLHtml++;
 				}
 			}
 			testIfPaused();
-			if (this.currentDLLink < this.maxDLLink && this.linkedFileToDownload.isEmpty() == false) {
+			if (currentDLLink < maxDLLink && linkedFileToDownload.isEmpty() == false) {
 				WebLinkedFile webLinkedFile;
-				webLinkedFile = this.linkedFileToDownload.get(0);
+				webLinkedFile = linkedFileToDownload.get(0);
 				this.linkedFileToDownload.remove(0);
 				if (webLinkedFile.getProgression() != -1) {  //was not cancelled
-					this.linkedFileInDownloading.add(webLinkedFile);
+					linkedFileInDownloading.add(webLinkedFile);
 					//start a new download of Linked File in a new Thread
-					downloadFile = new DownloadAndParseFile(this, webLinkedFile, defaultHost, this.destDirectory);
+					downloadFile = new DownloadAndParseFile(this, webLinkedFile, defaultHost, destDirectory);
 					downloadFile.start();
 					threadList.add(downloadFile);
-					this.currentDLLink++;
+					currentDLLink++;
 				}
 			}
 			try {
@@ -182,7 +187,6 @@ public class DownloadManager extends Thread {
 		currentDLHtml = 0;
 		currentDLLink = 0;
 		maxDepth = 0;
-		startURI = null;
 		destDirectory = null;
 		INSTANCE = null;
 		pauseThread = false;
@@ -199,18 +203,18 @@ public class DownloadManager extends Thread {
 		//creates the webHtmlFile according to the URI 
 		if (!isUriAlreadyDownloaded(uri)) {
 			//verification if the depth is good
-			if (depth <= this.maxDepth) {
+			if (depth <= maxDepth) {
 				discoveredURI.add(Utils.getCompletePath(uri));
 				WebHtmlFile webHtmlFile = new WebHtmlFile(uri, depth);
 				String webFileHost = Utils.getCompleteHost(webHtmlFile.getURI());;
 				
 				if (webFileHost.equals(defaultHost)) {
-					this.htmlFileToDownload.add(webHtmlFile);
+					htmlFileToDownload.add(webHtmlFile);
 					//add the webHtmlFile in the treeModel
-					DiscoveryTreeNode node = this.treeRoot.add(webHtmlFile);
-					this.treeModel.nodesWereInserted(this.treeRoot, new int[] {this.treeRoot.getIndex(node)});
+					DiscoveryTreeNode node = treeRoot.add(webHtmlFile);					
+					treeModel.nodesWereInserted(treeRoot, new int[] {treeRoot.getIndex(node)});
 					//add the webHtmlFile in the detailledModel
-					this.detailledModel.addElement(webHtmlFile);
+					detailledModel.addElement(webHtmlFile);
 				} else {
 					//it is not the same web site or the same protocol
 					System.err.println(webHtmlFile.getURI() + " / " + defaultHost + ": NOT THE SAME HOST OR THE SAME PROTOCOL");
@@ -230,22 +234,26 @@ public class DownloadManager extends Thread {
 		//creates the webLinkedFile according to the URI 
 		if (!isUriAlreadyDownloaded(uri)) {
 			//verification if the depth is good
-			if (depth <= this.maxDepth) {
+			if (depth <= maxDepth) {
 				discoveredURI.add(Utils.getCompletePath(uri));
 				WebLinkedFile webLinkedFile = new WebLinkedFile(uri, depth, parent);
 				String webFileHost = Utils.getCompleteHost(webLinkedFile.getURI());
 				
-				if (webFileHost.equals(defaultHost)) {
-					this.linkedFileToDownload.add(webLinkedFile);
-					//add the webHtmlFile in the treeModel
-					DiscoveryTreeNode parentNode = (DiscoveryTreeNode) this.treeRoot.getChild(parent);
-					DiscoveryTreeNode node = parentNode.add(webLinkedFile);
-					this.treeModel.nodesWereInserted(parentNode, new int[] {parentNode.getIndex(node)});
-					//add the webHtmlFile in the detailledModel
-					this.detailledModel.addElement(webLinkedFile);
-				} else {
-					//it is not the same web site or the same protocol
-					System.err.println(webLinkedFile.getURI() + " / " + defaultHost + ": NOT THE SAME HOST OR THE SAME PROTOCOL");
+				//filter the linked files with the Filter
+				RE r = new RE(regExp);
+				if (r.match(webLinkedFile.getFileName())) {
+					if (webFileHost.equals(defaultHost)) {
+						linkedFileToDownload.add(webLinkedFile);
+						//add the webHtmlFile in the treeModel
+						DiscoveryTreeNode parentNode = (DiscoveryTreeNode) treeRoot.getChild(parent);
+						DiscoveryTreeNode node = parentNode.add(webLinkedFile);
+						treeModel.nodesWereInserted(parentNode, new int[] {parentNode.getIndex(node)});
+						//add the webHtmlFile in the detailledModel
+						detailledModel.addElement(webLinkedFile);
+					} else {
+						//it is not the same web site or the same protocol
+						System.err.println(webLinkedFile.getURI() + " / " + defaultHost + ": NOT THE SAME HOST OR THE SAME PROTOCOL");
+					}
 				}
 			}
 		}
@@ -292,18 +300,25 @@ public class DownloadManager extends Thread {
 	 */
 	private void createJTree() {
 		//TODO: regler les parametres pour que le jTree soit beau
-		this.treeRoot = new DiscoveryTreeNode(null, null);
-		this.treeModel = new DefaultTreeModel(this.treeRoot);
-		this.tree = new JTree(this.treeModel);
-		this.tree.setCellRenderer(new DiscoveryRenderer());
-		this.tree.addTreeSelectionListener(new TreeSelectionListener() {
+		treeRoot = new DiscoveryTreeNode(null, null);
+		treeModel = new DefaultTreeModel(treeRoot);
+		tree = new JTree(treeModel) {
+			public String getToolTipText(MouseEvent evt) {
+		        if (getRowForLocation(evt.getX(), evt.getY()) == -1)
+		          return null;
+		        TreePath curPath = getPathForLocation(evt.getX(), evt.getY());
+		        return ((DiscoveryTreeNode) curPath.getLastPathComponent()).getToolTipText();
+		      }
+		};
+		tree.setCellRenderer(new DiscoveryRenderer());
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent arg0) {
 				//TODO: faire l'action pour aller selectionner la ligne dans la JTable
 				System.out.println("JTREE ACTION: [TODO] Selectionner dans la JTable");
 			}
 		});
 		JHMainPanel.getInstance().getDiscoveryPanel().getScrollablePanel().add(this.tree);
-		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 //		this.tree.setRootVisible(false);
 //		this.tree.setShowsRootHandles(true);
 //		this.tree.setSelectionRow(0);

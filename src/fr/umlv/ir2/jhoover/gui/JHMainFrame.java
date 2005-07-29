@@ -22,6 +22,7 @@ import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 
 /**
+ * Main Frame of jHoover
  * @author Romain Papuchon
  *
  */
@@ -30,12 +31,12 @@ public final class JHMainFrame extends JFrame {
 	private static JHMenuBar menuBar;
 	private static JHToolBar toolBar;
 	private static JHMainPanel mainPanel;
-	private ActionManager actions;
 
-	
+	/**
+	 * Create the JHMainFrame
+	 */
 	private JHMainFrame () {
 		super (Labels.MAINFRAME_WINDOW_TITLE_LABEL);
-		this.actions = new ActionManager();
 		//set the icon from the frame
 		setIcon (Icons.LOGO_URL);
 		
@@ -59,6 +60,10 @@ public final class JHMainFrame extends JFrame {
 
 	
 
+	/**
+	 * Return the singleton for the JHMainFrame
+	 * @return the singleton
+	 */
 	public static JHMainFrame getInstance() {
 		if (INSTANCE == null) {
 			INSTANCE = new JHMainFrame();
@@ -68,26 +73,36 @@ public final class JHMainFrame extends JFrame {
 
 	
 
+	/**
+	 * Return the mainPanel
+	 * @return the mainPanel
+	 */
 	public JHMainPanel getMainPanel() {
 		return mainPanel;
 	}
 
 
-	public ActionManager getActions() {
-		return this.actions;
-	}
-
-
+	/**
+	 * Return the menu bar
+	 * @return the menuBar
+	 */
 	public JHMenuBar getJHMenuBar() {
 		return menuBar;
 	}
 
 
+	/**
+	 * Return the tool bar
+	 * @return the toolBar
+	 */
 	public JHToolBar getJHToolBar() {
 		return toolBar;
 	}
 
 	
+	/**
+	 * Build the mainframe
+	 */
 	public void build() {
 		mainPanel = JHMainPanel.getInstance();
 		toolBar = new JHToolBar();
@@ -100,7 +115,10 @@ public final class JHMainFrame extends JFrame {
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 	}
 	
-
+	/**
+	 * Set an icone for the mainframe
+	 * @param logoFile the url of the icon
+	 */
 	private void setIcon(final URL logoFile) {
 		Image icone = Toolkit.getDefaultToolkit().getImage(logoFile);
 		setIconImage(icone);

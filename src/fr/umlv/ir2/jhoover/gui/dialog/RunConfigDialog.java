@@ -21,12 +21,16 @@ import fr.umlv.ir2.jhoover.gui.tool.Icons;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
+ * Run the Configuration of jHoover Dialog
  * @author Romain Papuchon
- *
  */
 public class RunConfigDialog extends AbstractConfigDialog {
 		
 	
+	/**
+	 * Create a RunConfigDialog
+	 * @param title the title of the dialog
+	 */
 	public RunConfigDialog(String title) {
 		super(JHMainFrame.getInstance(), title);
 		validButton.setText(Labels.RUN_JHOOVER_LABEL);
@@ -35,6 +39,10 @@ public class RunConfigDialog extends AbstractConfigDialog {
 	}
 	
 	
+	/**
+	 * Create the header panel
+	 * @return the panel
+	 */
 	private JPanel createHeaderPanel() {
 		FormLayout headerLayout = new FormLayout(
 			    "p, 9dlu, p", // columns
@@ -53,6 +61,9 @@ public class RunConfigDialog extends AbstractConfigDialog {
 
 	
 		
+	/**
+	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#validButtonAction()
+	 */
 	ActionListener validButtonAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

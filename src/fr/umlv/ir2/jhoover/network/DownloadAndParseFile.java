@@ -21,11 +21,12 @@ import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.ObjectFindingVisitor;
 
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
+import fr.umlv.ir2.jhoover.gui.tool.Extentions;
 import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
 
 /**
+ * Download, Parse and extract links from a webFile in a thread 
  * @author Romain Papuchon
- *
  */
 public class DownloadAndParseFile extends Thread {
 	private DownloadManager downloadManager;
@@ -50,6 +51,9 @@ public class DownloadAndParseFile extends Thread {
 	}
 
 	
+	/**
+	 * @see java.lang.Thread#run()
+	 */
 	public void run() {
 		testIfPaused();
 		boolean downloadedFile = false;
@@ -62,20 +66,20 @@ public class DownloadAndParseFile extends Thread {
 		testIfPaused();
 		if (downloadedFile) {
 			//parsing of the webFile if it is a HTML document
-			if (this.webFile.getContentType().contains(HtmlConstants.TEXT_HTML)) {
-				System.out.println("------parsing: " + this.destDirectory + webFile.getURI().getPath());
+			if (webFile.getContentType().contains(HtmlConstants.TEXT_HTML)) {
+				System.out.println("------parsing: " + destDirectory + webFile.getURI().getPath());
 				testIfPaused();
-				parseHtml(this.webFile);
+				parseHtml(webFile);
 			}
 		} else {
 			//error during download, set the progression to (-1)
-			this.webFile.setProgression(-2);
+			webFile.setProgression(-1);
 			//do a fire in the detailledModel
-			int indexInModel = DetailledModel.getInstance().getIndexWebFile(this.webFile);
+			int indexInModel = DetailledModel.getInstance().getIndexWebFile(webFile);
 			DetailledModel.getInstance().fireTableRowsUpdated(indexInModel, indexInModel);
 		}
 		testIfPaused();		
-		this.downloadManager.endDownload(this.webFile);
+		downloadManager.endDownload(this.webFile);
 	}
 	
 	
@@ -110,12 +114,13 @@ public class DownloadAndParseFile extends Thread {
 				}
 				testIfPaused();
 				//parameters from the file
-				this.webFile.setContentType(connection.getContentType());
+				webFile.setContentType(connection.getContentType());
 				//we cannot know the realSize (certainly blocked by server)
-				if (connection.getContentLength() == -1) {
-					this.webFile.setRealSize(-2);
+				int length = connection.getContentLength();
+				if (length == -1) {
+					webFile.setRealSize(-2);
 				} else {
-					this.webFile.setRealSize(connection.getContentLength());	
+					webFile.setRealSize(length);	
 				}
 				testIfPaused();
 				//Opening File for writing
@@ -147,14 +152,14 @@ public class DownloadAndParseFile extends Thread {
 							fileOutputStream.write(buffer, 0, nbBytes);
 							downloadedSize += nbBytes;
 							//progression in percent
-							if (this.webFile.getRealSize() == -2) {
+							if (webFile.getRealSize() == -2) {
 								//cannot kwnow the progression
-								this.webFile.setProgression(-2);
+								webFile.setProgression(-2);
 							} else {
-								this.webFile.setProgression(downloadedSize * 100 / this.webFile.getRealSize());
+								webFile.setProgression(downloadedSize * 100 / webFile.getRealSize());
 							}
 							//do a fire in the detailledModel
-							int indexInModel = DetailledModel.getInstance().getIndexWebFile(this.webFile);
+							int indexInModel = DetailledModel.getInstance().getIndexWebFile(webFile);
 							DetailledModel.getInstance().fireTableRowsUpdated(indexInModel, indexInModel);
 						} catch (IOException e) {
 							System.err.println(e);
@@ -167,6 +172,11 @@ public class DownloadAndParseFile extends Thread {
 					} else {						
 						nbBytes = 0;
 					}
+				}
+				
+				//the download is finished
+				if (webFile.getProgression() == -2) {
+					webFile.setProgression(100);
 				}
 				
 				//closing the streams
@@ -185,7 +195,6 @@ public class DownloadAndParseFile extends Thread {
 	
 	/**
 	 * Tests the response code returned by the connection
-	 * 
 	 * 200 - Ok (always considered 'good')
 	 * 201 - Created
 	 * 202 - Accepted
@@ -198,6 +207,7 @@ public class DownloadAndParseFile extends Thread {
 	 * The following codes probably indicate failure (though it could also simply indicate a server is down, although the link is still valid):
 	 * 500 - Any response code in the 500 series
 	 * Response codes in the 100 series should be considered unexpected (though not an error) from a HEAD request.
+	 * @param connection the connection
 	 * 
 	 * @return true if the download can begin, false else
 	 */
@@ -231,14 +241,14 @@ public class DownloadAndParseFile extends Thread {
 		Parser parser;
 		Node [] images;
 		try {
-			parser = new Parser(this.defaultHost + this.webFile.getURI().getPath());
+			parser = new Parser(defaultHost + webFile.getURI().getPath());
 			images = parser.extractAllNodesThatAre(ImageTag.class);
 			for (int i = 0; i < images.length; i++)	{
 				if (!isCancelled()) {
 					ImageTag imageTag = (ImageTag)images[i];
 					//System.out.println (imageTag.getImageURI ());
 					try {
-						this.downloadManager.addLinkedFile(new URI(imageTag.getImageURL()), depthParent+1, parent);
+						downloadManager.addLinkedFile(new URI(imageTag.getImageURL()), depthParent+1, parent);
 					} catch (URISyntaxException e) {
 						System.err.println("INVILID URI: " + imageTag.getImageURL());
 					}
@@ -246,9 +256,11 @@ public class DownloadAndParseFile extends Thread {
 					break;
 				}
 			}
-
+					
+			
+			
 			if (!isCancelled()) {
-				parser = new Parser(this.defaultHost + this.webFile.getURI().getPath());
+				parser = new Parser(defaultHost + webFile.getURI().getPath());
 				ObjectFindingVisitor visitor = new ObjectFindingVisitor(LinkTag.class);
 				parser.visitAllNodesWith(visitor);
 				Node[] links = visitor.getTags ();
@@ -259,7 +271,12 @@ public class DownloadAndParseFile extends Thread {
 //						System.out.println (linkTag.getLink ());
 						try {
 							if (isAGoodLink(linkTag)) {
-								this.downloadManager.addHtmlFile(new URI(linkTag.getLink()), depthParent+1);
+								//tests if it is a linked file or not
+								if (Extentions.isDocument(linkTag.getLink()) || Extentions.isImage(linkTag.getLink()) || Extentions.isMusic(linkTag.getLink()) || Extentions.isVideo(linkTag.getLink())) {
+									downloadManager.addLinkedFile(new URI(linkTag.getLink()), depthParent+1, parent);
+								} else {
+									downloadManager.addHtmlFile(new URI(linkTag.getLink()), depthParent+1);
+								}
 							}
 						} catch (URISyntaxException e) {
 							System.err.println("INVILID URI: " + linkTag.getLink());
