@@ -85,6 +85,8 @@ public final class Labels {
 	public static final String DOWNLOAD_CANCELLED_LABEL = "Download Cancelled by user!";
 	/** DOWNLOAD_RESUMED_LABEL */
 	public static final String DOWNLOAD_RESUMED_LABEL = "Download resumed";
+	/** URL_NOT_CORRECT_LABEL */
+	public static final String URL_NOT_CORRECT_LABEL = "Url not correct";
 	/** DOWNLOAD_PAUSED_LABEL */
 	public static final String DOWNLOAD_PAUSED_LABEL = "Download paused";
 	/** DOWNLOAD_ALREADY_PAUSED_LABEL */

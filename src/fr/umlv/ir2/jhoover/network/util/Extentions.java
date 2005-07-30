@@ -2,7 +2,7 @@
  * jHoover - UMLV IR2
  * UI Project
  */
-package fr.umlv.ir2.jhoover.gui.tool;
+package fr.umlv.ir2.jhoover.network.util;
 
 
 /**

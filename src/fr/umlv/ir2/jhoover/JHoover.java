@@ -44,8 +44,6 @@ public class JHoover {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//TODO: voir si cette methode est OK pour le lancement de l'application
-		
 		//create the SplashScreen
 		JWindow window = createJHooverSplashScreen();
 		
@@ -65,7 +63,6 @@ public class JHoover {
 	 * @return the SplashScreen
 	 */
 	private static JWindow createJHooverSplashScreen() {
-		//TODO: mettre une bordure pour faire mieux
 		JWindow window = new JWindow();
 		window.getContentPane().add(new JLabel(Icons.JHOOVER_JWINDOW));
 		window.setAlwaysOnTop(true);
@@ -102,7 +99,6 @@ public class JHoover {
 	 * @param regExp the filter
 	 */
 	public void startDownload(String projectName, String startURIString, String destDirectory, int maxDepth, int maxDLHtml, int maxDLLink, String regExp) {
-		//TODO: utiliser la RegExp
 		URI startURI = null;
 		
 		//Adds the project name in the path
@@ -117,6 +113,7 @@ public class JHoover {
 		}			
 		
 		downloadManager = DownloadManager.getInstance(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory, regExp);
+		
 		//add the file pointed by startURI in the downloadList from the downloadManager
 		downloadManager.addHtmlFile(startURI, 0);
 		downloadManager.start();

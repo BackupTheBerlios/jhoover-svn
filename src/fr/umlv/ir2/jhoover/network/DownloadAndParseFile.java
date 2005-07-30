@@ -21,7 +21,7 @@ import org.htmlparser.util.ParserException;
 import org.htmlparser.visitors.ObjectFindingVisitor;
 
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
-import fr.umlv.ir2.jhoover.gui.tool.Extentions;
+import fr.umlv.ir2.jhoover.network.util.Extentions;
 import fr.umlv.ir2.jhoover.network.util.HtmlConstants;
 
 /**

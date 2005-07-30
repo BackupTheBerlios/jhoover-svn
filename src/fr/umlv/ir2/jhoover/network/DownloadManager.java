@@ -155,15 +155,7 @@ public class DownloadManager extends Thread {
 				isInterrupted = true;
 			}
 		}
-		
-		if (isInterrupted) {
-			//Download was cancelled
-			ArrayList<WebFile> webList = DetailledModel.getInstance().getWebFiles();
-			for (int i=0; i<webList.size(); i++) {
-				webList.get(i).setProgression(-1);
-			}
-			DetailledModel.getInstance().fireTableDataChanged();
-		} else {	
+		if (!isInterrupted) {
 			//End of Download (successfull)
 			JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_FINISHED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.INFORMATION_MESSAGE);	
 		}
@@ -206,7 +198,7 @@ public class DownloadManager extends Thread {
 			if (depth <= maxDepth) {
 				discoveredURI.add(Utils.getCompletePath(uri));
 				WebHtmlFile webHtmlFile = new WebHtmlFile(uri, depth);
-				String webFileHost = Utils.getCompleteHost(webHtmlFile.getURI());;
+				String webFileHost = Utils.getCompleteHost(webHtmlFile.getURI());
 				
 				if (webFileHost.equals(defaultHost)) {
 					htmlFileToDownload.add(webHtmlFile);

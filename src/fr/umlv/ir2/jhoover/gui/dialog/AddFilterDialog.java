@@ -58,7 +58,7 @@ public class AddFilterDialog extends AbstractDialog {
 		regexpBuilder.add(regexpTextField,			ccHeader.xy (3,  1));
 
 		return regexpBuilder.getPanel();
-	};
+	}
 
 
 	/**

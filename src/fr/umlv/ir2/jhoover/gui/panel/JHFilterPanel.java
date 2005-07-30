@@ -67,7 +67,7 @@ public class JHFilterPanel extends JPanel {
 		regexpBuilder.add(helpButton,				ccHeader.xy (7,  1));
 
 		return regexpBuilder.getPanel();
-	};
+	}
 	
 	
 	/**

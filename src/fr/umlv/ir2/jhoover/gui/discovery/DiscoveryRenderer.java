@@ -10,8 +10,8 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
-import fr.umlv.ir2.jhoover.gui.tool.Extentions;
 import fr.umlv.ir2.jhoover.network.WebFile;
+import fr.umlv.ir2.jhoover.network.util.Extentions;
 import fr.umlv.ir2.jhoover.network.util.Utils;
 
 /**
