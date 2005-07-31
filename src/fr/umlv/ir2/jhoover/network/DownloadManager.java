@@ -18,6 +18,8 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.regexp.RE;
 
+import com.sun.org.apache.regexp.internal.RESyntaxException;
+
 import fr.umlv.ir2.jhoover.gui.ActionManager;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
