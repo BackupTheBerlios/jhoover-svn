@@ -6,7 +6,6 @@ package fr.umlv.ir2.jhoover.gui.dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.URI;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -68,10 +67,17 @@ public class RunConfigDialog extends AbstractConfigDialog {
 	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#validButtonAction()
 	 */
 	ActionListener validButtonAction() {
+		//TODO: put this action un the ActionManager(cf. SetConfigDialog)
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {	
 				boolean canSave = true;
-				String projectName = rProjectName.getText(); //TODO: verifier que le projectName ne contient pas de caracteres spéciaux
+				String projectName = rProjectName.getText();
+				if (projectName.contains("/") || projectName.contains("\\") || projectName.contains(":") || projectName.contains("*") || projectName.contains("?") || projectName.contains("\"") || projectName.contains("<") || projectName.contains(">") || projectName.contains("|")) {
+					//path contains not authorized character
+					System.err.println("PATH CONTAINS NOT AUTHORIZED CHARAcTERS: " + projectName);
+					JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.PROJECT_NAME_NOT_CORRECT_LABEL + ": " + projectName, Labels.PROJECT_NAME_NOT_CORRECT_LABEL, JOptionPane.ERROR_MESSAGE);
+					canSave = false;
+				}
 				String url = rUrl.getText();
 				String oldUrl = url;
 				String newUrl;

@@ -47,6 +47,8 @@ public final class Labels {
 	public static final String MAINFRAME_WINDOW_TITLE_LABEL = "Jhoover";
 	/** CANCEL_THE_DOWNLOAD_QUESTION_LABEL */
 	public static final String CANCEL_THE_DOWNLOAD_QUESTION_LABEL = "Do you really want to stop the current download?";
+	/** PROJECT_NAME_NOT_CORRECT_LABEL */
+	public static final String PROJECT_NAME_NOT_CORRECT_LABEL = "Project name not correct";
 	/** CANCEL_THE_DOWNLOAD_AND_NEW_QUESTION_LABEL */
 	public static final String CANCEL_THE_DOWNLOAD_AND_NEW_QUESTION_LABEL = "Do you really want to stop the current download to do a new one?";
 	/** MODIFY_FILTER_LABEL */

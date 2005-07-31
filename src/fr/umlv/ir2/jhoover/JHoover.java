@@ -112,7 +112,7 @@ public class JHoover {
 			System.exit(0);
 		}			
 		
-		downloadManager = DownloadManager.getInstance(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory, regExp);
+		downloadManager = DownloadManager.createInstance(maxDLHtml, maxDLLink, maxDepth, startURI, destDirectory, regExp);
 		
 		//add the file pointed by startURI in the downloadList from the downloadManager
 		downloadManager.addHtmlFile(startURI, 0);

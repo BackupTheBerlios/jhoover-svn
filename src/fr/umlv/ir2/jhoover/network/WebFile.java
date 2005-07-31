@@ -116,12 +116,8 @@ public abstract class WebFile {
 		StringBuffer fileName = new StringBuffer();
 		for (int i=path.length()-1; i>=0; i--) {
 			if (path.charAt(i) == '/') {
-				if (i == path.length()-1) {
-					//the last slash
-					
-				} else {
+				if (i != path.length()-1) {
 					//not the last slash
-					//string de i+1 a path.length()
 					for (int j=i+1; j<path.length(); j++) {
 						fileName.append(path.charAt(j));						
 					}

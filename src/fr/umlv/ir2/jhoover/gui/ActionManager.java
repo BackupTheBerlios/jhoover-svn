@@ -72,11 +72,11 @@ public final class ActionManager
 	public static final Action pauseAction = new AbstractAction(Labels.PAUSE_LABEL, Icons.PAUSE_ICON) {
 		public void actionPerformed (ActionEvent e) {	
 			if (DownloadManager.isRunning()) {
-				if (!DownloadManager.getInstance(0, 0, 0, null, null, null).isPaused()) {
+				if (!DownloadManager.getInstance().isPaused()) {
 					//pause the downloadManager Thread
 					JHoover.getInstance().getDownloadManager().setPauseStatus(true);
 					//pause all the Download Threads
-					ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance(0, 0, 0, null, null, null).getThreadList();
+					ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance().getThreadList();
 					for (int i=0; i<threadList.size(); i++) {
 						synchronized (threadList.get(i)) {
 							threadList.get(i).setPauseStatus(true);
@@ -96,7 +96,7 @@ public final class ActionManager
 	public static final Action resumeAction = new AbstractAction(Labels.RESUME_LABEL, Icons.RESUME_ICON) {
 		public void actionPerformed (ActionEvent e) {
 			if (DownloadManager.isRunning()) {
-				if (DownloadManager.getInstance(0, 0, 0, null, null, null).isPaused()) {
+				if (DownloadManager.getInstance().isPaused()) {
 					resumeAction();
 					JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.DOWNLOAD_RESUMED_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.INFORMATION_MESSAGE);
 				} else {
@@ -239,7 +239,7 @@ public final class ActionManager
 	 * To stop the download
 	 */
 	private static void stopAction() {
-		ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance(0, 0, 0, null, null, null).getThreadList();
+		ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance().getThreadList();
 		//stop the downloadManager Thread
 		JHoover.getInstance().getDownloadManager().interrupt();
 		//stop all the Download Threads
@@ -257,7 +257,7 @@ public final class ActionManager
 		JHoover.getInstance().getDownloadManager().setPauseStatus(false);
 		JHoover.getInstance().getDownloadManager().interrupt();
 		//resume all the Download Threads
-		ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance(0, 0, 0, null, null, null).getThreadList();
+		ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance().getThreadList();
 		for (int i=0; i<threadList.size(); i++) {
 			synchronized (threadList.get(i)) {
 				threadList.get(i).setPauseStatus(false);

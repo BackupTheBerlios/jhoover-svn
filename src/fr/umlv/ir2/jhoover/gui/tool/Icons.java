@@ -48,6 +48,8 @@ public final class Icons {
 	public static final Icon CONFIGURATION_ICON = new ImageIcon (getURL ("configuration_16x16.png"));
 	/** EXIT_ICON */
 	public static final Icon EXIT_ICON = new ImageIcon (getURL ("exit_16x16.png"));
+	/** APPLICATION_ICON */
+	public static final Icon APPLICATION_ICON = new ImageIcon (getURL ("application_16x16.png"));
 	/** LOGO_URL */
 	public static final URL LOGO_URL = getURL ("jHoover_125x123.jpg");
 	/** ABOUT_ICON */

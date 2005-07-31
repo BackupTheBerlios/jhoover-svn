@@ -228,7 +228,6 @@ public class JHooverConfiguration {
 		try {
 			this.configuration.save();
 		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

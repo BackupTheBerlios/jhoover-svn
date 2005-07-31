@@ -32,17 +32,13 @@ public class DetailledJProgressBarRenderer extends JProgressBar implements Table
 			this.setString("Cancelled");
 		} else if ((Integer)value == -2) {
 			//cannot know
-			//TODO: setString?
-//			this.setString("Unknown");
+			this.setString("Unknown");
 		} else {
 			this.setValue((Integer)value);
 			this.setMinimum(0);
 			this.setMaximum(100);
 			this.setStringPainted(true);
 			this.setBorderPainted(true);
-			//TODO: voir pour changer les couleurs de la barre ici
-//			this.setForeground(new Color(10,20,30));
-//			this.setBackground(new Color(60,10,80));
 		}
 		return this;
 	}

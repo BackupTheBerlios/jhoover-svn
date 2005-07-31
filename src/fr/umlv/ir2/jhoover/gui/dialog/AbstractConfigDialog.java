@@ -70,7 +70,6 @@ public abstract class AbstractConfigDialog extends AbstractDialog {
 	protected JPanel createFieldPanel() {
 		FormLayout fieldsLayout = new FormLayout(
 			    "right:80dlu, 3dlu, p, 100dlu, 3dlu, p", // columns
-			    //TODO: voir pour mettre left:p dans le 1er (ajouter une colone) et ne pas mettre 100dlu (4ème)
 			    "p, 3dlu, p, 3dlu, p, 9dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 9dlu, p, 3dlu, p, 3dlu, p");      // rows
 		PanelBuilder builderFields = new PanelBuilder(fieldsLayout);
 		builderFields.setDefaultDialogBorder();

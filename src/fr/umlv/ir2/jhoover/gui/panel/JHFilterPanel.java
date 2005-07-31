@@ -75,7 +75,7 @@ public class JHFilterPanel extends JPanel {
 	 * @return the action
 	 */
 	private ActionListener addAction() {
-		//TODO: voir pour mettre cette action dans ActionManager (cf. AddFilterDialog, meme methode)
+		//TODO: add this action in ActionManager (cf. AddFilterDialog, same methode)
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int index = 0;

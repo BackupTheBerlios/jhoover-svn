@@ -45,7 +45,9 @@ public class Utils {
 	 * @return the path with the file if necessary or null if the path end with a document
 	 */
 	public static String addFirstFile(String path) {
-		if (Extentions.isDocument(path)) {
+		if (Extentions.isApplication(path)) {
+			return null;
+		} else if (Extentions.isDocument(path)) {
 			return null;
 		} else if (Extentions.isImage(path)) {
 			return null;

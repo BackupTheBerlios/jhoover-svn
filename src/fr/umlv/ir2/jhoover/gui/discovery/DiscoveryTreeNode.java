@@ -68,7 +68,6 @@ public class DiscoveryTreeNode implements TreeNode {
 	 * @see javax.swing.tree.TreeNode#getAllowsChildren()
 	 */
 	public boolean getAllowsChildren() {
-		// TODO voir cette methode
 		return false;
 	}
 

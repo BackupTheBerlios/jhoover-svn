@@ -12,8 +12,6 @@ package fr.umlv.ir2.jhoover.network.util;
  */
 public class Extentions {
 
-	
-	//TODO: ajouter des extentions dans ces methodes
 	/**
 	 * Test if the path is an image dowument or not
 	 * @param path the path to test
@@ -22,7 +20,7 @@ public class Extentions {
 	public static boolean isImage(String path) {
 		if (path != null) {
 			path = path.toLowerCase();
-			if (path.endsWith(".bmp") || path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".gif")) {
+			if (path.endsWith(".bmp") || path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".gif") || path.endsWith(".png")) {
 				return true;
 			}
 		}
@@ -52,7 +50,7 @@ public class Extentions {
 	public static boolean isVideo(String path) {
 		if (path != null) {
 			path = path.toLowerCase();
-			if (path.endsWith(".avi") || path.endsWith(".mpg")) {
+			if (path.endsWith(".avi") || path.endsWith(".mpg") || path.endsWith(".mpeg") || path.endsWith(".divx")) {
 				return true;
 			}
 		}
@@ -67,7 +65,22 @@ public class Extentions {
 	public static boolean isDocument(String path) {
 		if (path != null) {
 			path = path.toLowerCase();
-			if (path.endsWith(".doc") || path.endsWith(".txt") || path.endsWith(".pdf")) {
+			if (path.endsWith(".doc") || path.endsWith(".txt") || path.endsWith(".pdf") || path.endsWith(".sxw") || path.endsWith(".ppt") || path.endsWith(".xls") || path.endsWith(".zip") || path.endsWith(".rar")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Test if the path is an application or not
+	 * @param path the path to test
+	 * @return true if it is an application, false else
+	 */
+	public static boolean isApplication(String path) {
+		if (path != null) {
+			path = path.toLowerCase();
+			if (path.endsWith(".exe") || path.endsWith(".bat")  || path.endsWith(".sh") || path.endsWith(".cmd")) {
 				return true;
 			}
 		}

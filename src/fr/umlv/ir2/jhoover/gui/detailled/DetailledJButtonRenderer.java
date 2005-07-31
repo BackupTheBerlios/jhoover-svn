@@ -22,7 +22,6 @@ public class DetailledJButtonRenderer extends JButton implements TableCellRender
 	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 	 */
 	public Component getTableCellRendererComponent(JTable table, final Object webFile, boolean isSelected, boolean hasFocus, int rowIndex, int colIndex) {
-		//TODO: rendre le bouton joli ici
 		this.setText("Cancel");
 		
 		int n = ((WebFile)webFile).getProgression();

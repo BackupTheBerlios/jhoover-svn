@@ -46,7 +46,7 @@ public class DetailledJButtonEditor extends AbstractCellEditor implements TableC
 					((WebFile)webFile).setProgression(-1);					
 					if (n>=0) {
 						//stop the download of the WebFile in progress
-						ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance(0, 0, 0, null, null, null).getThreadList();
+						ArrayList<DownloadAndParseFile> threadList = DownloadManager.getInstance().getThreadList();
 						for (int i=0; i<threadList.size(); i++) {
 							DownloadAndParseFile downloadAndParseFile = threadList.get(i);
 							WebFile web = downloadAndParseFile.getWebFile();

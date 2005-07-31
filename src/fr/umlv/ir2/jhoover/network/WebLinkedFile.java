@@ -26,7 +26,7 @@ public class WebLinkedFile extends WebFile {
 	}
 
 	/**
-	 * Return the li,ked WebFile parent
+	 * Return the parent linked WebFile
 	 * @return the parent
 	 */
 	public WebFile getParent() {

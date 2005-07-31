@@ -26,13 +26,6 @@ public class DiscoveryRenderer extends DefaultTreeCellRenderer{
 	public DiscoveryRenderer() {
 		setEnabled(true);
 		setAutoscrolls(true);
-//		setClosedIcon(Icons.STOP_ICON);
-//		setDisabledIcon(Icons.PAUSE_ICON);
-//		setIcon(Icons.ABOUT_ICON);
-//		setLeafIcon(Icons.LEAF_ICON);
-//		setOpenIcon(Icons.CONFIGURATION_ICON);
-//		setHorizontalAlignment(SwingConstants.LEFT);
-//		setVerticalAlignment(SwingConstants.TOP);
 	}
 	
 	
@@ -42,7 +35,6 @@ public class DiscoveryRenderer extends DefaultTreeCellRenderer{
 	 */
 	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean focus) {
 		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-		//TODO: faire marcher le toolTipText
 		if (value instanceof DiscoveryTreeNode) {
 			if (((DiscoveryTreeNode)value).getWebFile() != null) {
 				String path = ((DiscoveryTreeNode)value).getWebFile().getFileName();	
@@ -57,6 +49,9 @@ public class DiscoveryRenderer extends DefaultTreeCellRenderer{
 					setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
 				} else if (leaf && Extentions.isDocument(path)) {
 					setIcon(Icons.DOCUMENT_ICON);
+					setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
+				} else if (leaf && Extentions.isApplication(path)) {
+					setIcon(Icons.APPLICATION_ICON);
 					setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
 				} else if (leaf && Extentions.isWeb(path)) {
 					setIcon(Icons.WEB_ICON);

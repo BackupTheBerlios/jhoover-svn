@@ -90,17 +90,15 @@ public class AddFilterDialog extends AbstractDialog {
 
 	/**
 	 * Valid Button action
-	 * @return the help action
+	 * @return the valid action
 	 */
 	protected ActionListener validButtonAction() {
-		//TODO: voir pour mettre cette action: return ActionManager.okRegexpDialogAction; (cf. JHFilterPanel, meme methode)
+		//TODO: add this action in ActionManager (cf. JHFilterPanel, same methode)
 		return new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				int index = 0;
 				if (!regexpTextField.getText().equals("")) {
 					index = GuiUtils.createNewTable(DetailledModel.getInstance(), regexpTextField.getText(), regexpTextField.getText());
-				} else {
-					//TODO: gerer ce cas
 				}
 				regexpTextField.setText("");
 				JHDetailledPanel.getInstance().setSelectedIndex(index);

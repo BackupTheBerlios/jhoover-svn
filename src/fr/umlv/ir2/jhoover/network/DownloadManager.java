@@ -95,7 +95,7 @@ public class DownloadManager extends Thread {
 	
 	
 	/**
-	 * Return a DownloadManager per session
+	 * Create a DownloadManager and return it
 	 * @param maxDLHtml number of maximum simultaneous html download file
 	 * @param maxDLLink number of maximum simultaneous linked download file
 	 * @param maxDepth depth of the download in the WebSite
@@ -104,10 +104,19 @@ public class DownloadManager extends Thread {
 	 * @param regExp the filter of the linked WebFiles
 	 * @return an instance of DownloadManager
 	 */
-	public static DownloadManager getInstance(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory, String regExp) {
+	public static DownloadManager createInstance(int maxDLHtml ,int maxDLLink, int maxDepth, URI startURI, String destDirectory, String regExp) {
 		if (INSTANCE == null) {
 			INSTANCE = new DownloadManager(maxDLHtml ,maxDLLink, maxDepth, startURI, destDirectory, regExp);
 		}
+		return INSTANCE;
+	}
+	
+	
+	/**
+	 * Return the instance of DownloadManager 
+	 * @return the instance
+	 */
+	public static DownloadManager getInstance() {
 		return INSTANCE;
 	}
 	
@@ -291,7 +300,6 @@ public class DownloadManager extends Thread {
 	 * Creates the JTree in the discovery part
 	 */
 	private void createJTree() {
-		//TODO: regler les parametres pour que le jTree soit beau
 		treeRoot = new DiscoveryTreeNode(null, null);
 		treeModel = new DefaultTreeModel(treeRoot);
 		tree = new JTree(treeModel) {

@@ -129,7 +129,7 @@ public class DownloadAndParseFile extends Thread {
 				if (!file.getParentFile().exists()) {
 					if (!file.getParentFile().mkdirs()) {
 						throw new IOException("Cannot create ancestor directories: '" + localPath + "'");
-						//TODO: voir si on quitte le programme ou pas
+						//TODO: what do we do in this case?
 					}
 				}
 				try {
@@ -212,7 +212,6 @@ public class DownloadAndParseFile extends Thread {
 	 * @return true if the download can begin, false else
 	 */
 	private boolean canBeDownloaded(HttpURLConnection connection) {
-		//TODO: voir s'il faut ajouter des codes de retour ou pas
 		try {
 			switch (connection.getResponseCode()) {
 			case 200:
@@ -272,7 +271,7 @@ public class DownloadAndParseFile extends Thread {
 						try {
 							if (isAGoodLink(linkTag)) {
 								//tests if it is a linked file or not
-								if (Extentions.isDocument(linkTag.getLink()) || Extentions.isImage(linkTag.getLink()) || Extentions.isMusic(linkTag.getLink()) || Extentions.isVideo(linkTag.getLink())) {
+								if (Extentions.isDocument(linkTag.getLink()) || Extentions.isImage(linkTag.getLink()) || Extentions.isMusic(linkTag.getLink()) || Extentions.isVideo(linkTag.getLink()) || Extentions.isApplication(linkTag.getLink())) {
 									downloadManager.addLinkedFile(new URI(linkTag.getLink()), depthParent+1, parent);
 								} else {
 									downloadManager.addHtmlFile(new URI(linkTag.getLink()), depthParent+1);

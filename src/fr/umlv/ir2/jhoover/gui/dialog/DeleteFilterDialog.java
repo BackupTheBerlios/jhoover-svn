@@ -27,7 +27,7 @@ import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
  */
 public class DeleteFilterDialog extends AbstractDialog {
 	
-	JComboBox filterList;
+	private JComboBox filterList;
 	
 	/**
 	 * Create a DeleteFilterDialog

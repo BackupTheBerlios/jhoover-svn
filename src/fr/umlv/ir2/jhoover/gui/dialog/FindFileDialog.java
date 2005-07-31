@@ -63,7 +63,6 @@ public class FindFileDialog extends AbstractDialog {
 	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#validButtonAction()
 	 */
 	protected ActionListener validButtonAction() {
-		// TODO: faire l'action necessaire
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {				
 				dispose();
