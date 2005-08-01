@@ -10,15 +10,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
+import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.tool.GuiUtils;
+import fr.umlv.ir2.jhoover.gui.tool.Labels;
 
 /**
  * Represents the filter panel
@@ -80,14 +86,14 @@ public class JHFilterPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				int index = 0;
 				if (!regexpTextField.getText().equals("")) {
-					index = GuiUtils.createNewTable(DetailledModel.getInstance(), regexpTextField.getText(), regexpTextField.getText());
-				} else {
-					//TODO: gerer ce cas
+					try {
+						new RE(regexpTextField.getText());
+						index = GuiUtils.createNewTable(DetailledModel.getInstance(), regexpTextField.getText(), regexpTextField.getText());
+						JHDetailledPanel.getInstance().setSelectedIndex(index);
+					} catch (RESyntaxException e) {
+						JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.REGEXP_NOT_CORRECT_LABEL + ": " + regexpTextField.getText(), Labels.REGEXP_NOT_CORRECT_LABEL, JOptionPane.ERROR_MESSAGE);
+					}
 				}
-				regexpTextField.setText("");
-				JHDetailledPanel.getInstance().setSelectedIndex(index);
-				//TODO: faire marcher le dispose pour fermer la fenetre
-//				dispose();
 			}
 		};
 	}

@@ -31,7 +31,7 @@ public class DetailledJButtonEditor extends AbstractCellEditor implements TableC
 	 */
 	public DetailledJButtonEditor() {
 		super();
-		button = new JButton();
+		button = new JButton("Cancel");
 	}
 	
 	/**
@@ -57,6 +57,7 @@ public class DetailledJButtonEditor extends AbstractCellEditor implements TableC
 						}
 					}
 				}
+				fireEditingStopped();				
 			}
 		});
 		return button;

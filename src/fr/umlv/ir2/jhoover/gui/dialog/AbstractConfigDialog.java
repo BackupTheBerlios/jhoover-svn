@@ -10,18 +10,24 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import fr.umlv.ir2.jhoover.gui.ActionManager;
+import fr.umlv.ir2.jhoover.gui.JHMainFrame;
 import fr.umlv.ir2.jhoover.gui.tool.Labels;
 import fr.umlv.ir2.jhoover.network.util.JHooverConfiguration;
+import fr.umlv.ir2.jhoover.network.util.Utils;
 
 /**
  * Abstract Class for Configuration of jHoover Dialog
@@ -162,5 +168,68 @@ public abstract class AbstractConfigDialog extends AbstractDialog {
 		return buttonFields.getPanel();
 	}
 
+	
+	/**
+	 * Check if the fields are correct or not
+	 * @return true if the fields are correct, false else
+	 */
+	protected boolean checkFields() {
+		StringBuffer errorString = new StringBuffer();
+		
+		//projectName
+		if (rProjectName.getText().contains("/") || rProjectName.getText().contains("\\") || rProjectName.getText().contains(":") || rProjectName.getText().contains("*") || rProjectName.getText().contains("?") || rProjectName.getText().contains("\"") || rProjectName.getText().contains("<") || rProjectName.getText().contains(">") || rProjectName.getText().contains("|")) {
+			//path contains not authorized character
+			System.err.println("PATH CONTAINS NOT AUTHORIZED CHARACTERS: " + rProjectName.getText());
+			errorString.append(Labels.PROJECT_NAME_NOT_CORRECT_LABEL + ": " + rProjectName.getText());
+		}
+		
+		//url
+		if (Utils.addFirstFile(rUrl.getText()) != null) {
+		} else {
+			//url not good
+			System.err.println("URL NOT CORRECT: " + rUrl.getText());
+			errorString.append("\n" + Labels.URL_NOT_CORRECT_LABEL + ": " + rUrl.getText());
+		}
+		
+		//regexp
+		try {
+			new RE(rRegexp.getText());
+		} catch (RESyntaxException e) {
+			//error syntax in the regexp
+			System.err.println("REGEX NOT CORRECT: " + rRegexp.getText());
+			errorString.append("\n" + Labels.REGEXP_NOT_CORRECT_LABEL + ": " + rRegexp.getText());
+		}
+		
+		//save
+		if (errorString.length() == 0) {
+			System.out.println("Saving configuration...");
+			configuration.setProjectName(rProjectName.getText());
+			configuration.setUrl(rUrl.getText());
+			configuration.setDepth((Integer)rDepth.getValue());
+			configuration.setRegExp(rRegexp.getText());
+			configuration.setNbHtmlThread((Integer)rNbHtmlThread.getValue());
+			configuration.setNbLinkedThread((Integer)rNbLinkedThread.getValue());
+			configuration.setDestDirectory(validDestDirectory(rDestDirectory.getText()));
+			configuration.save();
+			return true;
+		}
+		JOptionPane.showMessageDialog(JHMainFrame.getInstance(), errorString, Labels.SYNTAX_ERROR_LABEL, JOptionPane.ERROR_MESSAGE);
+		return false;
+	}
+	
+	
+	
+	
+	/**
+	 * Test the destDirectory and return it with an '/' at the end
+	 * @param destDirectory the directory
+	 * @return the directory with an '/' at the end
+	 */
+	private String validDestDirectory(String destDirectory) {		
+		if (destDirectory.endsWith("/")) {
+			return destDirectory; 
+		}
+		return destDirectory = destDirectory + "/"; 
+	}
 	
 }

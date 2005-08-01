@@ -14,6 +14,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.apache.regexp.RE;
+import org.apache.regexp.RESyntaxException;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -82,11 +85,17 @@ public class ModifyFilterDialog extends AbstractDialog {
 	protected ActionListener validButtonAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//Delete the Filter
-				JHDetailledPanel.getInstance().removeTabPanel((String)filterList.getSelectedItem());
-				//Add a new one
-				GuiUtils.createNewTable(DetailledModel.getInstance(), newRegexpTextField.getText(), newRegexpTextField.getText());
-				dispose();
+				try {
+					new RE(newRegexpTextField.getText());
+					//Delete the Filter
+					JHDetailledPanel.getInstance().removeTabPanel((String)filterList.getSelectedItem());
+					//Add a new one
+					int index = GuiUtils.createNewTable(DetailledModel.getInstance(), newRegexpTextField.getText(), newRegexpTextField.getText());
+					JHDetailledPanel.getInstance().setSelectedIndex(index);
+					dispose();
+				} catch (RESyntaxException e) {						
+					JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.REGEXP_NOT_CORRECT_LABEL + ": " + newRegexpTextField.getText(), Labels.REGEXP_NOT_CORRECT_LABEL, JOptionPane.ERROR_MESSAGE);
+				}	
 			}
 		};
 	}

@@ -10,7 +10,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import fr.umlv.ir2.jhoover.gui.tool.Icons;
-import fr.umlv.ir2.jhoover.network.WebFile;
 import fr.umlv.ir2.jhoover.network.util.Extentions;
 import fr.umlv.ir2.jhoover.network.util.Utils;
 
@@ -40,49 +39,31 @@ public class DiscoveryRenderer extends DefaultTreeCellRenderer{
 				String path = ((DiscoveryTreeNode)value).getWebFile().getFileName();	
 				if (leaf && Extentions.isImage(path)) {
 					setIcon(Icons.IMAGE_ICON);
-					setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
 				} else if (leaf && Extentions.isMusic(path)) {
 					setIcon(Icons.MUSIC_ICON);
-					setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
 				} else if (leaf && Extentions.isVideo(path)) {
 					setIcon(Icons.VIDEO_ICON);
-					setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
 				} else if (leaf && Extentions.isDocument(path)) {
 					setIcon(Icons.DOCUMENT_ICON);
-					setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
 				} else if (leaf && Extentions.isApplication(path)) {
 					setIcon(Icons.APPLICATION_ICON);
-					setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
 				} else if (leaf && Extentions.isWeb(path)) {
 					setIcon(Icons.WEB_ICON);
-					setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
 				} else if (leaf) {
 					setIcon(Icons.UNKNOWN_ICON);
-					WebFile webFile = ((DiscoveryTreeNode)value).getWebFile();
-					if (webFile != null) {
-						setToolTipText(Utils.getCompletePath(webFile.getURI()));
-					} else {
-						setToolTipText(null);
-					}
 				} else {
 					setIcon(Icons.FOLDER_ICON);
-					setToolTipText(null);
 				}
+				setToolTipText(Utils.getCompletePath(((DiscoveryTreeNode)value).getWebFile().getURI()));
 			} else {
-				 if (leaf) {
-						setIcon(Icons.UNKNOWN_ICON);
-						WebFile webFile = ((DiscoveryTreeNode)value).getWebFile();
-						if (webFile != null) {
-							setToolTipText(Utils.getCompletePath(webFile.getURI()));
-						} else {
-							setToolTipText(null);
-						}
-					} else {
-						setIcon(Icons.FOLDER_ICON);
-						setToolTipText(null);
-					}
+				if (leaf) {
+					setIcon(Icons.UNKNOWN_ICON);
+				} else {
+					setIcon(Icons.FOLDER_ICON);
+				}
+				setToolTipText(null);
 			}
-		}
+		}		
 		return this;
 	}
 }

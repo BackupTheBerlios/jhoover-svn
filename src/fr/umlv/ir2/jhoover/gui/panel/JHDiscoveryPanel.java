@@ -21,8 +21,11 @@ public class JHDiscoveryPanel extends JPanel {
 	 */
 	public JHDiscoveryPanel() {
 		super(new BorderLayout());
-		this.scrollablePanel = new JPanel();
-		add(new JScrollPane(this.scrollablePanel), BorderLayout.CENTER);
+		scrollablePanel = new JPanel();
+		scrollablePanel.setLayout(new BorderLayout());
+		JScrollPane scrollPane = new JScrollPane(scrollablePanel);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(10);
+		add(scrollPane, BorderLayout.CENTER);
 	}
 	
 	
@@ -30,6 +33,6 @@ public class JHDiscoveryPanel extends JPanel {
 	 * @return the scrollablePanel
 	 */
 	public JPanel getScrollablePanel() {
-		return this.scrollablePanel;
+		return scrollablePanel;
 	}
 }

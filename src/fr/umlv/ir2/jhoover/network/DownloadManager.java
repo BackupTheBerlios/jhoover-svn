@@ -4,21 +4,21 @@
  */
 package fr.umlv.ir2.jhoover.network;
 
-import java.awt.event.MouseEvent;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.net.URI;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.ToolTipManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.apache.regexp.RE;
-
-import com.sun.org.apache.regexp.internal.RESyntaxException;
 
 import fr.umlv.ir2.jhoover.gui.ActionManager;
 import fr.umlv.ir2.jhoover.gui.JHMainFrame;
@@ -214,8 +214,12 @@ public class DownloadManager extends Thread {
 				if (webFileHost.equals(defaultHost)) {
 					htmlFileToDownload.add(webHtmlFile);
 					//add the webHtmlFile in the treeModel
-					DiscoveryTreeNode node = treeRoot.add(webHtmlFile);					
+					DiscoveryTreeNode node = treeRoot.add(webHtmlFile);				
 					treeModel.nodesWereInserted(treeRoot, new int[] {treeRoot.getIndex(node)});
+					if (tree.isRootVisible() && !tree.isExpanded(0)) {
+						tree.expandRow(0);
+						tree.setRootVisible(false);
+					}
 					//add the webHtmlFile in the detailledModel
 					detailledModel.addElement(webHtmlFile);
 				} else {
@@ -304,14 +308,7 @@ public class DownloadManager extends Thread {
 	private void createJTree() {
 		treeRoot = new DiscoveryTreeNode(null, null);
 		treeModel = new DefaultTreeModel(treeRoot);
-		tree = new JTree(treeModel) {
-			public String getToolTipText(MouseEvent evt) {
-		        if (getRowForLocation(evt.getX(), evt.getY()) == -1)
-		          return null;
-		        TreePath curPath = getPathForLocation(evt.getX(), evt.getY());
-		        return ((DiscoveryTreeNode) curPath.getLastPathComponent()).getToolTipText();
-		      }
-		};
+		tree = new JTree(treeModel);
 		tree.setCellRenderer(new DiscoveryRenderer());
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent arg0) {
@@ -319,13 +316,11 @@ public class DownloadManager extends Thread {
 				System.out.println("JTREE ACTION: [TODO] Selectionner dans la JTable");
 			}
 		});
-		JHMainPanel.getInstance().getDiscoveryPanel().getScrollablePanel().add(this.tree);
+		JPanel discoveryScrollablePanel = JHMainPanel.getInstance().getDiscoveryPanel().getScrollablePanel();
+		discoveryScrollablePanel.setBackground(new Color(255,255,255));
+		discoveryScrollablePanel.add(tree, BorderLayout.WEST);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-//		this.tree.setRootVisible(false);
-//		this.tree.setShowsRootHandles(true);
-//		this.tree.setSelectionRow(0);
-//		this.tree.setExpandsSelectedPaths(true);
-//		this.tree.expandRow(0);
+		ToolTipManager.sharedInstance().registerComponent(tree);
 	}
 	
 	

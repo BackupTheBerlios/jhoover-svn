@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
@@ -67,44 +66,10 @@ public class RunConfigDialog extends AbstractConfigDialog {
 	 * @see fr.umlv.ir2.jhoover.gui.dialog.AbstractDialog#validButtonAction()
 	 */
 	ActionListener validButtonAction() {
-		//TODO: put this action un the ActionManager(cf. SetConfigDialog)
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {	
-				boolean canSave = true;
-				String projectName = rProjectName.getText();
-				if (projectName.contains("/") || projectName.contains("\\") || projectName.contains(":") || projectName.contains("*") || projectName.contains("?") || projectName.contains("\"") || projectName.contains("<") || projectName.contains(">") || projectName.contains("|")) {
-					//path contains not authorized character
-					System.err.println("PATH CONTAINS NOT AUTHORIZED CHARAcTERS: " + projectName);
-					JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.PROJECT_NAME_NOT_CORRECT_LABEL + ": " + projectName, Labels.PROJECT_NAME_NOT_CORRECT_LABEL, JOptionPane.ERROR_MESSAGE);
-					canSave = false;
-				}
-				String url = rUrl.getText();
-				String oldUrl = url;
-				String newUrl;
-				if ((newUrl = Utils.addFirstFile(url)) != null) {
-					url = newUrl;
-				} else {
-					//url not good
-					System.err.println("URL NOT CORRECT: " + url);
-					JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.URL_NOT_CORRECT_LABEL + ": " + url, Labels.URL_NOT_CORRECT_LABEL, JOptionPane.ERROR_MESSAGE);
-					canSave = false;
-				}
-				Integer depth = (Integer)rDepth.getValue();
-				String regExp = rRegexp.getText();
-				Integer nbHtmlThread = (Integer)rNbHtmlThread.getValue();
-				Integer nbLinkedThread = (Integer)rNbLinkedThread.getValue();
-				String destDirectory = JHoover.validDestDirectory(rDestDirectory.getText());
-				if (canSave) {
-					System.out.println("Saving configuration...");
-					configuration.setProjectName(projectName);
-					configuration.setUrl(oldUrl);
-					configuration.setDepth(depth);
-					configuration.setRegExp(regExp);
-					configuration.setNbHtmlThread(nbHtmlThread);
-					configuration.setNbLinkedThread(nbLinkedThread);
-					configuration.setDestDirectory(destDirectory);
-					configuration.save();
-					JHoover.getInstance().startDownload(projectName, url, destDirectory, depth, nbHtmlThread, nbLinkedThread, regExp);
+				if (checkFields()) {
+					JHoover.getInstance().startDownload(rProjectName.getText(), Utils.addFirstFile(rUrl.getText()), rDestDirectory.getText(), (Integer)rDepth.getValue(), (Integer)rNbHtmlThread.getValue(), (Integer)rNbLinkedThread.getValue(), rRegexp.getText());
 					dispose();
 				}
 			}

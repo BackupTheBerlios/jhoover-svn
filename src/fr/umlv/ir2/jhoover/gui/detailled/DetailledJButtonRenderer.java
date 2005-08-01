@@ -18,6 +18,7 @@ import fr.umlv.ir2.jhoover.network.WebFile;
  */
 public class DetailledJButtonRenderer extends JButton implements TableCellRenderer{
 
+	
 	/**
 	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
 	 */
@@ -26,11 +27,11 @@ public class DetailledJButtonRenderer extends JButton implements TableCellRender
 		
 		int n = ((WebFile)webFile).getProgression();
 		if (n == -1 || n == 100) {  //-1: cancelled; 100: finished
-			this.setEnabled(false);
+			this.setEnabled(false);			
 		} else {
 			this.setEnabled(true);
 		}
-
+		
 		return this;
 	}
 }

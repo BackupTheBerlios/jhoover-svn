@@ -15,9 +15,8 @@ import fr.umlv.ir2.jhoover.gui.detailled.DetailledModel;
 import fr.umlv.ir2.jhoover.gui.panel.JHDetailledPanel;
 
 /** 
+ * Utils functions for GUI
  * @author Romain Papuchon 
- * 
- * 
  */
 public class GuiUtils {
 	
@@ -57,9 +56,11 @@ public class GuiUtils {
 				break;
 			}
 		}
-		//JButton
+		//JButton		
+		DetailledJButtonRenderer detailledJButtonRenderer = new DetailledJButtonRenderer();
+		table.getColumnModel().getColumn(3).setCellRenderer(detailledJButtonRenderer);
 		table.getColumnModel().getColumn(3).setCellEditor(new DetailledJButtonEditor());
-		table.getColumnModel().getColumn(3).setCellRenderer(new DetailledJButtonRenderer());
+		
 		//JProgressBar
 		table.getColumnModel().getColumn(2).setCellRenderer(new DetailledJProgressBarRenderer());
 		JHDetailledPanel.getInstance().addTabPanel(label, table);

@@ -41,11 +41,10 @@ public final class JHMainFrame extends JFrame {
 		setIcon (Icons.LOGO_URL);
 		
 		//perform actions before exiting the application
-		setDefaultCloseOperation (WindowConstants.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter () {
 			public void windowClosing (WindowEvent e) {
-				//TODO: faire un traitement (actionManager)
-				System.exit(0);
+				ActionManager.exitAction();
 			}
 		});
 		

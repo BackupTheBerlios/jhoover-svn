@@ -130,19 +130,7 @@ public final class ActionManager
 	 */
 	public static final Action exitAction = new AbstractAction(Labels.EXIT_LABEL, Icons.EXIT_ICON) {
 		public void actionPerformed (ActionEvent e) {
-			if (DownloadManager.isRunning()) {
-				Object[] options = {"Yes", "No"};			
-				int n = JOptionPane.showOptionDialog(JHMainFrame.getInstance(), Labels.CANCEL_THE_DOWNLOAD_QUESTION_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
-				if (n==0) {
-					//YES
-					stopAction();
-					initAction();
-					System.exit(0);
-				}
-			} else {
-				initAction();
-				System.exit(0);
-			}
+			exitAction();
 		}
 	};
 
@@ -275,6 +263,26 @@ public final class ActionManager
 		//init the detailled model: init the model and fire
 		if (!DetailledModel.getInstance().getWebFiles().isEmpty()) {
 			DetailledModel.getInstance().initModel();
+		}
+	}
+
+	
+	/**
+	 * Exit the jHoover project
+	 */
+	public static void exitAction() {
+		if (DownloadManager.isRunning()) {
+			Object[] options = {"Yes", "No"};			
+			int n = JOptionPane.showOptionDialog(JHMainFrame.getInstance(), Labels.CANCEL_THE_DOWNLOAD_QUESTION_LABEL, Labels.DOWNLOAD_STATUS_LABEL, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+			if (n==0) {
+				//YES
+				stopAction();
+				initAction();
+				System.exit(0);
+			}
+		} else {
+			initAction();
+			System.exit(0);
 		}
 	}
 }

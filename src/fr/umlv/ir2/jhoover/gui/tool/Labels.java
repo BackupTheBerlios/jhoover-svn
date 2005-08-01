@@ -87,6 +87,8 @@ public final class Labels {
 	public static final String DOWNLOAD_CANCELLED_LABEL = "Download Cancelled by user!";
 	/** DOWNLOAD_RESUMED_LABEL */
 	public static final String DOWNLOAD_RESUMED_LABEL = "Download resumed";
+	/** REGEXP_NOT_CORRECT_LABEL */
+	public static final String REGEXP_NOT_CORRECT_LABEL = "Regular expression not correct";
 	/** URL_NOT_CORRECT_LABEL */
 	public static final String URL_NOT_CORRECT_LABEL = "Url not correct";
 	/** DOWNLOAD_PAUSED_LABEL */
@@ -103,4 +105,6 @@ public final class Labels {
 	public static final String FILES_LABEL = "FILES";
 	/** NOT_IMPLEMENTED_LABEL */
 	public static final String NOT_IMPLEMENTED_LABEL = "Option not yet implemented!";
+	/** SYNTAX_ERROR_LABEL */
+	public static final String SYNTAX_ERROR_LABEL = "Syntax error";
 }

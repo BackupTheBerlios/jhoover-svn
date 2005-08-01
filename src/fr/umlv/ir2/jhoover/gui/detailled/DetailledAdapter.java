@@ -109,7 +109,7 @@ public class DetailledAdapter extends AbstractTableModel {
 	/**
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
-	public Object getValueAt(int rowIndex, int colIndex) {
+	public Object getValueAt(final int rowIndex, final int colIndex) {
 		switch (colIndex) {
 		case 0:
 			//returns the path of the webFile
@@ -201,6 +201,7 @@ public class DetailledAdapter extends AbstractTableModel {
 	private void updateDataWithRegex(int firstRow, int lastRow, String regex) {
 		ArrayList<WebFile> webFiles = model.getWebFiles();
 		if (regex != null) {
+
 			RE r = new RE(regex);
 			for (int i=firstRow; i<=lastRow; i++) {
 				WebFile webFile = webFiles.get(i);

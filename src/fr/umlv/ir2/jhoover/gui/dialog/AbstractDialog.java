@@ -41,7 +41,6 @@ public abstract class AbstractDialog extends JDialog {
 		super(parent, title, true);
 		cancelButton = new JButton(Labels.CANCEL_LABEL);
 		validButton = new JButton();
-		initButtonAction();
 		setdesign();		
 	}
 	
@@ -93,6 +92,7 @@ public abstract class AbstractDialog extends JDialog {
 			configFields.add(allJPanel[i], ccFields.xy (1, i+1));
 		}
 		setContentPane(configFields.getPanel());
+		initButtonAction();
 		pack();
 		center();
 		setVisible(true);
@@ -116,8 +116,6 @@ public abstract class AbstractDialog extends JDialog {
 		KeyStroke strokeEscape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE , 0);
 		((JComponent)getContentPane()).registerKeyboardAction(actionListenerEscape , strokeEscape , JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-		//TODO: add the actions "enter" and "escape" here
-		
 		ActionListener actionListenerValidate = validButtonAction();
 		
 		//add the valid action to the validate button

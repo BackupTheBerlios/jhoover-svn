@@ -75,18 +75,6 @@ public class JHoover {
 	}
 	
 	
-	/**
-	 * Test the destDirectory and return it with an '/' at the end
-	 * @param destDirectory the directory
-	 * @return the directory with an '/' at the end
-	 */
-	public static String validDestDirectory(String destDirectory) {		
-		if (destDirectory.endsWith("/")) {
-			return destDirectory; 
-		}
-		return destDirectory = destDirectory + "/"; 
-	}
-	
 	
 	/**
 	 * Start the download
