@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="network-i" size="518,731" id="fr.umlv.ir2.jhoover.network" metadata="uml2-1.0" initialized="true" scrolledY="14" tag="10" key="3230303530343131206A686F6F766572">
+  <children xsi:type="editmodel:ClassEditModel" name="DownloadManager" location="50,464" size="174,247" id="fr.umlv.ir2.jhoover.network/DownloadManager" runTimeClassModel="addHtmlFile(Ljava.net.URI;I),endDownload(Lfr.umlv.ir2.jhoover.network.WebFile;),addLinkedFile(Ljava.net.URI;ILfr.umlv.ir2.jhoover.network.WebFile;),isUriAlreadyDownloaded(Ljava.net.URI;),isRunning(),getInstance(),isPaused(),setPauseStatus(Z),getThreadList(),run(),createInstance(IIILjava.net.URI;Ljava.lang.String;Ljava.lang.String;)">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="151,198">
+      <children xsi:type="editmodel:MethodEditModel" name="addHtmlFile" id="fr.umlv.ir2.jhoover.network/DownloadManager#addHtmlFile(Ljava.net.URI;I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addLinkedFile" id="fr.umlv.ir2.jhoover.network/DownloadManager#addLinkedFile(Ljava.net.URI;ILfr.umlv.ir2.jhoover.network.WebFile;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="createInstance" id="fr.umlv.ir2.jhoover.network/DownloadManager#createInstance(IIILjava.net.URI;Ljava.lang.String;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="endDownload" id="fr.umlv.ir2.jhoover.network/DownloadManager#endDownload(Lfr.umlv.ir2.jhoover.network.WebFile;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getInstance" id="fr.umlv.ir2.jhoover.network/DownloadManager#getInstance()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getThreadList" id="fr.umlv.ir2.jhoover.network/DownloadManager#getThreadList()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isPaused" id="fr.umlv.ir2.jhoover.network/DownloadManager#isPaused()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isRunning" id="fr.umlv.ir2.jhoover.network/DownloadManager#isRunning()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isUriAlreadyDownloaded" id="fr.umlv.ir2.jhoover.network/DownloadManager#isUriAlreadyDownloaded(Ljava.net.URI;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="run" id="fr.umlv.ir2.jhoover.network/DownloadManager#run()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setPauseStatus" id="fr.umlv.ir2.jhoover.network/DownloadManager#setPauseStatus(Z)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="DownloadAndParseFile" location="274,464" size="192,157" id="fr.umlv.ir2.jhoover.network/DownloadAndParseFile" runTimeClassModel="DownloadAndParseFile(Lfr.umlv.ir2.jhoover.network.DownloadManager;Lfr.umlv.ir2.jhoover.network.WebFile;Ljava.lang.String;Ljava.lang.String;),getWebFile(),parseHtml(Lfr.umlv.ir2.jhoover.network.WebFile;),setPauseStatus(Z),download(),run()">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="144,108">
+      <children xsi:type="editmodel:MethodEditModel" name="DownloadAndParseFile" id="fr.umlv.ir2.jhoover.network/DownloadAndParseFile#DownloadAndParseFile(Lfr.umlv.ir2.jhoover.network.DownloadManager;Lfr.umlv.ir2.jhoover.network.WebFile;Ljava.lang.String;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="download" id="fr.umlv.ir2.jhoover.network/DownloadAndParseFile#download()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getWebFile" id="fr.umlv.ir2.jhoover.network/DownloadAndParseFile#getWebFile()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="parseHtml" id="fr.umlv.ir2.jhoover.network/DownloadAndParseFile#parseHtml(Lfr.umlv.ir2.jhoover.network.WebFile;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="run" id="fr.umlv.ir2.jhoover.network/DownloadAndParseFile#run()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setPauseStatus" id="fr.umlv.ir2.jhoover.network/DownloadAndParseFile#setPauseStatus(Z)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="WebHtmlFile" location="219,329" size="125,67" id="fr.umlv.ir2.jhoover.network/WebHtmlFile" runTimeClassModel="WebHtmlFile(Ljava.net.URI;I)">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="89,18">
+      <children xsi:type="editmodel:MethodEditModel" name="WebHtmlFile" id="fr.umlv.ir2.jhoover.network/WebHtmlFile#WebHtmlFile(Ljava.net.URI;I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="fr.umlv.ir2.jhoover.network/WebFile&lt;-fr.umlv.ir2.jhoover.network/WebHtmlFile" source="//@children.2" target="//@children.3/@sourceConnections.0" targetEnd="//@children.2/@sourceConnections.0/@children.1" sourceEnd="//@children.2/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="62,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="WebLinkedFile" location="50,329" size="139,85" id="fr.umlv.ir2.jhoover.network/WebLinkedFile" runTimeClassModel="WebLinkedFile(Ljava.net.URI;ILfr.umlv.ir2.jhoover.network.WebFile;),getParent()">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="100,36">
+      <children xsi:type="editmodel:MethodEditModel" name="WebLinkedFile" id="fr.umlv.ir2.jhoover.network/WebLinkedFile#WebLinkedFile(Ljava.net.URI;ILfr.umlv.ir2.jhoover.network.WebFile;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getParent" id="fr.umlv.ir2.jhoover.network/WebLinkedFile#getParent()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" targetConnections="//@children.2/@sourceConnections.0" autoLocated="true" id="fr.umlv.ir2.jhoover.network/WebFile&lt;-fr.umlv.ir2.jhoover.network/WebLinkedFile" source="//@children.3" target="//@children.4" targetEnd="//@children.3/@sourceConnections.0/@children.1" sourceEnd="//@children.3/@sourceConnections.0/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="69,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="65,229" anchorKind="FixedAtEdge"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.3/@sourceConnections.0" name="WebFile" location="135,50" size="130,229" id="fr.umlv.ir2.jhoover.network/WebFile" runTimeClassModel="setContentType(Ljava.lang.String;),getDepth(),getPath(),getFileName(),getRealSize(),getURI(),getContentType(),setProgression(I),getProgression(),setRealSize(I)">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="107,180">
+      <children xsi:type="editmodel:MethodEditModel" name="getContentType" id="fr.umlv.ir2.jhoover.network/WebFile#getContentType()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getDepth" id="fr.umlv.ir2.jhoover.network/WebFile#getDepth()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getFileName" id="fr.umlv.ir2.jhoover.network/WebFile#getFileName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getPath" id="fr.umlv.ir2.jhoover.network/WebFile#getPath()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getProgression" id="fr.umlv.ir2.jhoover.network/WebFile#getProgression()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRealSize" id="fr.umlv.ir2.jhoover.network/WebFile#getRealSize()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getURI" id="fr.umlv.ir2.jhoover.network/WebFile#getURI()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setContentType" id="fr.umlv.ir2.jhoover.network/WebFile#setContentType(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setProgression" id="fr.umlv.ir2.jhoover.network/WebFile#setProgression(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setRealSize" id="fr.umlv.ir2.jhoover.network/WebFile#setRealSize(I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" level="-1" showScope="InPackage" properties="wireOptions=1"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="10,10" gridOrigin="0,0" rulerUnit="pixel">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showInterfaceStereotype="true" showAttributeProperty="true"/>
+</editmodel:ClassDiagramEditModel>

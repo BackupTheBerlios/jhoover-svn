@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="dialog-i" size="1001,461" id="fr.umlv.ir2.jhoover.gui.dialog" metadata="uml2-1.0" initialized="true" scrolledX="179" scrolledY="39" tag="10" key="3230303530343131206A686F6F766572">
+  <children xsi:type="editmodel:ClassEditModel" name="DeleteFilterDialog" location="422,203" size="158,67" id="fr.umlv.ir2.jhoover.gui.dialog/DeleteFilterDialog" runTimeClassModel="DeleteFilterDialog()">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="113,18">
+      <children xsi:type="editmodel:MethodEditModel" name="DeleteFilterDialog" id="fr.umlv.ir2.jhoover.gui.dialog/DeleteFilterDialog#DeleteFilterDialog()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractDialog&lt;-fr.umlv.ir2.jhoover.gui.dialog/DeleteFilterDialog" source="//@children.0" target="//@children.3/@sourceConnections.0" targetEnd="//@children.0/@sourceConnections.0/@children.1" sourceEnd="//@children.0/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="79,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="ModifyFilterDialog" location="782,203" size="199,103" id="fr.umlv.ir2.jhoover.gui.dialog/ModifyFilterDialog" runTimeClassModel="filterList,newRegexpTextField,ModifyFilterDialog()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="176,36">
+      <children xsi:type="editmodel:AttributeEditModel" name="filterList" id="fr.umlv.ir2.jhoover.gui.dialog/ModifyFilterDialog#filterList"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="newRegexpTextField" id="fr.umlv.ir2.jhoover.gui.dialog/ModifyFilterDialog#newRegexpTextField"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="115,18">
+      <children xsi:type="editmodel:MethodEditModel" name="ModifyFilterDialog" id="fr.umlv.ir2.jhoover.gui.dialog/ModifyFilterDialog#ModifyFilterDialog()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractDialog&lt;-fr.umlv.ir2.jhoover.gui.dialog/ModifyFilterDialog" source="//@children.1" target="//@children.3/@sourceConnections.0" targetEnd="//@children.1/@sourceConnections.0/@children.1" sourceEnd="//@children.1/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="99,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.5/@sourceConnections.0" name="AbstractConfigDialog" location="216,203" size="176,67" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractConfigDialog" runTimeClassModel="AbstractConfigDialog(Ljavax.swing.JFrame;Ljava.lang.String;)">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="133,18">
+      <children xsi:type="editmodel:MethodEditModel" name="AbstractConfigDialog" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractConfigDialog#AbstractConfigDialog(Ljavax.swing.JFrame;Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractDialog&lt;-fr.umlv.ir2.jhoover.gui.dialog/AbstractConfigDialog" source="//@children.2" target="//@children.3/@sourceConnections.0" targetEnd="//@children.2/@sourceConnections.0/@children.1" sourceEnd="//@children.2/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="88,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="FindFileDialog" location="50,203" size="136,67" id="fr.umlv.ir2.jhoover.gui.dialog/FindFileDialog" runTimeClassModel="FindFileDialog()">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="96,18">
+      <children xsi:type="editmodel:MethodEditModel" name="FindFileDialog" id="fr.umlv.ir2.jhoover.gui.dialog/FindFileDialog#FindFileDialog()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" targetConnections="//@children.2/@sourceConnections.0 //@children.0/@sourceConnections.0 //@children.7/@sourceConnections.0 //@children.1/@sourceConnections.0" autoLocated="true" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractDialog&lt;-fr.umlv.ir2.jhoover.gui.dialog/FindFileDialog" source="//@children.3" target="//@children.4" targetEnd="//@children.3/@sourceConnections.0/@children.1" sourceEnd="//@children.3/@sourceConnections.0/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="68,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="71,103" anchorKind="FixedAtEdge"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.3/@sourceConnections.0" name="AbstractDialog" location="426,50" size="142,103" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractDialog" runTimeClassModel="validButtonAction(),AbstractDialog(Ljavax.swing.JFrame;Ljava.lang.String;),createButtonPanel()">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="119,54">
+      <children xsi:type="editmodel:MethodEditModel" name="AbstractDialog" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractDialog#AbstractDialog(Ljavax.swing.JFrame;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="createButtonPanel" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractDialog#createButtonPanel()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="validButtonAction" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractDialog#validButtonAction()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="SetConfigDialog" location="53,356" size="146,85" id="fr.umlv.ir2.jhoover.gui.dialog/SetConfigDialog" runTimeClassModel="validButtonAction(),SetConfigDialog(Ljava.lang.String;)">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="115,36">
+      <children xsi:type="editmodel:MethodEditModel" name="SetConfigDialog" id="fr.umlv.ir2.jhoover.gui.dialog/SetConfigDialog#SetConfigDialog(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="validButtonAction" id="fr.umlv.ir2.jhoover.gui.dialog/SetConfigDialog#validButtonAction()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" targetConnections="//@children.6/@sourceConnections.0" autoLocated="true" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractConfigDialog&lt;-fr.umlv.ir2.jhoover.gui.dialog/SetConfigDialog" source="//@children.5" target="//@children.2" targetEnd="//@children.5/@sourceConnections.0/@children.1" sourceEnd="//@children.5/@sourceConnections.0/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="73,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="88,67" anchorKind="FixedAtEdge"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="RunConfigDialog" location="229,356" size="150,85" id="fr.umlv.ir2.jhoover.gui.dialog/RunConfigDialog" runTimeClassModel="validButtonAction(),RunConfigDialog(Ljava.lang.String;)">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="115,36">
+      <children xsi:type="editmodel:MethodEditModel" name="RunConfigDialog" id="fr.umlv.ir2.jhoover.gui.dialog/RunConfigDialog#RunConfigDialog(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="validButtonAction" id="fr.umlv.ir2.jhoover.gui.dialog/RunConfigDialog#validButtonAction()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractConfigDialog&lt;-fr.umlv.ir2.jhoover.gui.dialog/RunConfigDialog" source="//@children.6" target="//@children.5/@sourceConnections.0" targetEnd="//@children.6/@sourceConnections.0/@children.1" sourceEnd="//@children.6/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="75,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="AddFilterDialog" location="610,203" size="142,67" id="fr.umlv.ir2.jhoover.gui.dialog/AddFilterDialog" runTimeClassModel="AddFilterDialog()">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="103,18">
+      <children xsi:type="editmodel:MethodEditModel" name="AddFilterDialog" id="fr.umlv.ir2.jhoover.gui.dialog/AddFilterDialog#AddFilterDialog()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="fr.umlv.ir2.jhoover.gui.dialog/AbstractDialog&lt;-fr.umlv.ir2.jhoover.gui.dialog/AddFilterDialog" source="//@children.7" target="//@children.3/@sourceConnections.0" targetEnd="//@children.7/@sourceConnections.0/@children.1" sourceEnd="//@children.7/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="71,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" level="-1" showScope="InPackage" properties="wireOptions=1"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="10,10" gridOrigin="0,0" rulerUnit="pixel">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showInterfaceStereotype="true" showAttributeProperty="true"/>
+</editmodel:ClassDiagramEditModel>
