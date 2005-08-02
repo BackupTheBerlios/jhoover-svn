@@ -71,4 +71,34 @@ public class Utils {
         }
         return path;
     }
+    
+    
+    /**
+     * Test if the string contains unauthorized characters '/', '\', ':', '*', '?', '"', '>', '<', '|' 
+     * 
+     * @param string
+     * @return true if the string constains unauthorized characters, false else
+     */
+    public static boolean containsUnauthorizedCharacters(String string) {
+        if (string.contains("/")) {
+            return true;
+        } else if (string.contains("\\")) {
+            return true;
+        } else if (string.contains(":")) {
+            return true;
+        } else if (string.contains("*")) {
+            return true;
+        } else if (string.contains("?")) {
+            return true;
+        } else if (string.contains("\"")) {
+            return true;
+        } else if (string.contains(">")) {
+            return true;
+        } else if (string.contains("<")) {
+            return true;
+        } else if (string.contains("|")) {
+            return true;
+        }
+        return false;
+    }
 }

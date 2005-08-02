@@ -176,12 +176,19 @@ public abstract class AbstractConfigDialog extends AbstractDialog {
         StringBuffer errorString = new StringBuffer();
 
         // projectName
-        if (rProjectName.getText().contains("/") || rProjectName.getText().contains("\\") || rProjectName.getText().contains(":") || rProjectName.getText().contains("*") || rProjectName.getText().contains("?") || rProjectName.getText().contains("\"") || rProjectName.getText().contains("<") || rProjectName.getText().contains(">") || rProjectName.getText().contains("|")) {
+        if (Utils.containsUnauthorizedCharacters(rProjectName.getText())) {
             // path contains not authorized character
             System.err.println("PATH CONTAINS NOT AUTHORIZED CHARACTERS: " + rProjectName.getText());
             errorString.append(Labels.PROJECT_NAME_NOT_CORRECT_LABEL + ": " + rProjectName.getText());
         }
 
+        
+        //destination directory
+        if (!rDestDirectory.getText().endsWith("/") || !rDestDirectory.getText().endsWith("\\")) {
+            rDestDirectory.setText(rDestDirectory.getText() + "/");
+        }
+        
+        
         // url
         if (Utils.addFirstFile(rUrl.getText()).equals("")) {
             // url not good
