@@ -100,109 +100,116 @@ public class DownloadAndParseFile extends Thread {
             try {
                 connection = (HttpURLConnection) this.webFile.getURI().toURL().openConnection();
                 connection.connect();
+                testIfPaused();
+                // tests the response code
+                if (canBeDownloaded(connection)) {
+                    try {
+                        inputStream = connection.getInputStream();
+                    } catch (IOException e2) {
+                        System.err.println(e2);
+                    }
+                    testIfPaused();
+                    // parameters from the file
+                    webFile.setContentType(connection.getContentType());
+                    // we cannot know the realSize (certainly blocked by server)
+                    int length = connection.getContentLength();
+                    if (length == -1) {
+                        webFile.setRealSize(-2);
+                    } else {
+                        webFile.setRealSize(length);
+                    }
+                    testIfPaused();
+                    // Opening File for writing
+                    File file = new File(localPath);
+                    // creates the directory if it doesn't yet exist
+                    if (!file.getParentFile().exists()) {
+                        if (!file.getParentFile().mkdirs()) {
+                            throw new IOException("Cannot create ancestor directories: '" + localPath + "'");
+                            // TODO: what do we do in this case?
+                        }
+                    }
+                    try {
+                        fileOutputStream = new FileOutputStream(file);
+                    } catch (FileNotFoundException e1) {
+                        System.err.println(e1);
+                    }
+                    testIfPaused();
+                    // Writing the data in the File
+                    try {
+                        nbBytes = inputStream.read(buffer);
+                    } catch (IOException e) {
+                        System.err.println(e);
+                    }
+                    int downloadedSize = 0;
+                    while (nbBytes > 0) {
+                        if (!isCancelled()) {
+                            testIfPaused();
+                            try {
+                                fileOutputStream.write(buffer, 0, nbBytes);
+                                downloadedSize += nbBytes;
+                                // progression in percent
+                                if (webFile.getRealSize() == -2) {
+                                    // cannot kwnow the progression
+                                    webFile.setProgression(-2);
+                                } else {
+                                    webFile.setProgression(downloadedSize * 100 / webFile.getRealSize());
+                                }
+                                // do a fire in the detailledModel
+                                int indexInModel = DetailledModel.getInstance().getIndexWebFile(webFile);
+                                DetailledModel.getInstance().fireTableRowsUpdated(indexInModel, indexInModel);
+                            } catch (IOException e) {
+                                System.err.println(e);
+                            }
+                            try {
+                                nbBytes = inputStream.read(buffer);
+                            } catch (IOException e) {
+                                System.err.println(e);
+                            }
+                        } else {
+                            nbBytes = 0;
+                            return false;
+                        }
+                    }
+
+                    // the download is finished
+                    if (webFile.getProgression() == -2) {
+                        webFile.setProgression(100);
+                    }
+
+                    // closing the streams
+                    try {
+                        inputStream.close();
+                        fileOutputStream.close();
+                    } catch (IOException e) {
+                        System.err.println(e);
+                    }
+                    return true;
+                }
             } catch (IOException e) {
                 System.err.println(e);
-            }
-            testIfPaused();
-            // tests the response code
-            if (canBeDownloaded(connection)) {
-                try {
-                    inputStream = connection.getInputStream();
-                } catch (IOException e2) {
-                    System.err.println(e2);
-                }
-                testIfPaused();
-                // parameters from the file
-                webFile.setContentType(connection.getContentType());
-                // we cannot know the realSize (certainly blocked by server)
-                int length = connection.getContentLength();
-                if (length == -1) {
-                    webFile.setRealSize(-2);
-                } else {
-                    webFile.setRealSize(length);
-                }
-                testIfPaused();
-                // Opening File for writing
-                File file = new File(localPath);
-                // creates the directory if it doesn't yet exist
-                if (!file.getParentFile().exists()) {
-                    if (!file.getParentFile().mkdirs()) {
-                        throw new IOException("Cannot create ancestor directories: '" + localPath + "'");
-                        // TODO: what do we do in this case?
-                    }
-                }
-                try {
-                    fileOutputStream = new FileOutputStream(file);
-                } catch (FileNotFoundException e1) {
-                    System.err.println(e1);
-                }
-                testIfPaused();
-                // Writing the data in the File
-                try {
-                    nbBytes = inputStream.read(buffer);
-                } catch (IOException e) {
-                    System.err.println(e);
-                }
-                int downloadedSize = 0;
-                while (nbBytes > 0) {
-                    if (!isCancelled()) {
-                        testIfPaused();
-                        try {
-                            fileOutputStream.write(buffer, 0, nbBytes);
-                            downloadedSize += nbBytes;
-                            // progression in percent
-                            if (webFile.getRealSize() == -2) {
-                                // cannot kwnow the progression
-                                webFile.setProgression(-2);
-                            } else {
-                                webFile.setProgression(downloadedSize * 100 / webFile.getRealSize());
-                            }
-                            // do a fire in the detailledModel
-                            int indexInModel = DetailledModel.getInstance().getIndexWebFile(webFile);
-                            DetailledModel.getInstance().fireTableRowsUpdated(indexInModel, indexInModel);
-                        } catch (IOException e) {
-                            System.err.println(e);
-                        }
-                        try {
-                            nbBytes = inputStream.read(buffer);
-                        } catch (IOException e) {
-                            System.err.println(e);
-                        }
-                    } else {
-                        nbBytes = 0;
-                        return false;
-                    }
-                }
-
-                // the download is finished
-                if (webFile.getProgression() == -2) {
-                    webFile.setProgression(100);
-                }
-
-                // closing the streams
-                try {
-                    inputStream.close();
-                    fileOutputStream.close();
-                } catch (IOException e) {
-                    System.err.println(e);
-                }
-                return true;
             }
         }
         return false;
     }
 
     /**
-     * Tests the response code returned by the connection 200 - Ok (always
-     * considered 'good') 201 - Created 202 - Accepted 204 - No Content 301 -
-     * Moved Permanently (re-direct) 302 - Found (re-direct) 304 - Not Modified
-     * (should only be returned if you set a HTTP request header date) The
-     * following codes will certainly indicate failure: 400 - Any response code
-     * in the 400 series The following codes probably indicate failure (though
-     * it could also simply indicate a server is down, although the link is
-     * still valid): 500 - Any response code in the 500 series Response codes in
-     * the 100 series should be considered unexpected (though not an error) from
-     * a HEAD request.
+     * Tests the response code returned by the connection
+     * 200 - Ok (always considered 'good')
+     * 201 - Created
+     * 202 - Accepted
+     * 204 - No Content
+     * 301 - Moved Permanently (re-direct)
+     * 302 - Found (re-direct)
+     * 304 - Not Modified (should only be returned if you set a HTTP request header date)
+     * 
+     * The following codes will certainly indicate failure:
+     * 400 - Any response code in the 400 series
+     * 
+     * The following codes probably indicate failure (though it could also simply indicate
+     * a server is down, although the link is still valid):
+     * 500 - Any response code in the 500 series
+     * 
+     * Response codes in the 100 series should be considered unexpected (though not an error) from a HEAD request.
      * 
      * @param connection the connection
      * 
