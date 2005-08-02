@@ -55,7 +55,6 @@ public class DownloadAndParseFile extends Thread {
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
-		testIfPaused();
 		boolean downloadedFile = false;
 		testIfPaused();
 		try {
@@ -78,8 +77,7 @@ public class DownloadAndParseFile extends Thread {
 			int indexInModel = DetailledModel.getInstance().getIndexWebFile(webFile);
 			DetailledModel.getInstance().fireTableRowsUpdated(indexInModel, indexInModel);
 		}
-		testIfPaused();		
-		downloadManager.endDownload(this.webFile);
+		downloadManager.endDownload(webFile);
 	}
 	
 	
@@ -88,7 +86,7 @@ public class DownloadAndParseFile extends Thread {
 	 * @return true if the file has been downloaded, false else
 	 * @throws IOException
 	 */
-	public boolean download() throws IOException {
+	private boolean download() throws IOException {
 		HttpURLConnection connection = null;
 		FileOutputStream fileOutputStream = null;
 		InputStream inputStream = null;
@@ -171,6 +169,7 @@ public class DownloadAndParseFile extends Thread {
 						}
 					} else {						
 						nbBytes = 0;
+						return false;
 					}
 				}
 				
@@ -235,7 +234,7 @@ public class DownloadAndParseFile extends Thread {
 	 * Parse the WebFile: extract linked files and html files 
 	 * @param parent parent of the webFile
 	 */
-	public void parseHtml(WebFile parent) {
+	private void parseHtml(WebFile parent) {
 		int depthParent = parent.getDepth();
 		Parser parser;
 		Node [] images;
@@ -252,7 +251,7 @@ public class DownloadAndParseFile extends Thread {
 						System.err.println("INVILID URI: " + imageTag.getImageURL());
 					}
 				} else {
-					break;
+					return;
 				}
 			}
 					
@@ -281,7 +280,7 @@ public class DownloadAndParseFile extends Thread {
 							System.err.println("INVILID URI: " + linkTag.getLink());
 						}
 					} else {
-						break;
+						return;
 					}
 				}
 			}

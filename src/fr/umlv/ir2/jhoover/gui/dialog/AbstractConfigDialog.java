@@ -6,6 +6,8 @@ package fr.umlv.ir2.jhoover.gui.dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -184,11 +186,18 @@ public abstract class AbstractConfigDialog extends AbstractDialog {
 		}
 		
 		//url
-		if (Utils.addFirstFile(rUrl.getText()) != null) {
-		} else {
+		if (Utils.addFirstFile(rUrl.getText()).equals("")) {
 			//url not good
 			System.err.println("URL NOT CORRECT: " + rUrl.getText());
 			errorString.append("\n" + Labels.URL_NOT_CORRECT_LABEL + ": " + rUrl.getText());
+		} else {
+			try {
+				new URI(rUrl.getText());
+			} catch (URISyntaxException e1) {
+				//url not good
+				System.err.println("URL NOT CORRECT: " + rUrl.getText());
+				errorString.append("\n" + Labels.URL_NOT_CORRECT_LABEL + ": " + rUrl.getText());
+			}
 		}
 		
 		//regexp

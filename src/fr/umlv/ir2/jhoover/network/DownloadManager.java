@@ -270,18 +270,21 @@ public class DownloadManager extends Thread {
 	/**
 	 * Return if the URI has already been downloaded 
 	 * @param uri the URI to test
-	 * @return true if the file has already been downloaded or if we shoutd not try to download it, else false
+	 * @return true if the file has already been downloaded or if we should not try to download it, else false
 	 */
-	public boolean isUriAlreadyDownloaded(URI uri) {
-		String discoveredURIString;
-		for (int i=0; i<this.discoveredURI.size(); i++) {
-			discoveredURIString = this.discoveredURI.get(i);
-			String uriPathToCompare = Utils.getCompletePath(uri);
-			if (discoveredURIString.compareTo(uriPathToCompare) == 0){
-				return true;
+	private boolean isUriAlreadyDownloaded(URI uri) {
+		if (INSTANCE != null) {
+			String discoveredURIString;
+			for (int i=0; i<discoveredURI.size(); i++) {
+				discoveredURIString = discoveredURI.get(i);
+				String uriPathToCompare = Utils.getCompletePath(uri);
+				if (discoveredURIString.compareTo(uriPathToCompare) == 0){
+					return true;
+				}
 			}
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	
@@ -291,13 +294,15 @@ public class DownloadManager extends Thread {
 	 */
 	public void endDownload(WebFile webFile) {
 		if (webFile instanceof WebHtmlFile) {
-			this.currentDLHtml--;
-			this.htmlFileInDownloading.remove(webFile);
-//			this.htmlFileDownloaded.add(webHtmlFile);
+			if (INSTANCE != null) {
+				this.currentDLHtml--;
+				this.htmlFileInDownloading.remove(webFile);
+			}
 		} else if (webFile instanceof WebLinkedFile){
-			this.currentDLLink--;
-			this.linkedFileInDownloading.remove(webFile);
-//			this.linkedFileDownloaded.add(webLinkedFile);
+			if (INSTANCE != null) {
+				this.currentDLLink--;
+				this.linkedFileInDownloading.remove(webFile);
+			}
 		}
 	}
 	
@@ -313,7 +318,7 @@ public class DownloadManager extends Thread {
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent arg0) {
 				//TODO: faire l'action pour aller selectionner la ligne dans la JTable
-				System.out.println("JTREE ACTION: [TODO] Selectionner dans la JTable");
+				System.out.println("JTREE ACTION: [TODO] Selectin the JTable");
 			}
 		});
 		JPanel discoveryScrollablePanel = JHMainPanel.getInstance().getDiscoveryPanel().getScrollablePanel();

@@ -73,8 +73,7 @@ public class AddFilterDialog extends AbstractDialog {
 	private ActionListener helpAction() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO: afficher l'aide
-				System.out.println("Afficher l'aide");
+				JOptionPane.showMessageDialog(JHMainFrame.getInstance(), Labels.NOT_IMPLEMENTED_LABEL, Labels.NOT_IMPLEMENTED_LABEL, JOptionPane.ERROR_MESSAGE);
 			}
 		};
 	}

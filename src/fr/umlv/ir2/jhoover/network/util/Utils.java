@@ -45,26 +45,28 @@ public class Utils {
 	 * @return the path with the file if necessary or null if the path end with a document
 	 */
 	public static String addFirstFile(String path) {
-		if (Extentions.isApplication(path)) {
-			return null;
-		} else if (Extentions.isDocument(path)) {
-			return null;
-		} else if (Extentions.isImage(path)) {
-			return null;
-		} else if (Extentions.isMusic(path)) {
-			return null;
-		} else if (Extentions.isVideo(path)) {
-			return null;
-		} else if (!Extentions.isWeb(path)) {
-			//add the 'index.hml' file
-			String newUri;
-			if (path.endsWith("/")) {
-				newUri = path + "index.html";
-			} else {
-				newUri = path + "/index.html";
-			}
-			return newUri;
-		} 
+		if (!path.equals("")) {
+			if (Extentions.isApplication(path)) {
+				return null;
+			} else if (Extentions.isDocument(path)) {
+				return null;
+			} else if (Extentions.isImage(path)) {
+				return null;
+			} else if (Extentions.isMusic(path)) {
+				return null;
+			} else if (Extentions.isVideo(path)) {
+				return null;
+			} else if (!Extentions.isWeb(path)) {
+				//add the 'index.hml' file
+				String newUri;
+				if (path.endsWith("/")) {
+					newUri = path + "index.html";
+				} else {
+					newUri = path + "/index.html";
+				}
+				return newUri;
+			} 		
+		}
 		return path;
 	}
 }
