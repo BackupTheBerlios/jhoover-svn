@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<project>
+<name>Toto</name>
+</project>
+<url>http://www.univ-mlv.fr/index.php</url>
+<depth>4</depth>
+<regexp></regexp>
+<nb>
+<html>
+<thread>6</thread>
+</html>
+<linked>
+<thread>6</thread>
+</linked>
+</nb>
+<destination>
+<directory>C:\TEMP/</directory>
+</destination>
+</configuration>

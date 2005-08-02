@@ -1,1 +1,1 @@
-java -jar ./jHoover.jar
+java -jar ../lib/jHoover.jar
